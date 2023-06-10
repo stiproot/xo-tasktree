@@ -28,6 +28,8 @@ public interface INode
 
 	Task HandleException(Exception ex);
 
+	INodeEdge? NodeEdge{ get; }
+
 	/// <summary>
 	///   Flag specifying if a synchronous functory is set. 
 	/// </summary>
@@ -36,6 +38,8 @@ public interface INode
 	/// </remarks>
 	/// <returns><see cref="bool"/></returns>
 	bool IsSync { get; }
+
+	INode SetNodeEdge(INodeEdge nodeEdge);
 
 	/// <summary>
 	///   Sets the implementation of <see cref="INodevaluator"/> that runs the <see cref="INode"/>s. 
