@@ -1,7 +1,11 @@
 # xo-task-workflow-builder
 
+## Logic
+### Decisions
+
 $$
-
-\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
-
+S : S(x) \rightarrow s
+\\
+f : f(S) \rightarrow f(S(x)) \rightarrow s
+\\
 $$
