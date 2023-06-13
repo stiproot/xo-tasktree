@@ -2,6 +2,7 @@
     "extensions": [
         "vscodevim.vim",
         "markdown-preview-github-styles.colorTheme",
-        "ms-dotnettools.csharp"
+        "ms-dotnettools.csharp",
+        "bierner.markdown-mermaid"
     ]
 }
