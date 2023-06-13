@@ -15,9 +15,9 @@ graph LR
     Y{edge} --> Z((node))
     Y{edge} --> P((node))
 
-    A((node)) --> E{edge}
-    B((node)) --> E{edge}
-    E{edge} --> F((node))
+    A((node)) --> E((node))
+    B((node)) --> E((node))
+    E((node)) --> F((node))
 ```
 
 ## Logic
