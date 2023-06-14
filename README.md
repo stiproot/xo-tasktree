@@ -2,7 +2,8 @@
 
 ## Laws
 - A Node contains a single functory.
-- Nodes do not directly reference other nodes, nodes reference edges. Edges reference nodes. 
+- Nodes do not directly reference other nodes, nodes reference edges. Edges reference nodes.
+- There should be a single core node type. ie. no different type for a decision making node.
 
 ## Branching
 ### Branch Types
@@ -30,3 +31,8 @@ S : S(x) \rightarrow s
 f : f(S) \rightarrow f(S(x)) \rightarrow s
 \\
 $$
+
+## Syntax
+
+### Abstract
+

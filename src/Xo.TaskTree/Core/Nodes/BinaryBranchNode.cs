@@ -48,6 +48,8 @@ public class BinaryBranchNode : BaseBranchNode, IBinaryBranchNode
 		{
 			await HandleException(ex);
 			throw;
+
+			
 		}
 	}
 
