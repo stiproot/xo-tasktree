@@ -28,7 +28,7 @@ public interface INode
 
 	Task HandleException(Exception ex);
 
-	INodeEdge? NodeEdge{ get; }
+	INodeEdge? NodeEdge { get; }
 
 	/// <summary>
 	///   Flag specifying if a synchronous functory is set. 
