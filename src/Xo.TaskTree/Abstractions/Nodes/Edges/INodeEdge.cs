@@ -2,5 +2,5 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface INodeEdge
 {
-    INodeEdge Add(params INode[] nodes);
+	INodeEdge Add(params INode[] nodes);
 }
