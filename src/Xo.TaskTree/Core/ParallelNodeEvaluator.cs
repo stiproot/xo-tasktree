@@ -1,6 +1,7 @@
 namespace Xo.TaskTree.Core;
 
 /// <inheritdoc cref="INodevaluator"/>
+
 public class ParallelNodeEvaluator : INodevaluator
 {
 	/// <inheritdoc />

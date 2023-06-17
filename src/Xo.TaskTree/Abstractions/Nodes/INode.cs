@@ -175,7 +175,7 @@ public interface INode
 	/// </summary>
 	/// <remarks>Uses the functory factory provided to produce the primary functory.</remarks>
 	/// <returns><see cref="IMsg"/></returns>
-	Task<IMsg?> Run(CancellationToken cancellationToken);
+	Task<IMsg?[]> Run(CancellationToken cancellationToken);
 
 	/// <summary>
 	///   Core validation operation. Validates that a either a asynchronous or synchronous functory has been provided.

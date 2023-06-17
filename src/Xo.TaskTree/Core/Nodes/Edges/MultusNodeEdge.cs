@@ -1,12 +1,13 @@
 namespace Xo.TaskTree.Core;
 
-public class MultusNodeEdge : INodeEdge
+public class MultusNodeEdge : INodeEdge, IMultusNodeEdge
 {
-    protected List<INode>? _Edges;
+    public NodeEdgeTypes NodeEdgeType => NodeEdgeTypes.Multus;
+    public IList<INode?> Edges { get; internal set; } = new List<INode?>();
 
-    public INodeEdge Add(params INode[] nodes)
+    public INodeEdge Add(params INode?[] nodes)
     {
-        this._Edges = nodes.ToList();
+        this.Edges = nodes.ToList();
         return this;
     }
 }

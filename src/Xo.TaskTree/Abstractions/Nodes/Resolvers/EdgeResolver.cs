@@ -2,9 +2,17 @@ namespace Xo.TaskTree.Abstractions;
 
 public class EdgeResolver : IEdgeResolver
 {
-	public Task<IMsg[]> Resolve(INodeEdge edge)
+	public Task<IMsg?[]> Resolve(
+		INodeEdge nodeEdge,
+		IMsg?[] msgs
+	)
 	{
-		// todo: node edge type needs to be determined...
-
+		return nodeEdge.NodeEdgeType switch
+		{
+			NodeEdgeTypes.Monarius =>  
+			NodeEdgeTypes.Binarius => throw new NotImplementedException(),
+			NodeEdgeTypes.Multus => throw new NotImplementedException(),
+			_ => throw new InvalidOperationException()
+		};
 	}
 }

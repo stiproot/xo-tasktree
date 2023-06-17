@@ -1,12 +1,13 @@
 namespace Xo.TaskTree.Core;
 
-public class MonariusNodeEdge : INodeEdge
+public class MonariusNodeEdge : INodeEdge, IMonariusNodeEdge
 {
-    protected INode? _Edge;
+    public NodeEdgeTypes NodeEdgeType => NodeEdgeTypes.Monarius;
+    public INode? Edge { get; internal set; }
 
-    public INodeEdge Add(params INode[] nodes)
+    public INodeEdge Add(params INode?[] nodes)
     {
-        this._Edge = nodes[0];
+        this.Edge = nodes[0];
         return this;
     }
 }
