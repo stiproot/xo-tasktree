@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IEdgeResolver
+public interface INodeEdgeResolver
 {
 	Task<IMsg?[]> Resolve(
 		INodeEdge nodeEdge, 

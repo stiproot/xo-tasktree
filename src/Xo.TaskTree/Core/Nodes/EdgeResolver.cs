@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Core;
 
-public class EdgeResolver : IEdgeResolver
+public class NodeEdgeResolver : INodeEdgeResolver
 {
 	public Task<IMsg?[]> Resolve(
 		INodeEdge nodeEdge,

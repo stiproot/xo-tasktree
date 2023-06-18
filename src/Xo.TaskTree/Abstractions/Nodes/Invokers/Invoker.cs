@@ -1,21 +1,19 @@
 namespace Xo.TaskTree.Abstractions;
 
+// todo: is this class necessary?
 public class Invoker : IInvoker
 {
-	protected readonly IEdgeResolver _EdgeResolver;
+	protected readonly INodeEdgeResolver _NodeEdgeResolver;
 
-	public Invoker(IEdgeResolver edgeResolver) => this._EdgeResolver = edgeResolver ?? throw new ArgumentNullException(nameof(edgeResolver));
+	public Invoker(INodeEdgeResolver nodeEdgeResolver) => this._NodeEdgeResolver = nodeEdgeResolver ?? throw new ArgumentNullException(nameof(nodeEdgeResolver));
 
-	public Task<IMsg?> Invoke(IMsg? msg)
-	{
-		throw new NotImplementedException();
-	}
 
-	public Task<IMsg?> Invoke(
+	public Task<IMsg?[]> Invoke(
 		INodeEdge nodeEdge,
-		IMsg? msg
+		IMsg?[] msgs,
+		CancellationToken cancellationToken
 	)
 	{
-		throw new NotImplementedException();
+		return this._NodeEdgeResolver.Resolve(nodeEdge, msgs, cancellationToken);
 	}
 }

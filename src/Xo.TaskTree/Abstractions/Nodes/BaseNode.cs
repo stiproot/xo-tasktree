@@ -144,7 +144,9 @@ public abstract class BaseNode : INode
 	)
 	{
 		if (data is null || paramName is null) throw new InvalidOperationException("Null values cannot be passed into AddArg<T>...");
+
 		this._Params.Add(this._MsgFactory.Create<T>(data, paramName));
+
 		return this;
 	}
 
@@ -155,6 +157,7 @@ public abstract class BaseNode : INode
 		{
 			this._ContextParams.Add(p);
 		}
+
 		return this;
 	}
 
@@ -162,6 +165,7 @@ public abstract class BaseNode : INode
 	public INode SetExceptionHandler(Func<Exception, Task> handler)
 	{
 		this._ExceptionHandlerAsync = handler;
+
 		return this;
 	}
 
@@ -169,11 +173,12 @@ public abstract class BaseNode : INode
 	public INode SetExceptionHandler(Action<Exception> handler)
 	{
 		this._ExceptionHandler = handler;
+
 		return this;
 	}
 
 	/// <inheritdoc />
-	public virtual async Task<IMsg?> Run(CancellationToken cancellationToken)
+	public virtual async Task<IMsg?[]> Run(CancellationToken cancellationToken)
 	{
 		this._Logger?.LogTrace($"Node.Run - start.");
 
@@ -256,7 +261,7 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public virtual async Task<IMsg?> ResolveFunctory(CancellationToken cancellationToken)
+	public virtual async Task<IMsg?[]> ResolveFunctory(CancellationToken cancellationToken)
 	{
 		this._Logger?.LogTrace($"BaseNode.ResolveFunctory - starting...");
 
@@ -271,7 +276,21 @@ public abstract class BaseNode : INode
 			this._Context.AddMsg(this.Id, result);
 		}
 
-		return result;
+		// todo: do we really want all these 'ToArray'? Should Functory not return an array?
+
+		if(this._Controller is not null)
+		{
+			var bit = this._Controller.Control(result);
+
+			if(!bit) return result.ToArray();
+		}
+
+		if(this._NodeEdge is not null)
+		{
+			return await this._Invoker!.Invoke(this._NodeEdge, result.ToArray(), cancellationToken);
+		}
+
+		return result.ToArray();
 	}
 
 	/// <inheritdoc />
@@ -286,6 +305,19 @@ public abstract class BaseNode : INode
 		{
 			this._ExceptionHandler(ex);
 		}
+	}
+
+	public INode SetInvoker(IInvoker invoker)
+	{
+		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
+		return this;
+	}
+
+	public INode SetController(IController controller)
+	{
+		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
+
+		return this;
 	}
 
 	/// <inheritdoc />

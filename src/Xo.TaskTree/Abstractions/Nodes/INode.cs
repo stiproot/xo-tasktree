@@ -16,20 +16,6 @@ public interface INode
 
 	bool RequiresResult { get; }
 
-	INode RequireResult(bool requiresResult = true);
-
-	bool HasParam(string paramName);
-
-	Task ResolvePromisedParams(CancellationToken cancellationToken);
-
-	void AddContextParamResultsToParams();
-
-	Task<IMsg?> ResolveFunctory(CancellationToken cancellationToken);
-
-	Task HandleException(Exception ex);
-
-	INodeEdge? NodeEdge { get; }
-
 	/// <summary>
 	///   Flag specifying if a synchronous functory is set. 
 	/// </summary>
@@ -39,7 +25,23 @@ public interface INode
 	/// <returns><see cref="bool"/></returns>
 	bool IsSync { get; }
 
+	INode RequireResult(bool requiresResult = true);
+
+	bool HasParam(string paramName);
+
+	Task ResolvePromisedParams(CancellationToken cancellationToken);
+
+	void AddContextParamResultsToParams();
+
+	Task<IMsg?[]> ResolveFunctory(CancellationToken cancellationToken);
+
+	Task HandleException(Exception ex);
+
 	INode SetNodeEdge(INodeEdge nodeEdge);
+
+	INode SetInvoker(IInvoker invoker);
+
+	INode SetController(IController controller);
 
 	/// <summary>
 	///   Sets the implementation of <see cref="INodevaluator"/> that runs the <see cref="INode"/>s. 
