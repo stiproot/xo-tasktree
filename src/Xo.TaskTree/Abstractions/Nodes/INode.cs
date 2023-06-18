@@ -130,7 +130,7 @@ public interface INode
 	/// <remarks>Method can be chained.</remarks>
 	/// <param name="msgs"></param>
 	/// <returns><see cref="INode"/></returns>
-	INode AddArg(params IMsg[] msgs);
+	INode AddArg(params IMsg?[] msgs);
 
 	/// <summary>
 	///   Creates a <see cref="IMsg"/>, out of type T. 

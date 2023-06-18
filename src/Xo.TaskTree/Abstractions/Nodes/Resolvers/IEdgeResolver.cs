@@ -4,6 +4,7 @@ public interface IEdgeResolver
 {
 	Task<IMsg?[]> Resolve(
 		INodeEdge nodeEdge, 
-		IMsg?[] msgs
+		IMsg?[] msgs,
+		CancellationToken cancellationToken
 	);
 }
