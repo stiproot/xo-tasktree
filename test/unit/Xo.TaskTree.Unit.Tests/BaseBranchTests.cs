@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Unit.Tests;
 
 [ExcludeFromCodeCoverage]
-public abstract class BaseBranchNodeTests
+public abstract class BaseBranchTests
 {
 	protected readonly IFunctitect _Functitect;
 	protected readonly INodeFactory _NodeFactory;
@@ -10,7 +10,7 @@ public abstract class BaseBranchNodeTests
 	protected readonly INodeBuilderFactory _NodeBuilderFactory;
 	protected CancellationToken CancellationTokenFactory() => new CancellationToken();
 
-	public BaseBranchNodeTests(
+	public BaseBranchTests(
 		IFunctitect functitect,
 		INodeFactory nodeFactory,
 		IMsgFactory msgFactory,

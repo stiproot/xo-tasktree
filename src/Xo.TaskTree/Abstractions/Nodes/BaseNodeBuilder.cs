@@ -175,7 +175,9 @@ public abstract class BaseNodeBuilder : INodeBuilder
 		if (type is null) throw new InvalidOperationException("Unable to find functory type...");
 
 		string paramName = this.MatchArgToTypeMethodParam<TArg>(type);
+
 		this._Params.Add(this._MsgFactory.Create<TArg>(arg, paramName));
+
 		return this;
 	}
 
@@ -186,7 +188,9 @@ public abstract class BaseNodeBuilder : INodeBuilder
 	)
 	{
 		if (data is null || paramName is null) throw new InvalidOperationException("Null values cannot be passed into AddArg<T>...");
+
 		this._Params.Add(this._MsgFactory.Create<TArgData>(data, paramName));
+
 		return this;
 	}
 

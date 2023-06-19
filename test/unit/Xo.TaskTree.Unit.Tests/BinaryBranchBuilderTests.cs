@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Unit.Tests;
 
 [ExcludeFromCodeCoverage]
-public class BinaryBranchBuilderTests : BaseBranchNodeTests
+public class BinaryBranchBuilderTests : BaseBranchTests
 {
 	public BinaryBranchBuilderTests(
 		IFunctitect functitect,
@@ -12,13 +12,12 @@ public class BinaryBranchBuilderTests : BaseBranchNodeTests
 	) : base(functitect, nodeFactory, msgFactory, workflowContextFactory, nodeBuilderFactory) { }
 
 	[Fact]
-	public async Task BinaryBranchUsingFunctitectInternallyTest()
+	public async Task Single()
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();
 		var context = this._WorkflowContextFactory.Create();
 		
-
 		// The output of this Node will be used as a param for the Task produced by the functory contained in Node n2, "flag2" of type bool.
 		var n1 = this._NodeFactory
 			.Create(context)

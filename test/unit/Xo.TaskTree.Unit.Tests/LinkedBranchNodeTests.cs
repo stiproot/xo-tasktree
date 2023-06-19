@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Unit.Tests;
 
 [ExcludeFromCodeCoverage]
-public class LinkedBranchNodeTests : BaseBranchNodeTests
+public class LinkedBranchNodeTests : BaseBranchTests
 {
 	public LinkedBranchNodeTests(
 		IFunctitect functitect,

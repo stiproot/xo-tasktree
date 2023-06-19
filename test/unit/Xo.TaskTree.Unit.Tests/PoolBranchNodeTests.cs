@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Unit.Tests;
 
 [ExcludeFromCodeCoverage]
-public class PoolBranchBuilderTests : BaseBranchNodeTests
+public class PoolBranchBuilderTests : BaseBranchTests
 {
 	public PoolBranchBuilderTests(
 		IFunctitect functitect,
