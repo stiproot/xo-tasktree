@@ -63,7 +63,7 @@ public class HashBranchNodeTests : BaseBranchNodeTests
 	}
 
 	[Fact]
-	public async Task HashBranchNodeBuilderTest()
+	public async Task HashBranchBuilderTest()
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();

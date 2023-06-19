@@ -1,22 +1,22 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class PoolBranchNodeBuilder : BaseNodeBuilder, IPoolBranchNodeBuilder
+public class PoolBranchBuilder : BaseNodeBuilder, IPoolBranchBuilder
 {
 	protected readonly List<INode> _Pool = new();
 
-	public IPoolBranchNodeBuilder AddNext(INode node)
+	public IPoolBranchBuilder AddNext(INode node)
 	{
 		this._Pool.Add(node ?? throw new ArgumentNullException(nameof(node)));
 		return this;
 	}
 
-	public IPoolBranchNodeBuilder AddNext(params INode[] node)
+	public IPoolBranchBuilder AddNext(params INode[] node)
 	{
 		this._Pool.AddRange(node ?? throw new ArgumentNullException(nameof(node)));
 		return this;
 	}
 
-	public IPoolBranchNodeBuilder AddNext<T>(bool requiresResult = true)
+	public IPoolBranchBuilder AddNext<T>(bool requiresResult = true)
 	{
 		var n = this.Build(typeof(T));
 
@@ -38,9 +38,9 @@ public class PoolBranchNodeBuilder : BaseNodeBuilder, IPoolBranchNodeBuilder
 	}
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="PoolBranchNodeBuilder"/>. 
+	///   Initializes a new instance of <see cref="PoolBranchBuilder"/>. 
 	/// </summary>
-	public PoolBranchNodeBuilder(
+	public PoolBranchBuilder(
 		IFunctitect functitect,
 		INodeFactory nodeFactory,
 		IMsgFactory msgFactory,

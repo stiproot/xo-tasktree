@@ -46,160 +46,160 @@ public interface INodeBuilderFactory
 	///////////////////////////////////////////////////////////////
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IPoolBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IPoolBranchBuilder"/>.
 	/// </summary>
-	/// <returns><see cref="IPoolBranchNodeBuilder"/></returns>
-	IPoolBranchNodeBuilder Pool();
+	/// <returns><see cref="IPoolBranchBuilder"/></returns>
+	IPoolBranchBuilder Pool();
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IPoolBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IPoolBranchBuilder"/>.
 	/// </summary>
 	/// <param name="id"></param>
-	/// <returns><see cref="IPoolBranchNodeBuilder"/></returns>
-	IPoolBranchNodeBuilder Pool(string id);
+	/// <returns><see cref="IPoolBranchBuilder"/></returns>
+	IPoolBranchBuilder Pool(string id);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IPoolBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IPoolBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
 	/// <param name="id"></param>
-	/// <returns><see cref="IPoolBranchNodeBuilder"/></returns>
-	IPoolBranchNodeBuilder Pool(
+	/// <returns><see cref="IPoolBranchBuilder"/></returns>
+	IPoolBranchBuilder Pool(
 		ILogger logger,
 		string id
 	);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IPoolBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IPoolBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
-	/// <returns><see cref="IPoolBranchNodeBuilder"/></returns>
-	IPoolBranchNodeBuilder Pool(ILogger logger);
+	/// <returns><see cref="IPoolBranchBuilder"/></returns>
+	IPoolBranchBuilder Pool(ILogger logger);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IPoolBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IPoolBranchBuilder"/>.
 	/// </summary>
 	/// <param name="context"><see cref="IWorkflowContext"/></param>
-	/// <returns><see cref="IPoolBranchNodeBuilder"/></returns>
-	IPoolBranchNodeBuilder Pool(IWorkflowContext context);
+	/// <returns><see cref="IPoolBranchBuilder"/></returns>
+	IPoolBranchBuilder Pool(IWorkflowContext context);
 
 	///////////////////////////////////////////////////////////////
 
 	/// <summary>
-	///   Creates an implementation of <see cref="ILinkedBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="ILinkedBranchBuilder"/>.
 	/// </summary>
-	/// <returns><see cref="ILinkedBranchNodeBuilder"/></returns>
-	ILinkedBranchNodeBuilder Linked();
+	/// <returns><see cref="ILinkedBranchBuilder"/></returns>
+	ILinkedBranchBuilder Linked();
 
 	/// <summary>
-	///   Creates an implementation of <see cref="ILinkedBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="ILinkedBranchBuilder"/>.
 	/// </summary>
 	/// <param name="id"></param>
-	/// <returns><see cref="ILinkedBranchNodeBuilder"/></returns>
-	ILinkedBranchNodeBuilder Linked(string id);
+	/// <returns><see cref="ILinkedBranchBuilder"/></returns>
+	ILinkedBranchBuilder Linked(string id);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="ILinkedBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="ILinkedBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
 	/// <param name="id"></param>
-	/// <returns><see cref="ILinkedBranchNodeBuilder"/></returns>
-	ILinkedBranchNodeBuilder Linked(
+	/// <returns><see cref="ILinkedBranchBuilder"/></returns>
+	ILinkedBranchBuilder Linked(
 		ILogger logger,
 		string id
 	);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="ILinkedBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="ILinkedBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
-	/// <returns><see cref="ILinkedBranchNodeBuilder"/></returns>
-	ILinkedBranchNodeBuilder Linked(ILogger logger);
+	/// <returns><see cref="ILinkedBranchBuilder"/></returns>
+	ILinkedBranchBuilder Linked(ILogger logger);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="ILinkedBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="ILinkedBranchBuilder"/>.
 	/// </summary>
 	/// <param name="context"><see cref="IWorkflowContext"/></param>
-	/// <returns><see cref="ILinkedBranchNodeBuilder"/></returns>
-	ILinkedBranchNodeBuilder Linked(IWorkflowContext context);
+	/// <returns><see cref="ILinkedBranchBuilder"/></returns>
+	ILinkedBranchBuilder Linked(IWorkflowContext context);
 
 	///////////////////////////////////////////////////////////////
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IBinaryBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IBinaryBranchBuilder"/>.
 	/// </summary>
-	/// <returns><see cref="IBinaryBranchNodeBuilder"/></returns>
-	IBinaryBranchNodeBuilder Binary();
+	/// <returns><see cref="IBinaryBranchBuilder"/></returns>
+	IBinaryBranchBuilder Binary();
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IBinaryBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IBinaryBranchBuilder"/>.
 	/// </summary>
 	/// <param name="id"></param>
-	/// <returns><see cref="IBinaryBranchNodeBuilder"/></returns>
-	IBinaryBranchNodeBuilder Binary(string id);
+	/// <returns><see cref="IBinaryBranchBuilder"/></returns>
+	IBinaryBranchBuilder Binary(string id);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IBinaryBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IBinaryBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
 	/// <param name="id"></param>
-	/// <returns><see cref="IBinaryBranchNodeBuilder"/></returns>
-	IBinaryBranchNodeBuilder Binary(
+	/// <returns><see cref="IBinaryBranchBuilder"/></returns>
+	IBinaryBranchBuilder Binary(
 		ILogger logger,
 		string id
 	);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IBinaryBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IBinaryBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
-	/// <returns><see cref="IBinaryBranchNodeBuilder"/></returns>
-	IBinaryBranchNodeBuilder Binary(ILogger logger);
+	/// <returns><see cref="IBinaryBranchBuilder"/></returns>
+	IBinaryBranchBuilder Binary(ILogger logger);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IBinaryBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IBinaryBranchBuilder"/>.
 	/// </summary>
 	/// <param name="context"><see cref="IWorkflowContext"/></param>
-	/// <returns><see cref="IBinaryBranchNodeBuilder"/></returns>
-	IBinaryBranchNodeBuilder Binary(IWorkflowContext context);
+	/// <returns><see cref="IBinaryBranchBuilder"/></returns>
+	IBinaryBranchBuilder Binary(IWorkflowContext context);
 
 	///////////////////////////////////////////////////////////////
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IHashBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IHashBranchBuilder"/>.
 	/// </summary>
-	/// <returns><see cref="IHashBranchNodeBuilder"/></returns>
-	IHashBranchNodeBuilder Hash();
+	/// <returns><see cref="IHashBranchBuilder"/></returns>
+	IHashBranchBuilder Hash();
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IHashBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IHashBranchBuilder"/>.
 	/// </summary>
 	/// <param name="id"></param>
-	/// <returns><see cref="IHashBranchNodeBuilder"/></returns>
-	IHashBranchNodeBuilder Hash(string id);
+	/// <returns><see cref="IHashBranchBuilder"/></returns>
+	IHashBranchBuilder Hash(string id);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IHashBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IHashBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
 	/// <param name="id"></param>
-	/// <returns><see cref="IHashBranchNodeBuilder"/></returns>
-	IHashBranchNodeBuilder Hash(
+	/// <returns><see cref="IHashBranchBuilder"/></returns>
+	IHashBranchBuilder Hash(
 		ILogger logger,
 		string id
 	);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IHashBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IHashBranchBuilder"/>.
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
-	/// <returns><see cref="IHashBranchNodeBuilder"/></returns>
-	IHashBranchNodeBuilder Hash(ILogger logger);
+	/// <returns><see cref="IHashBranchBuilder"/></returns>
+	IHashBranchBuilder Hash(ILogger logger);
 
 	/// <summary>
-	///   Creates an implementation of <see cref="IHashBranchNodeBuilder"/>.
+	///   Creates an implementation of <see cref="IHashBranchBuilder"/>.
 	/// </summary>
 	/// <param name="context"><see cref="IWorkflowContext"/></param>
-	/// <returns><see cref="IHashBranchNodeBuilder"/></returns>
-	IHashBranchNodeBuilder Hash(IWorkflowContext context);
+	/// <returns><see cref="IHashBranchBuilder"/></returns>
+	IHashBranchBuilder Hash(IWorkflowContext context);
 }

@@ -212,7 +212,7 @@ public class BinaryBranchNodeTests : BaseBranchNodeTests
 	}
 
 	[Fact]
-	public async Task NullCheckBinaryBranchNodeBuilderTest()
+	public async Task NullCheckBinaryBranchBuilderTest()
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();
@@ -235,7 +235,7 @@ public class BinaryBranchNodeTests : BaseBranchNodeTests
 	}
 
 	[Fact]
-	public async Task NullCheckBinaryBranchNodeBuilderWithNoArgMatchingTest()
+	public async Task NullCheckBinaryBranchBuilderWithNoArgMatchingTest()
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();

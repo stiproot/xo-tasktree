@@ -128,10 +128,14 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode AddArg(params IMsg[] msgs)
+	public INode AddArg(params IMsg?[] msgs)
 	{
 		foreach (var m in msgs)
 		{
+			if(m is null)
+			{
+				continue;
+			}
 			this._Params.Add(m);
 		}
 		return this;

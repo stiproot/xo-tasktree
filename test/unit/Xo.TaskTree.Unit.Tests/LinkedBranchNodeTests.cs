@@ -46,7 +46,7 @@ public class LinkedBranchNodeTests : BaseBranchNodeTests
 	}
 
 	[Fact]
-	public async Task LinkedBranchNodeBuilderTest()
+	public async Task LinkedBranchBuilderTest()
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();

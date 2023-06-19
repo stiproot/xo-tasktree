@@ -1,9 +1,9 @@
 namespace Xo.TaskTree.Unit.Tests;
 
 [ExcludeFromCodeCoverage]
-public class PoolBranchNodeBuilderTests : BaseBranchNodeTests
+public class PoolBranchBuilderTests : BaseBranchNodeTests
 {
-	public PoolBranchNodeBuilderTests(
+	public PoolBranchBuilderTests(
 		IFunctitect functitect,
 		INodeFactory nodeFactory,
 		IMsgFactory msgFactory,
@@ -48,7 +48,7 @@ public class PoolBranchNodeBuilderTests : BaseBranchNodeTests
 	}
 
 	[Fact]
-	public async Task PoolBranchNodeBuilderTest()
+	public async Task PoolBranchBuilderTest()
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();

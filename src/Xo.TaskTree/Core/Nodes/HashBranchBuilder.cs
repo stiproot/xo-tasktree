@@ -1,16 +1,16 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class HashBranchNodeBuilder : BaseNodeBuilder, IHashBranchNodeBuilder
+public class HashBranchBuilder : BaseNodeBuilder, IHashBranchBuilder
 {
 	protected readonly IDictionary<string, INode> _Hash = new Dictionary<string, INode>();
 
-	public virtual IHashBranchNodeBuilder AddNext(string key, INode node)
+	public virtual IHashBranchBuilder AddNext(string key, INode node)
 	{
 		this._Hash.Add(key, node ?? throw new ArgumentNullException(nameof(node)));
 		return this;
 	}
 
-	public virtual IHashBranchNodeBuilder AddNext<T>(string key)
+	public virtual IHashBranchBuilder AddNext<T>(string key)
 	{
 		var n = this.Build(typeof(T));
 		this._Hash.Add(key, n);
@@ -28,9 +28,9 @@ public class HashBranchNodeBuilder : BaseNodeBuilder, IHashBranchNodeBuilder
 	}
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="HashBranchNodeBuilder"/>. 
+	///   Initializes a new instance of <see cref="HashBranchBuilder"/>. 
 	/// </summary>
-	public HashBranchNodeBuilder(
+	public HashBranchBuilder(
 		IFunctitect functitect,
 		INodeFactory nodeFactory,
 		IMsgFactory msgFactory,

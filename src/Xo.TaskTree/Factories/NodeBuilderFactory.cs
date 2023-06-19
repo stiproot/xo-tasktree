@@ -34,64 +34,64 @@ public class NodeBuilderFactory : INodeBuilderFactory
 	public INodeBuilder Create(IWorkflowContext context) => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, context: context);
 
 	/// <inheritdoc />
-	public IPoolBranchNodeBuilder Pool() => (IPoolBranchNodeBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory);
+	public IPoolBranchBuilder Pool() => (IPoolBranchBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory);
 
 	/// <inheritdoc />
-	public IPoolBranchNodeBuilder Pool(string id) => (IPoolBranchNodeBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, id: id);
+	public IPoolBranchBuilder Pool(string id) => (IPoolBranchBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, id: id);
 
 	/// <inheritdoc />
-	public IPoolBranchNodeBuilder Pool(ILogger logger, string id) => (IPoolBranchNodeBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
+	public IPoolBranchBuilder Pool(ILogger logger, string id) => (IPoolBranchBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
 
 	/// <inheritdoc />
-	public IPoolBranchNodeBuilder Pool(ILogger logger) => (IPoolBranchNodeBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, logger);
+	public IPoolBranchBuilder Pool(ILogger logger) => (IPoolBranchBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, logger);
 
 	/// <inheritdoc />
-	public IPoolBranchNodeBuilder Pool(IWorkflowContext context) => (IPoolBranchNodeBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, context: context);
+	public IPoolBranchBuilder Pool(IWorkflowContext context) => (IPoolBranchBuilder)this.Create(NodeTypes.Pool, this._functitect, this._nodeFactory, this._msgFactory, context: context);
 
 	/// <inheritdoc />
-	public ILinkedBranchNodeBuilder Linked() => (ILinkedBranchNodeBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory);
+	public ILinkedBranchBuilder Linked() => (ILinkedBranchBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory);
 
 	/// <inheritdoc />
-	public ILinkedBranchNodeBuilder Linked(string id) => (ILinkedBranchNodeBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, id: id);
+	public ILinkedBranchBuilder Linked(string id) => (ILinkedBranchBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, id: id);
 
 	/// <inheritdoc />
-	public ILinkedBranchNodeBuilder Linked(ILogger logger, string id) => (ILinkedBranchNodeBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
+	public ILinkedBranchBuilder Linked(ILogger logger, string id) => (ILinkedBranchBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
 
 	/// <inheritdoc />
-	public ILinkedBranchNodeBuilder Linked(ILogger logger) => (ILinkedBranchNodeBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, logger);
+	public ILinkedBranchBuilder Linked(ILogger logger) => (ILinkedBranchBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, logger);
 
 	/// <inheritdoc />
-	public ILinkedBranchNodeBuilder Linked(IWorkflowContext context) => (ILinkedBranchNodeBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, context: context);
+	public ILinkedBranchBuilder Linked(IWorkflowContext context) => (ILinkedBranchBuilder)this.Create(NodeTypes.Linked, this._functitect, this._nodeFactory, this._msgFactory, context: context);
 
 	/// <inheritdoc />
-	public IBinaryBranchNodeBuilder Binary() => (IBinaryBranchNodeBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory);
+	public IBinaryBranchBuilder Binary() => (IBinaryBranchBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory);
 
 	/// <inheritdoc />
-	public IBinaryBranchNodeBuilder Binary(string id) => (IBinaryBranchNodeBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, id: id);
+	public IBinaryBranchBuilder Binary(string id) => (IBinaryBranchBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, id: id);
 
 	/// <inheritdoc />
-	public IBinaryBranchNodeBuilder Binary(ILogger logger, string id) => (IBinaryBranchNodeBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
+	public IBinaryBranchBuilder Binary(ILogger logger, string id) => (IBinaryBranchBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
 
 	/// <inheritdoc />
-	public IBinaryBranchNodeBuilder Binary(ILogger logger) => (IBinaryBranchNodeBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, logger);
+	public IBinaryBranchBuilder Binary(ILogger logger) => (IBinaryBranchBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, logger);
 
 	/// <inheritdoc />
-	public IBinaryBranchNodeBuilder Binary(IWorkflowContext context) => (IBinaryBranchNodeBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, context: context);
+	public IBinaryBranchBuilder Binary(IWorkflowContext context) => (IBinaryBranchBuilder)this.Create(NodeTypes.Binary, this._functitect, this._nodeFactory, this._msgFactory, context: context);
 
 	/// <inheritdoc />
-	public IHashBranchNodeBuilder Hash() => (IHashBranchNodeBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory);
+	public IHashBranchBuilder Hash() => (IHashBranchBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory);
 
 	/// <inheritdoc />
-	public IHashBranchNodeBuilder Hash(string id) => (IHashBranchNodeBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, id: id);
+	public IHashBranchBuilder Hash(string id) => (IHashBranchBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, id: id);
 
 	/// <inheritdoc />
-	public IHashBranchNodeBuilder Hash(ILogger logger, string id) => (IHashBranchNodeBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
+	public IHashBranchBuilder Hash(ILogger logger, string id) => (IHashBranchBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
 
 	/// <inheritdoc />
-	public IHashBranchNodeBuilder Hash(ILogger logger) => (IHashBranchNodeBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, logger);
+	public IHashBranchBuilder Hash(ILogger logger) => (IHashBranchBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, logger);
 
 	/// <inheritdoc />
-	public IHashBranchNodeBuilder Hash(IWorkflowContext context) => (IHashBranchNodeBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, context: context);
+	public IHashBranchBuilder Hash(IWorkflowContext context) => (IHashBranchBuilder)this.Create(NodeTypes.Hash, this._functitect, this._nodeFactory, this._msgFactory, context: context);
 
 	private INodeBuilder Create(
 		NodeTypes nodeType,
@@ -106,10 +106,10 @@ public class NodeBuilderFactory : INodeBuilderFactory
 		return nodeType switch
 		{
 			NodeTypes.Default => new NodeBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Linked => new LinkedBranchNodeBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Binary => new BinaryBranchNodeBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Pool => new PoolBranchNodeBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Hash => new HashBranchNodeBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			NodeTypes.Linked => new LinkedBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			NodeTypes.Binary => new BinaryBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			NodeTypes.Pool => new PoolBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			NodeTypes.Hash => new HashBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
 			_ => throw new NotSupportedException()
 		};
 	}

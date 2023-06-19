@@ -28,7 +28,7 @@ public abstract class BaseBranchNode : BaseNode, IBranchNode
 		next.AddArg(clone);
 	}
 
-	protected virtual async Task<IMsg?> RunNext(
+	protected virtual async Task<IMsg?[]> RunNext(
 		IMsg? msg,
 		INode next,
 		CancellationToken cancellationToken
