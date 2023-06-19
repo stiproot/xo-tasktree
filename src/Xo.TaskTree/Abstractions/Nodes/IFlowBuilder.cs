@@ -17,7 +17,6 @@ public interface IFlowBuilder
 
     IFlowBuilder Arg<T>();
     IFlowBuilder Arg<T>(Action<INodeConfigurationBuilder> config);
-    IFlowBuilder Arg(Action<IFlowBuilder> arg);
 
     IFlowBuilder AsArg<T>();
     IFlowBuilder AsArgs<T, U, V>();
@@ -57,6 +56,10 @@ public interface IFlowBuilder
 
     IFlowBuilder Else<T>();
     IFlowBuilder Else<T>(Action<INodeConfigurationBuilder> config);
+    IFlowBuilder Else<T>(
+        Action<IFlowBuilder> then,
+        Action<INodeConfigurationBuilder> config
+    );
 
     IFlowBuilder Pool<T, U, V>();
     INode Pool<T, U, V>(

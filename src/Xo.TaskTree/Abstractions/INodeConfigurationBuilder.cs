@@ -7,11 +7,12 @@ public interface INodeConfigurationBuilder
 
     INodeConfigurationBuilder AddArg<T>();
     INodeConfigurationBuilder AddArg<T>(string paramName);
-    INodeConfigurationBuilder MatchArg<T>(T arg);
     INodeConfigurationBuilder AddArg<T>(
         T data, 
         string paramName
     );
+    INodeConfigurationBuilder MatchArg<T>(T arg);
+    INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null);
 
     INodeConfiguration Build();
 }
