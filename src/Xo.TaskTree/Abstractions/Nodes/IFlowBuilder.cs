@@ -41,7 +41,6 @@ public interface IFlowBuilder
         Action<IFlowBuilder> @else,
         Action<INodeConfigurationBuilder> config
     );
-
     INode If<T>(
         Action<INodeConfigurationBuilder> config,
         Action<IFlowBuilder> then,
@@ -71,6 +70,7 @@ public interface IFlowBuilder
     );
 
     IFlowBuilder Next<T>();
+
     IFlowBuilder Hash<T, U, V>();
 
     IFlowBuilder Node<T>();
