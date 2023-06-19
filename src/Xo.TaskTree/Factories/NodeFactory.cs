@@ -22,66 +22,6 @@ public class NodeFactory : INodeFactory
 	/// <inheritdoc />
 	public INode Create(IWorkflowContext context) => this.Create(NodeTypes.Default, this._msgFactory, context: context);
 
-	/// <inheritdoc />
-	public IPoolBranchNode Pool() => (IPoolBranchNode)this.Create(NodeTypes.Pool, this._msgFactory);
-
-	/// <inheritdoc />
-	public IPoolBranchNode Pool(string id) => (IPoolBranchNode)this.Create(NodeTypes.Pool, this._msgFactory, id: id);
-
-	/// <inheritdoc />
-	public IPoolBranchNode Pool(ILogger logger, string id) => (IPoolBranchNode)this.Create(NodeTypes.Pool, this._msgFactory, logger, id);
-
-	/// <inheritdoc />
-	public IPoolBranchNode Pool(ILogger logger) => (IPoolBranchNode)this.Create(NodeTypes.Pool, this._msgFactory, logger);
-
-	/// <inheritdoc />
-	public IPoolBranchNode Pool(IWorkflowContext context) => (IPoolBranchNode)this.Create(NodeTypes.Pool, this._msgFactory, context: context);
-
-	/// <inheritdoc />
-	public ILinkedBranchNode Linked() => (ILinkedBranchNode)this.Create(NodeTypes.Linked, this._msgFactory);
-
-	/// <inheritdoc />
-	public ILinkedBranchNode Linked(string id) => (ILinkedBranchNode)this.Create(NodeTypes.Linked, this._msgFactory, id: id);
-
-	/// <inheritdoc />
-	public ILinkedBranchNode Linked(ILogger logger, string id) => (ILinkedBranchNode)this.Create(NodeTypes.Linked, this._msgFactory, logger, id);
-
-	/// <inheritdoc />
-	public ILinkedBranchNode Linked(ILogger logger) => (ILinkedBranchNode)this.Create(NodeTypes.Linked, this._msgFactory, logger);
-
-	/// <inheritdoc />
-	public ILinkedBranchNode Linked(IWorkflowContext context) => (ILinkedBranchNode)this.Create(NodeTypes.Linked, this._msgFactory, context: context);
-
-	/// <inheritdoc />
-	public IBinaryBranchNode Binary() => (IBinaryBranchNode)this.Create(NodeTypes.Binary, this._msgFactory);
-
-	/// <inheritdoc />
-	public IBinaryBranchNode Binary(string id) => (IBinaryBranchNode)this.Create(NodeTypes.Binary, this._msgFactory, id: id);
-
-	/// <inheritdoc />
-	public IBinaryBranchNode Binary(ILogger logger, string id) => (IBinaryBranchNode)this.Create(NodeTypes.Binary, this._msgFactory, logger, id);
-
-	/// <inheritdoc />
-	public IBinaryBranchNode Binary(ILogger logger) => (IBinaryBranchNode)this.Create(NodeTypes.Binary, this._msgFactory, logger);
-
-	/// <inheritdoc />
-	public IBinaryBranchNode Binary(IWorkflowContext context) => (IBinaryBranchNode)this.Create(NodeTypes.Binary, this._msgFactory, context: context);
-
-	/// <inheritdoc />
-	public IHashBranchNode Hash() => (IHashBranchNode)this.Create(NodeTypes.Hash, this._msgFactory);
-
-	/// <inheritdoc />
-	public IHashBranchNode Hash(string id) => (IHashBranchNode)this.Create(NodeTypes.Hash, this._msgFactory, id: id);
-
-	/// <inheritdoc />
-	public IHashBranchNode Hash(ILogger logger, string id) => (IHashBranchNode)this.Create(NodeTypes.Hash, this._msgFactory, logger, id);
-
-	/// <inheritdoc />
-	public IHashBranchNode Hash(ILogger logger) => (IHashBranchNode)this.Create(NodeTypes.Hash, this._msgFactory, logger);
-
-	/// <inheritdoc />
-	public IHashBranchNode Hash(IWorkflowContext context) => (IHashBranchNode)this.Create(NodeTypes.Hash, this._msgFactory, context: context);
-
 	public INode Create(
 		NodeTypes nodeType,
 		ILogger? logger = null,

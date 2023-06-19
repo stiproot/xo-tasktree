@@ -22,6 +22,7 @@ public interface IFlowBuilder
     IFlowBuilder AsArg<T>();
     IFlowBuilder AsArgs<T, U, V>();
 
+    IFlowBuilder If<T>(Action<INodeConfigurationBuilder>? config = null);
     IFlowBuilder If<T>(
         Action<IFlowBuilder> then,
         Action<IFlowBuilder> @else
@@ -49,9 +50,9 @@ public interface IFlowBuilder
 
     IFlowBuilder Then<T>();
     IFlowBuilder Then<T>(Action<INodeConfigurationBuilder> config);
-    INode Then<T>(
-        Action<INodeConfigurationBuilder> config,
-        Action<IFlowBuilder> then
+    IFlowBuilder Then<T>(
+        Action<IFlowBuilder> then,
+        Action<INodeConfigurationBuilder> config
     );
 
     IFlowBuilder Else<T>();

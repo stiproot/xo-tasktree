@@ -211,3 +211,16 @@ public class Y_InStrStrStr_OutConstInt_AsyncService : IY_InStrStrStr_OutConstInt
 		return 1;
 	}
 }
+
+public interface IY_InStr_OutConstStr_AsyncService
+{
+	Task<string> GetConstStrAsync(string arg1);
+}
+public class Y_InStr_OutConstStr_AsyncService : IY_InStr_OutConstStr_AsyncService
+{
+	public async Task<string> GetConstStrAsync(string arg1)
+	{
+		await Task.Delay(Utils.ProcessTimeGenerator());
+		return "<<str>>";
+	}
+}
