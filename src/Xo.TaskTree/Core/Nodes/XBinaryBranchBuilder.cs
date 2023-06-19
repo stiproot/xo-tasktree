@@ -31,6 +31,12 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		return this;
 	}
 
+	 public virtual IXBinaryBranchBuilder AddTrue(INode node)
+	 {
+		this._TrueNode = node ?? throw new ArgumentNullException(nameof(node));
+		return this;
+	 }
+
 	public virtual IXBinaryBranchBuilder AddFalse<TFalse>(Action<INodeConfigurationBuilder>? configure = null)
 	{
 		// this._False = this.Build(typeof(TFalse));
@@ -55,7 +61,16 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		return this;
 	}
 
-	public virtual IXBinaryBranchBuilder IsNotNull<TService, TArg>(TArg arg)
+	public virtual IXBinaryBranchBuilder AddFalse(INode node)
+	{
+		this._FalseNode = node ?? throw new ArgumentNullException(nameof(node));
+		return this;
+	}
+
+	public virtual IXBinaryBranchBuilder IsNotNull<TService, TArg>(
+		TArg arg,
+		Action<INodeConfigurationBuilder>? configure = null
+	)
 	{
 		// this.AddFunctory<TService, TArg>(arg: arg);
 		// return this.AddIsNotNullPathResolver();
@@ -65,7 +80,7 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		return this;
 	}
 
-	public virtual IXBinaryBranchBuilder IsNotNull<TService>()
+	public virtual IXBinaryBranchBuilder IsNotNull<TService>(Action<INodeConfigurationBuilder>? configure = null)
 	{
 		// this.AddFunctory<TService>();
 		// return this.AddIsNotNullPathResolver();
@@ -88,18 +103,6 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 
 		throw new NotImplementedException();
 	}
-
-	// public virtual IXBinaryBranchBuilder AddTrue(INode node)
-	// {
-		// this._True = node ?? throw new ArgumentNullException(nameof(node));
-		// return this;
-	// }
-
-	// public virtual IXBinaryBranchBuilder AddFalse(INode node)
-	// {
-		// this._False = node ?? throw new ArgumentNullException(nameof(node));
-		// return this;
-	// }
 
 	// public virtual IXBinaryBranchBuilder AddPathResolver(Func<IMsg?, bool> pathResolver)
 	// {
