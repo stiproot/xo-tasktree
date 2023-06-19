@@ -21,6 +21,7 @@ public interface IFlowBuilder
     IFlowBuilder AsArg<T>();
     IFlowBuilder AsArgs<T, U, V>();
 
+    IFlowBuilder RootIf<T>(Action<INodeConfigurationBuilder>? config = null);
     IFlowBuilder If<T>(Action<INodeConfigurationBuilder>? config = null);
     IFlowBuilder If<T>(
         Action<IFlowBuilder> then,

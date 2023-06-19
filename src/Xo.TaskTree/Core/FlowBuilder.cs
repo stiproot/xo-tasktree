@@ -59,6 +59,11 @@ public class FlowBuilder : IFlowBuilder
         throw new NotImplementedException();
     }
 
+    public IFlowBuilder RootIf<T>(Action<INodeConfigurationBuilder>? config = null)
+    {
+        throw new NotImplementedException();
+    }
+
     public IFlowBuilder If<T>(Action<INodeConfigurationBuilder>? config = null)
     {
         throw new NotImplementedException();
