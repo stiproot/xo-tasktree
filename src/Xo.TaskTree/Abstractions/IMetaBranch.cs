@@ -2,17 +2,14 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface IAllish : IIfMetaBranch, IThenMetaBranch, IElseMetaBranch
 {
-
 }
 
 public interface IRootish : IIfMetaBranch
 {
-
 }
 
 public interface IPathish : IThenMetaBranch, IElseMetaBranch
 {
-
 }
 
 public interface IIfMetaBranch
