@@ -5,6 +5,9 @@ namespace Xo.TaskTree.Abstractions;
 /// <inheritdoc cref="INode"/>
 public abstract class BaseNodeBuilder : INodeBuilder
 {
+	protected Type? __FunctoryType;
+	protected Action<INodeConfigurationBuilder>? __Configure;
+
 	protected readonly IFunctitect _Functitect;
 	protected readonly INodeFactory _NodeFactory;
 	protected readonly IMsgFactory _MsgFactory;
@@ -52,7 +55,7 @@ public abstract class BaseNodeBuilder : INodeBuilder
 	}
 
 	/// <inheritdoc />
-	public INodeBuilder AddFunctory<T>(string? nextParamName = null)
+	public virtual INodeBuilder AddFunctory<T>(string? nextParamName = null)
 	{
 		// todo: what happens if this is not async?
 		this._AsyncFunctory = this._Functitect.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync();

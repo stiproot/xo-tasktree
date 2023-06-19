@@ -3,6 +3,7 @@ namespace Xo.TaskTree.Abstractions;
 public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 {
 	protected Type? _TrueType;
+	protected Action<INodeConfigurationBuilder>? _ConfigureTrue;
 	protected Type? _FalseType;
 	protected INode? _TrueNode;
 	protected INode? _FalseNode;
@@ -13,6 +14,7 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		// if (requiresResult) this._True.RequireResult();
 
 		this._TrueType = typeof(TTrue);
+		this._ConfigureTrue = configure;
 
 		return this;
 	}
@@ -27,6 +29,7 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		// if (requiresResult) this._True.RequireResult();
 
 		this._TrueType = typeof(TTrue);
+		this._ConfigureTrue = configure;
 
 		return this;
 	}
@@ -90,18 +93,71 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		return this;
 	}
 
-	public override IBinaryBranchNode Build()
+	public override INodeBuilder AddFunctory<T>(string? nextParamName = null)
 	{
-		// var n = this.BuildBase() as IBinaryBranchNode;
+		this.__FunctoryType = typeof(T);
+		return this;
+	}
 
-		// n!
-			// .AddTrue(this._True)
-			// .AddFalse(this._False)
-			// .AddPathResolver(this._PathResolver);
+	public override INode Build()
+	{
+		IAsyncFunctory rootFunctory = this._Functitect
+			.Build(this.__FunctoryType!)
+			.SetServiceType(this.__FunctoryType!)
+			.AsAsync();
+		
+		var rootNode = this._NodeFactory.Create(
+			NodeTypes.Default,
+			this._Logger,
+			this.Id,
+			this._Context
+		);
 
-		// return n;
+		var configBuilder = new NodeConfigurationBuilder();
+		this.__Configure!(configBuilder);
+		var rootNodeConfig = configBuilder.Build();
 
-		throw new NotImplementedException();
+		rootNode.SetFunctory(rootFunctory);
+
+		if(rootNodeConfig.Args.Any()) rootNode.AddArg(rootNodeConfig.Args.ToArray());
+
+		if(this._TrueType is not null)
+		{
+			IAsyncFunctory trueFunctory = this._Functitect
+				.Build(this.__FunctoryType!)
+				.SetServiceType(this.__FunctoryType!)
+				.AsAsync();
+			
+			var trueNode = this._NodeFactory.Create(
+				NodeTypes.Default,
+				this._Logger
+			);
+
+			trueNode.SetContext(this._Context);
+
+			var trueNodeConfigBuilder = new NodeConfigurationBuilder();
+			this._ConfigureTrue!(trueNodeConfigBuilder);
+			var trueNodeConfig = trueNodeConfigBuilder.Build();
+
+			trueNode.SetFunctory(trueFunctory);
+
+			if(trueNodeConfig.Args.Any()) trueNode.AddArg(trueNodeConfig.Args.ToArray());
+
+			// todo: this is ridiculous...
+			Func<IDictionary<string, IMsg>, Func<IMsg>> trueDecisionNodeFunctory = (p) => () => this._MsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
+			var trueDecisionNodeEdge = new MonariusNodeEdge().Add(trueNode);
+			var trueDecisionNode = this._NodeFactory
+				.Create()
+				.SetFunctory(trueDecisionNodeFunctory)
+				.SetController(new TrueController())
+				.SetNodeEdge(trueDecisionNodeEdge);
+		
+			var nodeEdge = new BinariusNodeEdge().Add(trueDecisionNode);;
+
+			rootNode.SetNodeEdge(nodeEdge);
+		}
+
+		return rootNode;
 	}
 
 	// public virtual IXBinaryBranchBuilder AddPathResolver(Func<IMsg?, bool> pathResolver)
