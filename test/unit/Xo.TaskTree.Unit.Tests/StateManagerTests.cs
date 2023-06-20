@@ -10,7 +10,7 @@ public class StateManagerTests
 	{
 		var cancellationToken = NewCancellationToken();
 
-		var n = manager
+		var mn = manager
 			.RootIf<IY_OutConstBool_SyncService>()
 			.Then<IY_InStr_OutConstInt_AsyncService>(
 				then => then.Then<IY_InInt_OutBool_SyncService>(configure: c => c.RequireResult()),
@@ -20,19 +20,14 @@ public class StateManagerTests
 
 	}
 
-	// [Fact]
-	// public async Task THEN()
-	// {
-		// var cancellationToken = NewCancellationToken();
+	[Fact]
+	public async Task THEN()
+	{
+		var cancellationToken = NewCancellationToken();
 
-		// var n = builder
-			// .Root<IY_OutConstBool_SyncService>()
-			// .Then<IY_InBoolStr_OutConstInt_AsyncService>(configure => configure.MatchArg("<<arg>>").RequireResult())
-			// .Then<IY_InInt_OutBool_SyncService>(c => c.RequireResult())
-			// .Build();
-
-		// IMsg?[]? r = await n.Run(cancellationToken);
-
-		// var d = (r[0] as Msg<int>)!.GetData();
-	// }
+		var mn = manager
+			.Root<IY_OutConstBool_SyncService>()
+			.Then<IY_InBoolStr_OutConstInt_AsyncService>(configure: c => c.MatchArg("<<arg>>").RequireResult())
+			.Then<IY_InInt_OutBool_SyncService>(configure: c => c.RequireResult());
+	}
 }

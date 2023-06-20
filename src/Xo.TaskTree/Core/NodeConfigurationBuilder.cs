@@ -16,18 +16,11 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
         return this;
     }
 
-    public INodeConfigurationBuilder AddArg<T>(string paramName)
-    {
-        // todo: create IMsg...
-        return this;
-    }
-
     public INodeConfigurationBuilder AddArg<T>(
         T data, 
         string paramName
     )
     {
-        // todo: use factory?...
         var msg = new Msg<T>(data, paramName);
 
         this._config.Args.Add(msg);
@@ -50,7 +43,14 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
     {
         var arg = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.PromisedArgMatch };
 
-        // todo: process configure...
+        if(configure is not null)
+        {
+            var configBuilder = new NodeConfigurationBuilder();
+            configure(configBuilder);
+            var config = configBuilder.Build();
+
+            arg.NodeConfiguration = config;
+        }
 
         this._config.PromisedArgs.Add(arg);
 

@@ -4,6 +4,9 @@ namespace Xo.TaskTree.Abstractions;
 /// <typeparam name="T">The value or reference type of the data this msg houses.</typeparam>
 public abstract class BaseMsg<T> : IMsg
 {
+	// todo: keep this?...
+	protected bool _IsPendingMatch = false;
+
 	protected readonly Type _Type;
 	protected readonly T _Data;
 
