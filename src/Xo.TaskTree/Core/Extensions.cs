@@ -12,8 +12,10 @@ internal static class Extensions
 
 internal static class LambdaExtensions
 {
-    public static INodeConfiguration Build(this Action<INodeConfigurationBuilder> @this)
+    public static INodeConfiguration? Build(this Action<INodeConfigurationBuilder>? @this)
     {
+        if(@this is null) return null;
+
         var builder = new NodeConfigurationBuilder();
         @this(builder);
         return builder.Build();
@@ -30,9 +32,11 @@ internal static class LambdaExtensions
 internal static class MetaExtensions
 {
     public static IMetaNode Configure(this IMetaNode @this, 
-        INodeConfiguration configuration
+        INodeConfiguration? configuration
     )
     {
+        if(configuration is null) return @this;
+
         @this.NodeConfiguration = configuration;
 
         // todo: should this not be removed?... as it is in config...

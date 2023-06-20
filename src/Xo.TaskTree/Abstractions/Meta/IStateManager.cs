@@ -14,14 +14,17 @@ public interface IIfBranch
 public interface IThenBranch
 {
     IStateManager Then<T>(
-        Action<IStateManager>? then = null,
-        Action<INodeConfigurationBuilder>? configure = null
+        Action<INodeConfigurationBuilder>? configure = null,
+        Action<IStateManager>? then = null
     );
 }
 
 public interface IElseBranch
 {
-    IStateManager Else<T>(Action<INodeConfigurationBuilder>? configure = null);
+    IStateManager Else<T>(
+        Action<INodeConfigurationBuilder>? configure = null,
+        Action<IStateManager>? then = null
+    );
 }
 
 public interface IStateManager : IIfBranch, IThenBranch, IElseBranch, IRoot

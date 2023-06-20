@@ -7,22 +7,16 @@ public class StateManager : IStateManager
 
     public IStateManager Root<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
-        this.RootNode = this.StateNode = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default, NodeEdge = new MetaNodeEdge() };
+        this.RootNode = this.StateNode = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default }.Configure(configure.Build());
 
-        if(configure is null) return this;
-
-        // todo: process config...
         return this;
     }
 
     public IStateManager RootIf<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
         // todo: double check pointers...
-        this.RootNode = this.StateNode = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Binary, NodeEdge = new MetaNodeEdge() };
+        this.RootNode = this.StateNode = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Binary }.Configure(configure.Build());
 
-        if(configure is null) return this;
-
-        // todo: process config...
         return this;
     }
 
@@ -31,62 +25,65 @@ public class StateManager : IStateManager
         throw new NotImplementedException();
     }
 
+
     public IStateManager Then<T>(
-        Action<IStateManager>? then = null,
-        Action<INodeConfigurationBuilder>? configure = null
+        Action<INodeConfigurationBuilder>? configure = null,
+        Action<IStateManager>? then = null
     )
     {
-        if(this.StateNode.NodeType is MetaNodeTypes.Binary)
+        IMetaNode transition = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default };
+
+        if(this.StateNode.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
+
+        IMetaNode? @ref = this.StateNode.NodeType switch
         {
-            this.StateNode.NodeEdge.True = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default }; // we do not presume to define a node-edge...
+            MetaNodeTypes.Binary => this.StateNode.NodeEdge.True,
+            _ => this.StateNode.NodeEdge.Next
+        };
 
-            /* PROCESS CONFIGURATION */ 
-            if(configure is not null)
-            {
-                var config = configure.Build();
-                this.StateNode.NodeEdge.True.Configure(config);
-            }
-
-            /* PROCESS THEN */
-            if(then is not null)
-            {
-                // NEW LEVEL
-                IStateManager manager = new StateManager();
-                then(manager);
-                IMetaNode root = manager.RootNode;
-
-                this.StateNode.NodeEdge.True.NodeEdge = new MetaNodeEdge { Next = root };
-            }
-        }
-        else
-        {
-            this.StateNode.NodeEdge.Next = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default }; // we do not presume to define a node-edge...
-
-            /* PROCESS CONFIGURATION */ 
-            if(configure is not null)
-            {
-                var config = configure.Build();
-                this.StateNode.NodeEdge.Next.Configure(config);
-            }
-
-            this.StateNode = this.StateNode.NodeEdge.Next;
-        }
-
-        return this;
+        return this.Transition(@ref, transition, configure, then);
     }
 
-    public IStateManager Else<T>(Action<INodeConfigurationBuilder>? configure = null)
+    public IStateManager Else<T>(
+        Action<INodeConfigurationBuilder>? configure = null,
+        Action<IStateManager>? then = null
+    )
     {
-        if(this.StateNode.NodeType is MetaNodeTypes.Binary)
-        {
-            this.StateNode.NodeEdge.False = new MetaNode{ FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default }; // we do not presume to define a node-edge...
+        IMetaNode transition = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default };
 
-            // todo: process configuration...
-        }
-        else
+        if(this.StateNode.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
+
+        IMetaNode? @ref = this.StateNode.NodeEdge.False;
+
+        return this.Transition(@ref, transition, configure, then);
+    }
+
+    private IStateManager Transition(
+        IMetaNode? @ref,
+        IMetaNode transition,
+        Action<INodeConfigurationBuilder>? configure = null,
+        Action<IStateManager>? then = null
+    )
+    {
+        INodeConfiguration? config = configure.Build();
+        transition.Configure(config);
+
+        /* PROCESS THEN */
+        if(then is not null)
         {
-            // todo: update State to this else?
+            // NEW LEVEL
+            IStateManager manager = new StateManager();
+            then(manager);
+            IMetaNode root = manager.RootNode;
+
+            transition.NodeEdge = new MetaNodeEdge { Next = root };
+
+            // todo: should this.StateNode not be set to the lower levels root?
+            // IMetaNode state = manager.StateNode;
+            // this.StateNode = state;
         }
+
+        @ref = this.StateNode = transition;
 
         return this;
     }
