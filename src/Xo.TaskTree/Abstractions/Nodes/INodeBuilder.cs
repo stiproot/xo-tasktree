@@ -13,7 +13,10 @@ public interface INodeBuilder
 	INodeBuilder RequireResult(bool requiresResult = true);
 	INodeBuilder AddContext(IWorkflowContext? context);
 
-	INodeBuilder AddFunctory<T>(string? nextParamName = null);
+	INodeBuilder AddFunctory(
+		Type serviceType, 
+		string? nextParamName = null
+	);
 	INodeBuilder AddFunctory<TService, TArg>(TArg arg, string? nextParamName = null);
 	INodeBuilder AddFunctory(Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> fn);
 	INodeBuilder AddFunctory(IAsyncFunctory functory);

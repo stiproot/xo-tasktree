@@ -63,6 +63,17 @@ public abstract class BaseNodeBuilder : INodeBuilder
 	}
 
 	/// <inheritdoc />
+	public virtual INodeBuilder AddFunctory(
+		Type serviceType, 
+		string? nextParamName = null
+	)
+	{
+		// todo: what happens if this is not async?
+		this._AsyncFunctory = this._Functitect.Build(serviceType, nextParamName).AsAsync();
+		return this;
+	}
+
+	/// <inheritdoc />
 	public INodeBuilder AddFunctory<TService, TArg>(
 		TArg arg,
 		string? nextParamName = null

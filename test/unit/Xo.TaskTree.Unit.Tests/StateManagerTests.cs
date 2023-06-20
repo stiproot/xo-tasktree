@@ -4,6 +4,7 @@ public class StateManagerTests
 {
     private static CancellationToken NewCancellationToken() => new CancellationToken();
 	private static IStateManager manager = null!;
+	private static IMetaNodeMapper mapper = null!;
 
 	[Fact]
 	public async Task IF_THEN_ELSE()
@@ -17,6 +18,11 @@ public class StateManagerTests
 				then => then.Then<IY_InInt_OutBool_SyncService>(configure: c => c.RequireResult())
 			)
 			.Else<IY_InStr_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg>>")));
+
+		var r = mn.RootNode;
+
+		var n = mapper.Map(r);
+		
 	}
 
 	[Fact]

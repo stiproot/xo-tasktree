@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
 /// <inheritdoc cref="INode"/>
-public abstract class BaseNode : INode
+public abstract class BaseXNode : IXNode
 {
 	protected ILogger? _Logger;
 	protected readonly IMsgFactory _MsgFactory;
@@ -23,166 +23,13 @@ public abstract class BaseNode : INode
 	protected readonly IList<Func<IWorkflowContext, IMsg>> _ContextParams = new List<Func<IWorkflowContext, IMsg>>();
 
 	/// <inheritdoc />
-	public string Id { get; internal set; } = $"{Guid.NewGuid()}";
-
-	/// <inheritdoc />
-	public INodeEdge? NodeEdge => this._NodeEdge;
-
-	/// <inheritdoc />
-	public bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
-
-	/// <inheritdoc />
-	public bool RequiresResult { get; internal set; }
-
-	/// <inheritdoc />
+	public string Id { get; init; } = $"{Guid.NewGuid()}";
+	public bool RequiresResult { get; init; } = false;
+	public bool IsSync => this._SyncFunctory != null;
 	public IFunctory Functory => this._AsyncFunctory is not null ? (IFunctory)this._AsyncFunctory! : (IFunctory)this._SyncFunctory!;
 
 	/// <inheritdoc />
-	public bool IsSync => this._SyncFunctory != null;
-
-	/// <inheritdoc />
-	public INode SetNodeEdge(INodeEdge nodeEdge)
-	{
-		this._NodeEdge = nodeEdge ?? throw new ArgumentNullException(nameof(nodeEdge));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetNodevaluator(INodevaluator nodevaluator)
-	{
-		this._Nodevaluator = nodevaluator ?? throw new ArgumentNullException(nameof(nodevaluator));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode RunNodesInLoop()
-	{
-		this.SetNodevaluator(new LoopNodeEvaluator());
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetFunctory(IAsyncFunctory functory)
-	{
-		this._AsyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetFunctory(Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> fn)
-	{
-		this._AsyncFunctory = new AsyncFunctoryAdaptor(fn);
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetFunctory(ISyncFunctory functory)
-	{
-		this._SyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetFunctory(Func<IDictionary<string, IMsg>, Func<IMsg?>> fn)
-	{
-		this._SyncFunctory = new SyncFunctoryAdapter(fn);
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetFunctory(Func<IWorkflowContext, Func<IMsg>> fn)
-	{
-		this._SyncFunctory = new SyncFunctoryAdapter(fn);
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetContext(IWorkflowContext? context)
-	{
-		this._Context = context;
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetId(string id)
-	{
-		this.Id = id;
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetLogger(ILogger logger)
-	{
-		this._Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode AddArg(params INode[] nodes)
-	{
-		foreach (var h in nodes)
-		{
-			this._PromisedParams.Add(h);
-		}
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode AddArg(params IMsg?[] msgs)
-	{
-		foreach (var m in msgs)
-		{
-			if(m is null)
-			{
-				continue;
-			}
-			this._Params.Add(m);
-		}
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode AddArg<T>(
-			T data,
-			string paramName
-	)
-	{
-		if (data is null || paramName is null) throw new InvalidOperationException("Null values cannot be passed into AddArg<T>...");
-
-		this._Params.Add(this._MsgFactory.Create<T>(data, paramName));
-
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode AddArg(params Func<IWorkflowContext, IMsg>[] contextArgs)
-	{
-		foreach (var p in contextArgs)
-		{
-			this._ContextParams.Add(p);
-		}
-
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetExceptionHandler(Func<Exception, Task> handler)
-	{
-		this._ExceptionHandlerAsync = handler;
-
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetExceptionHandler(Action<Exception> handler)
-	{
-		this._ExceptionHandler = handler;
-
-		return this;
-	}
-
-	/// <inheritdoc />
-	public virtual async Task<IMsg?[]> Run(CancellationToken cancellationToken)
+	public virtual async Task<IMsg?[]> RunAsync(CancellationToken cancellationToken)
 	{
 		this._Logger?.LogTrace($"Node.Run - start.");
 
@@ -311,30 +158,10 @@ public abstract class BaseNode : INode
 		}
 	}
 
-	public INode SetInvoker(IInvoker invoker)
-	{
-		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
-		return this;
-	}
-
-	public INode SetController(IController controller)
-	{
-		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
-
-		return this;
-	}
-
-	/// <inheritdoc />
-	public virtual INode RequireResult(bool requiresResult = true)
-	{
-		this.RequiresResult = requiresResult;
-		return this;
-	}
-
 	/// <summary>
 	///   Initializes a new instance of <see cref="Node"/>. 
 	/// </summary>
-	public BaseNode(
+	public BaseXNode(
 			IMsgFactory msgFactory,
 			ILogger? logger = null,
 			string? id = null,
