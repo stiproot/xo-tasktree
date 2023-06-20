@@ -13,7 +13,7 @@ public class StateManagerTests
 		var n = manager
 			.RootIf<IY_OutConstBool_SyncService>()
 			.Then<IY_InStr_OutConstInt_AsyncService>(
-				then => then.Then<IY_InInt_OutBool_SyncService>(c => c.RequireResult()),
+				then => then.Then<IY_InInt_OutBool_SyncService>(configure: c => c.RequireResult()),
 				configure => configure.MatchArg("<<arg>>")
 			)
 			.Else<IY_InStr_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg>>")));

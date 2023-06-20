@@ -16,12 +16,6 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
         return this;
     }
 
-    public INodeConfigurationBuilder AddArg<T>()
-    {
-        // todo: create IMsg, match to param...
-        return this;
-    }
-
     public INodeConfigurationBuilder AddArg<T>(string paramName)
     {
         // todo: create IMsg...
@@ -35,9 +29,34 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
     {
         // todo: use factory?...
         var msg = new Msg<T>(data, paramName);
+
         this._config.Args.Add(msg);
+
         return this;
     }
 
+    public INodeConfigurationBuilder MatchArg<T>(T arg)
+    {
+        // todo: how to get param name in this context?...
+
+        var msg = new Msg<T>(arg);
+
+        this._config.Args.Add(msg);
+
+        return this;
+    }
+
+    public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null) 
+    {
+        var arg = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.PromisedArgMatch };
+
+        // todo: process configure...
+
+        this._config.PromisedArgs.Add(arg);
+
+        return this;
+    }
+
+    // todo: delay build operation, or just reference config directly -> Build() is misleading.
     public INodeConfiguration Build() => this._config;
 }

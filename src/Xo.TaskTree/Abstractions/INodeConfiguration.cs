@@ -4,5 +4,6 @@ public interface INodeConfiguration
 {
     bool RequiresResult { get; set; }
     string? NextParamName{ get; set; }
-    IList<IMsg> Args{ get; set; }
+    List<IMsg> Args { get; init; }
+    List<IMetaNode> PromisedArgs { get; init; }
 }
