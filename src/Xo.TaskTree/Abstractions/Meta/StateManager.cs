@@ -25,7 +25,6 @@ public class StateManager : IStateManager
         throw new NotImplementedException();
     }
 
-
     public IStateManager Then<T>(
         Action<INodeConfigurationBuilder>? configure = null,
         Action<IStateManager>? then = null
