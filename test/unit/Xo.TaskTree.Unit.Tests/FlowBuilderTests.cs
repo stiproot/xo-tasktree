@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Unit.Tests;
 
-public class CoreUseCaseTests
+public class FlowBuilderTests
 {
     private static CancellationToken NewCancellationToken() => new CancellationToken();
 	private static IFlowBuilder builder = null!;
