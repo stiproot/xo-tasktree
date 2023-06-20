@@ -43,15 +43,8 @@ public class StateManager : IStateManager
             /* PROCESS CONFIGURATION */ 
             if(configure is not null)
             {
-                var configBuilder = new NodeConfigurationBuilder();
-                configure(configBuilder);
-                INodeConfiguration config = configBuilder.Build();
-
-                this.StateNode.NodeEdge.True.NodeConfiguration = config;
-
-                // todo: should this not be removed?... as it is in config...
-                this.StateNode.NodeEdge.True.PromisedArgs.AddRange(config.PromisedArgs);
-                this.StateNode.NodeEdge.True.Args.AddRange(config.Args);
+                var config = configure.Build();
+                this.StateNode.NodeEdge.True.Configure(config);
             }
 
             /* PROCESS THEN */
@@ -59,9 +52,7 @@ public class StateManager : IStateManager
             {
                 // NEW LEVEL
                 IStateManager manager = new StateManager();
-
                 then(manager);
-
                 IMetaNode root = manager.RootNode;
 
                 this.StateNode.NodeEdge.True.NodeEdge = new MetaNodeEdge { Next = root };
@@ -74,15 +65,8 @@ public class StateManager : IStateManager
             /* PROCESS CONFIGURATION */ 
             if(configure is not null)
             {
-                var configBuilder = new NodeConfigurationBuilder();
-                configure(configBuilder);
-                INodeConfiguration config = configBuilder.Build();
-
-                this.StateNode.NodeEdge.Next.NodeConfiguration = config;
-
-                // todo: should this not be removed?... as it is in config...
-                this.StateNode.NodeEdge.Next.PromisedArgs.AddRange(config.PromisedArgs);
-                this.StateNode.NodeEdge.Next.Args.AddRange(config.Args);
+                var config = configure.Build();
+                this.StateNode.NodeEdge.Next.Configure(config);
             }
 
             this.StateNode = this.StateNode.NodeEdge.Next;
