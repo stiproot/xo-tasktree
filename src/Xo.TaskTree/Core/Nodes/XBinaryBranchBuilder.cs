@@ -7,6 +7,7 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 	protected Type? _FalseType;
 	protected INode? _TrueNode;
 	protected INode? _FalseNode;
+	protected IMetaNode? _MetaNode;
 
 	public virtual IXBinaryBranchBuilder AddTrue<TTrue>(Action<INodeConfigurationBuilder>? configure = null)
 	{
@@ -99,25 +100,18 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		return this;
 	}
 
+	protected IAsyncFunctory TypeToFunctory(Type functoryType) => this._Functitect.Build(functoryType).SetServiceType(functoryType).AsAsync();
+
 	public override INode Build()
 	{
-		IAsyncFunctory rootFunctory = this._Functitect
-			.Build(this.__FunctoryType!)
-			.SetServiceType(this.__FunctoryType!)
-			.AsAsync();
-		
-		var rootNode = this._NodeFactory.Create(
-			NodeTypes.Default,
-			this._Logger,
-			this.Id,
-			this._Context
-		);
+		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
 
-		var configBuilder = new NodeConfigurationBuilder();
-		this.__Configure!(configBuilder);
-		var rootNodeConfig = configBuilder.Build();
+		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, this.Id, this._Context);
 
-		rootNode.SetFunctory(rootFunctory);
+		n
+			.SetFunctory(fn)
+			.AddArg(this._MetaNode.Args.ToArray())
+			.AddArg(this._MetaNode.PromisedArgs.ToArray());
 
 		if(rootNodeConfig.Args.Any()) rootNode.AddArg(rootNodeConfig.Args.ToArray());
 
@@ -158,6 +152,12 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		}
 
 		return rootNode;
+	}
+
+	public IXBinaryBranchBuilder Init(IMetaNode metaNode)
+	{
+		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
+		return this;
 	}
 
 	// public virtual IXBinaryBranchBuilder AddPathResolver(Func<IMsg?, bool> pathResolver)

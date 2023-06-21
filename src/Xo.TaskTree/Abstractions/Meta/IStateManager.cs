@@ -78,3 +78,13 @@ public enum MetaNodeTypes
 	Hash = 4,
 	PromisedArgMatch = 5,
 }
+
+public enum MetaNodeEdgeTypes
+{
+	Default = 0,
+	Linked = 1,
+	Pool = 2,
+	Binary = 3,
+	Hash = 4,
+	PromisedArgMatch = 5,
+}
