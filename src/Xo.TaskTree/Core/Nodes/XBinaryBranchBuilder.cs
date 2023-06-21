@@ -2,12 +2,12 @@ namespace Xo.TaskTree.Abstractions;
 
 public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 {
+	protected IMetaNodeMapper _MetaNodeMapper;
 	protected Type? _TrueType;
 	protected Action<INodeConfigurationBuilder>? _ConfigureTrue;
 	protected Type? _FalseType;
 	protected INode? _TrueNode;
 	protected INode? _FalseNode;
-	protected IMetaNode? _MetaNode;
 
 	public virtual IXBinaryBranchBuilder AddTrue<TTrue>(Action<INodeConfigurationBuilder>? configure = null)
 	{
@@ -100,83 +100,10 @@ public class XBinaryBranchBuilder : BaseNodeBuilder, IXBinaryBranchBuilder
 		return this;
 	}
 
-	protected IAsyncFunctory TypeToFunctory(Type functoryType) => this._Functitect.Build(functoryType).SetServiceType(functoryType).AsAsync();
-
 	public override INode Build()
 	{
-		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-
-		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, this.Id, this._Context);
-
-		n
-			.SetFunctory(fn)
-			.AddArg(this._MetaNode.Args.ToArray())
-			.AddArg(this._MetaNode.PromisedArgs.ToArray());
-
-		if(rootNodeConfig.Args.Any()) rootNode.AddArg(rootNodeConfig.Args.ToArray());
-
-		if(this._TrueType is not null)
-		{
-			IAsyncFunctory trueFunctory = this._Functitect
-				.Build(this.__FunctoryType!)
-				.SetServiceType(this.__FunctoryType!)
-				.AsAsync();
-			
-			var trueNode = this._NodeFactory.Create(
-				NodeTypes.Default,
-				this._Logger
-			);
-
-			trueNode.SetContext(this._Context);
-
-			var trueNodeConfigBuilder = new NodeConfigurationBuilder();
-			this._ConfigureTrue!(trueNodeConfigBuilder);
-			var trueNodeConfig = trueNodeConfigBuilder.Build();
-
-			trueNode.SetFunctory(trueFunctory);
-
-			if(trueNodeConfig.Args.Any()) trueNode.AddArg(trueNodeConfig.Args.ToArray());
-
-			// todo: this is ridiculous...
-			Func<IDictionary<string, IMsg>, Func<IMsg>> trueDecisionNodeFunctory = (p) => () => this._MsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
-			var trueDecisionNodeEdge = new MonariusNodeEdge().Add(trueNode);
-			var trueDecisionNode = this._NodeFactory
-				.Create()
-				.SetFunctory(trueDecisionNodeFunctory)
-				.SetController(new TrueController())
-				.SetNodeEdge(trueDecisionNodeEdge);
-		
-			var nodeEdge = new BinariusNodeEdge().Add(trueDecisionNode);;
-
-			rootNode.SetNodeEdge(nodeEdge);
-		}
-
-		return rootNode;
+		throw new NotImplementedException();
 	}
-
-	public IXBinaryBranchBuilder Init(IMetaNode metaNode)
-	{
-		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
-		return this;
-	}
-
-	// public virtual IXBinaryBranchBuilder AddPathResolver(Func<IMsg?, bool> pathResolver)
-	// {
-		// this._PathResolver = new BinaryBranchNodePathResolverAdapter(pathResolver);
-		// return this;
-	// }
-
-	// public virtual IXBinaryBranchBuilder AddPathResolver(IBinaryBranchNodePathResolver pathResolver)
-	// {
-		// this._PathResolver = pathResolver ?? throw new ArgumentNullException(nameof(pathResolver));
-		// return this;
-	// }
-
-	// public virtual IXBinaryBranchBuilder AddIsNotNullPathResolver()
-	// {
-		// this._PathResolver = new NotNullBinaryBranchNodePathResolver();
-		// return this;
-	// }
 
 	/// <summary>
 	///   Initializes a new instance of <see cref="XBinaryBranchBuilder"/>. 

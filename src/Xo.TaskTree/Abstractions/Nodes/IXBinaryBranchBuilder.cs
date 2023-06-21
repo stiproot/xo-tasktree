@@ -1,9 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IXBinaryBranchBuilder
+public interface IXBinaryBranchBuilder : IBranchBuilder
 {
-	IXBinaryBranchBuilder Init(IMetaNode metaNode);
-
 	IXBinaryBranchBuilder AddTrue<TTrue>(Action<INodeConfigurationBuilder>? configure = null);
 	IXBinaryBranchBuilder AddTrue<TTrue, TArg>(
 		TArg arg,
