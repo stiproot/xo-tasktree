@@ -3,6 +3,9 @@ namespace Xo.TaskTree.Abstractions;
 public class MetaNodeMapper : IMetaNodeMapper
 {
     protected readonly INodeBuilderFactory _NodeBuilderFactory;
+    
+    public MetaNodeMapper(INodeBuilderFactory nodeBuilderFactory) 
+        => this._NodeBuilderFactory = nodeBuilderFactory ?? throw new ArgumentNullException(nameof(nodeBuilderFactory));
 
     public INode Map(IMetaNode source)
     {

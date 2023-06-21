@@ -17,8 +17,8 @@ public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, this.Id, this._Context);
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  this._MetaNodeMapper.Map(p)).ToArray();
 
-		INode @true = this.BuildTrue(this._MetaNode.NodeEdge.True);
-		INode @false = this.BuildFalse(this._MetaNode.NodeEdge.False);
+		INode @true = this.BuildTrue(this._MetaNode.NodeEdge!.True);
+		INode @false = this.BuildFalse(this._MetaNode.NodeEdge!.False);
 		INodeEdge e = new BinariusNodeEdge { Edge1 = @true, Edge2 = @false };
 
 		n

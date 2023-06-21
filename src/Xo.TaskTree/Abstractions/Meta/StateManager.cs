@@ -2,12 +2,12 @@ namespace Xo.TaskTree.Abstractions;
 
 public class StateManager : IStateManager 
 {
-    public IMetaNode RootNode{ get; set; }
-    public IMetaNode StateNode { get; set; }
+    public IMetaNode? RootNode { get; set; }
+    public IMetaNode? StateNode { get; set; }
 
     public IStateManager Root<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
-        this.RootNode = this.StateNode = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default }.Configure(configure.Build());
+        this.RootNode = this.StateNode = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Default }.Configure(configure.Build());
 
         return this;
     }
@@ -15,7 +15,7 @@ public class StateManager : IStateManager
     public IStateManager RootIf<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
         // todo: double check pointers...
-        this.RootNode = this.StateNode = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Binary }.Configure(configure.Build());
+        this.RootNode = this.StateNode = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Binary }.Configure(configure.Build());
 
         return this;
     }
@@ -30,9 +30,9 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default };
+        IMetaNode transition = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Default };
 
-        if(this.StateNode.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
 
         IMetaNode? @ref = this.StateNode.NodeType switch
         {
@@ -48,9 +48,9 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.Default };
+        IMetaNode transition = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Default };
 
-        if(this.StateNode.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
 
         IMetaNode? @ref = this.StateNode.NodeEdge.False;
 
@@ -73,7 +73,7 @@ public class StateManager : IStateManager
             // NEW LEVEL
             IStateManager manager = new StateManager();
             then(manager);
-            IMetaNode root = manager.RootNode;
+            IMetaNode root = manager.RootNode!;
 
             transition.NodeEdge = new MetaNodeEdge { Next = root };
 

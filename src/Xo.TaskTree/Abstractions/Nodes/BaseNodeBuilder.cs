@@ -5,8 +5,7 @@ namespace Xo.TaskTree.Abstractions;
 /// <inheritdoc cref="INode"/>
 public abstract class BaseNodeBuilder : INodeBuilder
 {
-	protected Type? __FunctoryType;
-	protected Action<INodeConfigurationBuilder>? __Configure;
+	// protected Type? __FunctoryType;
 
 	protected readonly IFunctitect _Functitect;
 	protected readonly INodeFactory _NodeFactory;

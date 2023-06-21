@@ -7,20 +7,22 @@ public class PoolBranchBuilder : BaseNodeBuilder, IPoolBranchBuilder
 	public IPoolBranchBuilder AddNext(INode node)
 	{
 		this._Pool.Add(node ?? throw new ArgumentNullException(nameof(node)));
+
 		return this;
 	}
 
 	public IPoolBranchBuilder AddNext(params INode[] node)
 	{
 		this._Pool.AddRange(node ?? throw new ArgumentNullException(nameof(node)));
+
 		return this;
 	}
 
-	public IPoolBranchBuilder AddNext<T>(bool requiresResult = true)
+	public IPoolBranchBuilder AddNext<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
 		var n = this.Build(typeof(T));
 
-		if (requiresResult) n.RequireResult();
+		// if (requiresResult) n.RequireResult();
 
 		this._Pool.Add(n);
 
