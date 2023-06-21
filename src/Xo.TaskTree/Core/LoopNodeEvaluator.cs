@@ -10,14 +10,16 @@ public class LoopNodeEvaluator : INodevaluator
 	)
 	{
 		var results = new List<IMsg?>();
+
 		foreach (var node in nodes)
 		{
 			var result = await node.Run(cancellationToken);
 
 			if (result is null) continue;
 
-			results.Add(result);
+			results.AddRange(result);
 		}
+
 		return results;
 	}
 }

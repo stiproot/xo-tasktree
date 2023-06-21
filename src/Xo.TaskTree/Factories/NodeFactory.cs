@@ -40,10 +40,10 @@ public class NodeFactory : INodeFactory
 		return nodeType switch
 		{
 			NodeTypes.Default => new Node(msgFactory, logger, id, context),
-			NodeTypes.Linked => new LinkedBranchNode(msgFactory, logger, id, context),
-			NodeTypes.Pool => new PoolBranchNode(msgFactory, logger, id, context),
-			NodeTypes.Binary => new BinaryBranchNode(msgFactory, logger, id, context),
-			NodeTypes.Hash => new HashBranchNode(msgFactory, logger, id, context),
+			// NodeTypes.Linked => new LinkedBranchNode(msgFactory, logger, id, context),
+			// NodeTypes.Pool => new PoolBranchNode(msgFactory, logger, id, context),
+			// NodeTypes.Binary => new BinaryBranchNode(msgFactory, logger, id, context),
+			// NodeTypes.Hash => new HashBranchNode(msgFactory, logger, id, context),
 			_ => throw new NotSupportedException()
 		};
 	}

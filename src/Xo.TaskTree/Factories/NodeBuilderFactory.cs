@@ -22,6 +22,9 @@ public class NodeBuilderFactory : INodeBuilderFactory
 	public INodeBuilder Create() => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory);
 
 	/// <inheritdoc />
+	public INodeBuilder Create(NodeTypes nodeType) => this.Create(nodeType, this._functitect, this._nodeFactory, this._msgFactory);
+
+	/// <inheritdoc />
 	public INodeBuilder Create(string id) => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, id: id);
 
 	/// <inheritdoc />

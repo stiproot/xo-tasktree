@@ -2,6 +2,8 @@ namespace Xo.TaskTree.Abstractions;
 
 public class MetaNodeMapper : IMetaNodeMapper
 {
+    protected readonly INodeBuilderFactory _NodeBuilderFactory;
+
     public INode Map(IMetaNode source)
     {
         return source.NodeType switch
@@ -11,9 +13,14 @@ public class MetaNodeMapper : IMetaNodeMapper
         };
     }
 
-    private TBuilder Create<TBuilder>(MetaNodeTypes nodeType) where TBuilder : IBranchBuilder
+    private TBuilder Create<TBuilder>(MetaNodeTypes nodeType) => (TBuilder)this.Create(nodeType);
+
+    private INodeBuilder Create(MetaNodeTypes nodeType)
     {
-        // todo: implement builder factory...
-        throw new NotImplementedException();
+        return nodeType switch
+        {
+            MetaNodeTypes.Binary => this._NodeBuilderFactory.Create(NodeTypes.Binary),
+            _ => throw new NotSupportedException()
+        };
     }
 }

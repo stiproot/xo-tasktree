@@ -13,6 +13,6 @@ public class ParallelNodeEvaluator : INodevaluator
 		var promisedArgs = nodes.Select(p => p.Run(cancellationToken));
 		var continuation = Task.WhenAll(promisedArgs);
 		var results = await continuation;
-		return results;
+		return results.SelectMany(r => r).ToList();
 	}
 }

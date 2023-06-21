@@ -14,6 +14,13 @@ public interface INodeBuilderFactory
 	/// <summary>
 	///   Creates an implementation of <see cref="INodeBuilder"/>.
 	/// </summary>
+	/// <param name="nodeType"></param>
+	/// <returns><see cref="INodeBuilder"/></returns>
+	INodeBuilder Create(NodeTypes nodeType);
+
+	/// <summary>
+	///   Creates an implementation of <see cref="INodeBuilder"/>.
+	/// </summary>
 	/// <param name="id"></param>
 	/// <returns><see cref="INodeBuilder"/></returns>
 	INodeBuilder Create(string id);
