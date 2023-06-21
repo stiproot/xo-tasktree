@@ -2,21 +2,23 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface IBinaryBranchBuilder : IBranchBuilder
 {
-	IBinaryBranchBuilder AddTrue<TTrue>(bool requiresResult = true);
-	IBinaryBranchBuilder AddFalse<TFalse>(bool requiresResult = true);
-	IBinaryBranchBuilder AddTrue<TTrue, TArgs>(
-		TArgs args,
-		bool requiresResult = true
-	);
-	IBinaryBranchBuilder AddFalse<TFalse, TArgs>(
-		TArgs args,
-		bool requiresResult = true
+	IBinaryBranchBuilder AddTrue<TTrue>(Action<INodeConfigurationBuilder>? configure = null);
+	IBinaryBranchBuilder AddTrue<TTrue, TArg>(
+		TArg arg,
+		Action<INodeConfigurationBuilder>? configure = null
 	);
 	IBinaryBranchBuilder AddTrue(INode node);
+
+	IBinaryBranchBuilder AddFalse<TFalse>(Action<INodeConfigurationBuilder>? configure = null);
+	IBinaryBranchBuilder AddFalse<TFalse, TArg>(
+		TArg arg,
+		Action<INodeConfigurationBuilder>? configure = null
+	);
 	IBinaryBranchBuilder AddFalse(INode node);
-	IBinaryBranchBuilder AddPathResolver(Func<IMsg?, bool> pathResolver);
-	IBinaryBranchBuilder AddPathResolver(IBinaryBranchNodePathResolver pathResolver);
-	IBinaryBranchBuilder AddIsNotNullPathResolver();
-	IBinaryBranchBuilder IsNotNull<TService, TArg>(TArg arg);
-	IBinaryBranchBuilder IsNotNull<TService>();
+
+	IBinaryBranchBuilder IsNotNull<TService, TArg>(
+		TArg arg,
+		Action<INodeConfigurationBuilder>? configure = null
+	);
+	IBinaryBranchBuilder IsNotNull<TService>(Action<INodeConfigurationBuilder>? configure = null);
 }

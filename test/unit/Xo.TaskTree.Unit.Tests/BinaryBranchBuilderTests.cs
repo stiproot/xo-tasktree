@@ -25,7 +25,7 @@ public class BinaryBranchBuilderTests : BaseBranchTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.AddArg(this._MsgFactory.Create<string>("some string", "args"));
 
-		var binary = new XBinaryBranchBuilder() 
+		var binary = new BinaryBranchBuilder() 
 			.AddTrue<Mocked.IY_InStr_OutConstInt_AsyncService, string>("blah blah", requiresResult: false)
 			.AddFalse<Mocked.IY_InStr_AsyncService, string>("branch2", requiresResult: false)
 			.AddFunctory(new SyncFunctoryAdapter(p => () => this._MsgFactory.Create((p["flag2"] as BaseMsg<bool>)!.GetData())).SetNextParamName("flag3").AsSync())

@@ -47,6 +47,8 @@ public abstract class BaseNodeBuilder : INodeBuilder
 		}
 	}
 
+	protected IAsyncFunctory TypeToFunctory(Type functoryType) => this._Functitect.Build(functoryType).SetServiceType(functoryType).AsAsync();
+
 	/// <inheritdoc />
 	public INodeBuilder AddContext(IWorkflowContext? context)
 	{

@@ -16,8 +16,6 @@ public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 		return this;
 	}
 
-	protected IAsyncFunctory TypeToFunctory(Type functoryType) => this._Functitect.Build(functoryType).SetServiceType(functoryType).AsAsync();
-
 	public override INode Build()
 	{
 		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
@@ -79,7 +77,7 @@ public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 	}
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="XBinaryBranchBuilder"/>. 
+	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaBinaryBranchBuilder(
 		IFunctitect functitect,

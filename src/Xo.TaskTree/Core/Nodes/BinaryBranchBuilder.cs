@@ -2,108 +2,107 @@ namespace Xo.TaskTree.Abstractions;
 
 public class BinaryBranchBuilder : BaseNodeBuilder, IBinaryBranchBuilder
 {
-	protected INode? _True;
-	protected INode? _False;
-	protected IBinaryBranchNodePathResolver? _PathResolver;
+	protected INode? _TrueNode;
+	protected INode? _FalseNode;
+	protected Type? _TrueType;
+	protected Type? _FalseType;
+	protected Action<INodeConfigurationBuilder>? _ConfigureTrue;
+	protected Action<INodeConfigurationBuilder>? _ConfigureFalse;
 
-	public virtual IBinaryBranchBuilder AddTrue<TTrue>(bool requiresResult = true)
+	public virtual IBinaryBranchBuilder AddTrue<TTrue>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		this._True = this.Build(typeof(TTrue));
+		// this._True = this.Build(typeof(TTrue));
+		// if (requiresResult) this._True.RequireResult();
 
-		if (requiresResult) this._True.RequireResult();
+		this._TrueType = typeof(TTrue);
+		this._ConfigureTrue = configure;
 
 		return this;
 	}
 
-	public virtual IBinaryBranchBuilder AddTrue<TTrue, TArgs>(
-		TArgs args,
-		bool requiresResult = true
+	public virtual IBinaryBranchBuilder AddTrue<TTrue, TArg>(
+		TArg arg,
+		Action<INodeConfigurationBuilder>? configure = null
 	)
 	{
-		this._True = this.Build(typeof(TTrue));
+		// this._True = this.Build(typeof(TTrue));
+		// this.MatchArgToNodesFunctory<TArgs>(this._True, args);
+		// if (requiresResult) this._True.RequireResult();
 
-		this.MatchArgToNodesFunctory<TArgs>(this._True, args);
-
-		if (requiresResult) this._True.RequireResult();
+		this._TrueType = typeof(TTrue);
+		this._ConfigureTrue = configure;
 
 		return this;
 	}
 
-	public virtual IBinaryBranchBuilder AddFalse<TFalse>(bool requiresResult = true)
+	 public virtual IBinaryBranchBuilder AddTrue(INode node)
+	 {
+		this._TrueNode = node ?? throw new ArgumentNullException(nameof(node));
+		return this;
+	 }
+
+	public virtual IBinaryBranchBuilder AddFalse<TFalse>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		this._False = this.Build(typeof(TFalse));
+		// this._False = this.Build(typeof(TFalse));
+		// if (requiresResult) this._False.RequireResult();
 
-		if (requiresResult) this._False.RequireResult();
+		this._FalseType = typeof(TFalse);
 
 		return this;
 	}
 
-	public virtual IBinaryBranchBuilder AddFalse<TFalse, TArgs>(
-		TArgs args,
-		bool requiresResult = true
+	public virtual IBinaryBranchBuilder AddFalse<TFalse, TArg>(
+		TArg arg,
+		Action<INodeConfigurationBuilder>? configure = null
 	)
 	{
-		this._False = this.Build(typeof(TFalse));
+		// this._False = this.Build(typeof(TFalse));
+		// this.MatchArgToNodesFunctory<TArgs>(this._False, args);
+		// if (requiresResult) this._False.RequireResult();
 
-		this.MatchArgToNodesFunctory<TArgs>(this._False, args);
+		this._FalseType = typeof(TFalse);
 
-		if (requiresResult) this._False.RequireResult();
-
-		return this;
-	}
-
-	public virtual IBinaryBranchBuilder AddTrue(INode node)
-	{
-		this._True = node ?? throw new ArgumentNullException(nameof(node));
 		return this;
 	}
 
 	public virtual IBinaryBranchBuilder AddFalse(INode node)
 	{
-		this._False = node ?? throw new ArgumentNullException(nameof(node));
+		this._FalseNode = node ?? throw new ArgumentNullException(nameof(node));
 		return this;
 	}
 
-	public virtual IBinaryBranchBuilder AddPathResolver(Func<IMsg?, bool> pathResolver)
+	public virtual IBinaryBranchBuilder IsNotNull<TService, TArg>(
+		TArg arg,
+		Action<INodeConfigurationBuilder>? configure = null
+	)
 	{
-		this._PathResolver = new BinaryBranchNodePathResolverAdapter(pathResolver);
+		// this.AddFunctory<TService, TArg>(arg: arg);
+		// return this.AddIsNotNullPathResolver();
+
+		// todo: ...
+
 		return this;
 	}
 
-	public virtual IBinaryBranchBuilder AddPathResolver(IBinaryBranchNodePathResolver pathResolver)
+	public virtual IBinaryBranchBuilder IsNotNull<TService>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		this._PathResolver = pathResolver ?? throw new ArgumentNullException(nameof(pathResolver));
+		// this.AddFunctory<TService>();
+		// return this.AddIsNotNullPathResolver();
+
+		// todo: ...
+
 		return this;
 	}
 
-	public virtual IBinaryBranchBuilder AddIsNotNullPathResolver()
+	public override INodeBuilder AddFunctory<T>(string? nextParamName = null)
 	{
-		this._PathResolver = new NotNullBinaryBranchNodePathResolver();
+		this.__FunctoryType = typeof(T);
 		return this;
 	}
 
-	public virtual IBinaryBranchBuilder IsNotNull<TService, TArg>(TArg arg)
+	public override INode Build()
 	{
-		this.AddFunctory<TService, TArg>(arg: arg);
-		return this.AddIsNotNullPathResolver();
-	}
-
-	public virtual IBinaryBranchBuilder IsNotNull<TService>()
-	{
-		this.AddFunctory<TService>();
-		return this.AddIsNotNullPathResolver();
-	}
-
-	public override IBinaryBranchNode Build()
-	{
-		var n = this.BuildBase() as IBinaryBranchNode;
-
-		n!
-			.AddTrue(this._True)
-			.AddFalse(this._False)
-			.AddPathResolver(this._PathResolver);
-
-		return n;
+		throw new NotImplementedException();
 	}
 
 	/// <summary>
