@@ -3,11 +3,6 @@ namespace Xo.TaskTree.Abstractions;
 public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 {
 	protected IMetaNodeMapper _MetaNodeMapper;
-	protected Type? _TrueType;
-	protected Action<INodeConfigurationBuilder>? _ConfigureTrue;
-	protected Type? _FalseType;
-	protected INode? _TrueNode;
-	protected INode? _FalseNode;
 	protected IMetaNode? _MetaNode;
 
 	public IMetaBinaryBranchBuilder Init(IMetaNode metaNode)
