@@ -94,12 +94,6 @@ public class BinaryBranchBuilder : BaseNodeBuilder, IBinaryBranchBuilder
 		return this;
 	}
 
-	public override INodeBuilder AddFunctory<T>(string? nextParamName = null)
-	{
-		this.__FunctoryType = typeof(T);
-		return this;
-	}
-
 	public override INode Build()
 	{
 		throw new NotImplementedException();

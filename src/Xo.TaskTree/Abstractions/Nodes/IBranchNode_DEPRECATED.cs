@@ -1,3 +1,3 @@
-namespace Xo.TaskTree.Abstractions;
+//namespace Xo.TaskTree.Abstractions;
 
-public interface IBranchNode : INode { }
+//public interface IBranchNode : INode { }
