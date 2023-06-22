@@ -19,12 +19,12 @@ public class LinkedBranchBuilder : BaseNodeBuilder, ILinkedBranchBuilder
 
 	public override INode Build()
 	{
-		var n = this.BuildBase() as ILinkedBranchNode;
+		// var n = this.BuildBase() as ILinkedBranchNode;
+		// n!
+			// .SetNext(this._Next);
+		// return n;
 
-		n!
-			.SetNext(this._Next);
-
-		return n;
+		throw new NotImplementedException();
 	}
 
 	/// <summary>
@@ -37,5 +37,5 @@ public class LinkedBranchBuilder : BaseNodeBuilder, ILinkedBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeTypes.Linked;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Linked;
 }

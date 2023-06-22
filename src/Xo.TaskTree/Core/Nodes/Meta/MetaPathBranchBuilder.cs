@@ -21,7 +21,7 @@ public class MetaPathBranchBuilder : BaseNodeBuilder, IMetaPathBranchBuilder
 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => this._MetaNodeMapper.Map(p)).ToArray();
 
-		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, context: this._Context)
+		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, context: this._Context)
 			.SetFunctory(fn)
 			.AddArg(promisedArgs)
 			.AddArg(mn.NodeConfiguration!.Args.ToArray());
@@ -41,5 +41,5 @@ public class MetaPathBranchBuilder : BaseNodeBuilder, IMetaPathBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Binary;
 }

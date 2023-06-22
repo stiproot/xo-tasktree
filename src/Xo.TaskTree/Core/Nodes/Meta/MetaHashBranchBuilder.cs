@@ -14,7 +14,7 @@ public class MetaHashBranchBuilder : BaseNodeBuilder, IMetaHashBranchBuilder
 	public override INode Build()
 	{
 		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, this.Id, this._Context);
+		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, this.Id, this._Context);
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  this._MetaNodeMapper.Map(p)).ToArray();
 
 		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildTrue(v)).ToArray();
@@ -35,7 +35,7 @@ public class MetaHashBranchBuilder : BaseNodeBuilder, IMetaHashBranchBuilder
 		if(mn is null) throw new InvalidOperationException();
 
 		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, context: this._Context);
+		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, context: this._Context);
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => this._MetaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
@@ -63,5 +63,5 @@ public class MetaHashBranchBuilder : BaseNodeBuilder, IMetaHashBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Binary;
 }

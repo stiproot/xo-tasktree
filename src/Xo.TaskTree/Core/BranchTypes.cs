@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Core;
 
-public enum NodeTypes
+public enum BranchTypes
 {
 	Default = 0,
 	Linked = 1,

@@ -44,7 +44,7 @@ public interface INodeFactory
 	INode Create(IWorkflowContext context);
 
 	INode Create(
-		NodeTypes nodeType,
+		BranchTypes nodeType,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null

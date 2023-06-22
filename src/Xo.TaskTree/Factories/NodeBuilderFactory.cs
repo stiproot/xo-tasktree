@@ -19,25 +19,25 @@ public class NodeBuilderFactory : INodeBuilderFactory
 	}
 
 	/// <inheritdoc />
-	public INodeBuilder Create() => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory);
+	public INodeBuilder Create() => this.Create(BranchTypes.Default, this._functitect, this._nodeFactory, this._msgFactory);
 
 	/// <inheritdoc />
-	public INodeBuilder Create(NodeTypes nodeType) => this.Create(nodeType, this._functitect, this._nodeFactory, this._msgFactory);
+	public INodeBuilder Create(BranchTypes nodeType) => this.Create(nodeType, this._functitect, this._nodeFactory, this._msgFactory);
 
 	/// <inheritdoc />
-	public INodeBuilder Create(string id) => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, id: id);
+	public INodeBuilder Create(string id) => this.Create(BranchTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, id: id);
 
 	/// <inheritdoc />
-	public INodeBuilder Create(ILogger logger, string id) => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
+	public INodeBuilder Create(ILogger logger, string id) => this.Create(BranchTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, logger, id);
 
 	/// <inheritdoc />
-	public INodeBuilder Create(ILogger logger) => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, logger);
+	public INodeBuilder Create(ILogger logger) => this.Create(BranchTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, logger);
 
 	/// <inheritdoc />
-	public INodeBuilder Create(IWorkflowContext context) => this.Create(NodeTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, context: context);
+	public INodeBuilder Create(IWorkflowContext context) => this.Create(BranchTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, context: context);
 
 	private INodeBuilder Create(
-		NodeTypes nodeType,
+		BranchTypes nodeType,
 		IFunctitect functitect,
 		INodeFactory nodeFactory,
 		IMsgFactory msgFactory,
@@ -48,11 +48,11 @@ public class NodeBuilderFactory : INodeBuilderFactory
 	{
 		return nodeType switch
 		{
-			NodeTypes.Default => new NodeBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Linked => new LinkedBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Binary => new BinaryBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Pool => new PoolBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
-			NodeTypes.Hash => new HashBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			BranchTypes.Default => new NodeBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			BranchTypes.Linked => new LinkedBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			BranchTypes.Binary => new BinaryBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			BranchTypes.Pool => new PoolBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
+			BranchTypes.Hash => new HashBranchBuilder(functitect, nodeFactory, msgFactory, logger, id, context),
 			_ => throw new NotSupportedException()
 		};
 	}

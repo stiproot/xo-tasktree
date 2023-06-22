@@ -8,7 +8,7 @@ public abstract class BaseNodeBuilder : INodeBuilder
 	protected readonly IFunctitect _Functitect;
 	protected readonly INodeFactory _NodeFactory;
 	protected readonly IMsgFactory _MsgFactory;
-	protected NodeTypes _NodeType;
+	protected BranchTypes _NodeType;
 
 	protected readonly IList<IMsg> _Params = new List<IMsg>();
 	protected readonly List<INode> _PromisedParams = new List<INode>();

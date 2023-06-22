@@ -22,7 +22,7 @@ public class MetaNodeMapper : IMetaNodeMapper
     {
         return nodeType switch
         {
-            MetaNodeTypes.Binary => this._NodeBuilderFactory.Create(NodeTypes.Binary),
+            MetaNodeTypes.Binary => this._NodeBuilderFactory.Create(BranchTypes.Binary),
             _ => throw new NotSupportedException()
         };
     }

@@ -14,7 +14,7 @@ public class MetaBranchBranchBuilder : BaseNodeBuilder, IMetaBranchBranchBuilder
 	public override INode Build()
 	{
 		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, this.Id, this._Context);
+		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, this.Id, this._Context);
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  this._MetaNodeMapper.Map(p)).ToArray();
 
 		INode[] ns = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.Build(v)).ToArray();
@@ -38,7 +38,7 @@ public class MetaBranchBranchBuilder : BaseNodeBuilder, IMetaBranchBranchBuilder
 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => this._MetaNodeMapper.Map(p)).ToArray();
 
-		INode n = this._NodeFactory.Create(NodeTypes.Default, this._Logger, context: this._Context)
+		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, context: this._Context)
 			.SetFunctory(fn)
 			.AddArg(promisedArgs)
 			.AddArg(mn.NodeConfiguration!.Args.ToArray());
@@ -56,5 +56,5 @@ public class MetaBranchBranchBuilder : BaseNodeBuilder, IMetaBranchBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Binary;
 }
