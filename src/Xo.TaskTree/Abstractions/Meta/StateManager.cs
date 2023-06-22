@@ -1,4 +1,4 @@
-namespace Xo.TaskTree.Abstractions;
+namespace Xo.TaskTree.Core;
 
 public class StateManager : IStateManager 
 {
@@ -62,7 +62,7 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Hash };
+        IMetaNode transition = typeof(T).ToNode(configure, MetaNodeTypes.Hash);
 
         if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { Nexts = new() };
 
@@ -77,8 +77,9 @@ public class StateManager : IStateManager
     )
     {
         IMetaNode transitionT = typeof(T).ToNode(configureT);
-        if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
         IMetaNode transitionU = typeof(U).ToNode(configureU);
+
+        if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
         if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
 
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionT);
@@ -87,11 +88,59 @@ public class StateManager : IStateManager
         return this;
     }
 
+    public IStateManager Branch<T, U>(
+        Action<INodeConfigurationBuilder>? configureT = null,
+        Action<INodeConfigurationBuilder>? configureU = null,
+        Action<IStateManager>? thenT = null,
+        Action<IStateManager>? thenU = null
+    )
+    {
+        if(this.StateNode!.NodeEdge is null) this.StateNode!.NodeEdge = new MetaNodeEdge { Nexts = new() };
+
+        IMetaNode transitionT = typeof(T).ToNode(configureT);
+        IMetaNode transitionU = typeof(U).ToNode(configureU);
+
+        if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
+        if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
+
+        this.StateNode!.NodeEdge!.Nexts!.Add(transitionT);
+        this.StateNode!.NodeEdge!.Nexts!.Add(transitionU);
+
+        return this;
+    }
+
+    public IStateManager Branch<T, U, V>(
+        Action<INodeConfigurationBuilder>? configureT = null,
+        Action<INodeConfigurationBuilder>? configureU = null,
+        Action<INodeConfigurationBuilder>? configureV = null,
+        Action<IStateManager>? thenT = null,
+        Action<IStateManager>? thenU = null,
+        Action<IStateManager>? thenV = null
+    )
+    {
+        if(this.StateNode!.NodeEdge is null) this.StateNode!.NodeEdge = new MetaNodeEdge { Nexts = new() };
+
+        IMetaNode transitionT = typeof(T).ToNode(configureT);
+        IMetaNode transitionU = typeof(U).ToNode(configureU);
+        IMetaNode transitionV = typeof(V).ToNode(configureV);
+
+        if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
+        if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
+        if(thenV is not null) transitionV.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenV) };
+
+        this.StateNode!.NodeEdge!.Nexts!.Add(transitionT);
+        this.StateNode!.NodeEdge!.Nexts!.Add(transitionU);
+        this.StateNode!.NodeEdge!.Nexts!.Add(transitionV);
+
+        return this;
+    }
+
+    // todo: remaining thens...
     public IStateManager Hash<T, U, V>(
         Action<INodeConfigurationBuilder>? configureT = null,
         Action<INodeConfigurationBuilder>? configureU = null,
         Action<INodeConfigurationBuilder>? configureV = null,
-        Action<IStateManager>? then = null
+        Action<IStateManager>? thenT = null
     )
     {
         IMetaNode transitionT = typeof(T).ToNode(configureT);
