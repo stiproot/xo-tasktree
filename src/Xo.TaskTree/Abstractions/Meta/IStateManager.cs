@@ -32,7 +32,8 @@ public interface IHashBranch
     IStateManager Hash<T, U>(
         Action<INodeConfigurationBuilder>? configureT = null,
         Action<INodeConfigurationBuilder>? configureU = null,
-        Action<IStateManager>? then = null
+        Action<IStateManager>? thenT = null,
+        Action<IStateManager>? thenU = null
     );
 
     IStateManager Hash<T, U, V>(

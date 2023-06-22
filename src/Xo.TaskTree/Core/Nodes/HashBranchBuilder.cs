@@ -19,12 +19,12 @@ public class HashBranchBuilder : BaseNodeBuilder, IHashBranchBuilder
 
 	public override INode Build()
 	{
-		var n = this.BuildBase() as IHashBranchNode;
+		//var n = this.BuildBase() as IHashBranchNode;
+		//n!
+			//.SetHash(this._Hash);
+		//return n;
 
-		n!
-			.SetHash(this._Hash);
-
-		return n;
+		throw new NotImplementedException();
 	}
 
 	/// <summary>

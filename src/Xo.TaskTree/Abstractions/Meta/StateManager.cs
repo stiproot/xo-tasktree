@@ -72,11 +72,14 @@ public class StateManager : IStateManager
     public IStateManager Hash<T, U>(
         Action<INodeConfigurationBuilder>? configureT = null,
         Action<INodeConfigurationBuilder>? configureU = null,
-        Action<IStateManager>? then = null
+        Action<IStateManager>? thenT = null,
+        Action<IStateManager>? thenU = null
     )
     {
         IMetaNode transitionT = typeof(T).ToNode(configureT);
+        if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
         IMetaNode transitionU = typeof(U).ToNode(configureU);
+        if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
 
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionT);
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionU);
@@ -131,5 +134,19 @@ public class StateManager : IStateManager
         else this.StateNode = transition;
 
         return this;
+    }
+
+    private IMetaNode NestedThen(
+        Action<IStateManager>? then
+    )
+    {
+        if(then is null) throw new InvalidOperationException();
+
+        // NEW LEVEL
+        IStateManager manager = new StateManager();
+        then(manager);
+        IMetaNode root = manager.RootNode!;
+
+        return root;
     }
 }
