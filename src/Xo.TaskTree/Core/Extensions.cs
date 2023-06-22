@@ -20,13 +20,6 @@ internal static class LambdaExtensions
         @this(builder);
         return builder.Build();
     }
-
-    public static INode BuildNode(this Action<IFlowBuilder> @this)
-    {
-        var builder = new FlowBuilder();
-        @this(builder);
-        return builder.Build();
-    }
 }
 
 internal static class MetaExtensions

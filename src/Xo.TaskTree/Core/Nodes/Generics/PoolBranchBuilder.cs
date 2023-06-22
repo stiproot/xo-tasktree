@@ -31,12 +31,12 @@ public class PoolBranchBuilder : BaseNodeBuilder, IPoolBranchBuilder
 
 	public override INode Build()
 	{
-		var n = this.BuildBase() as IPoolBranchNode;
+		// var n = this.BuildBase() as IPoolBranchNode;
+		// n!
+			// .AddNext(this._Pool.ToArray());
+		// return n;
 
-		n!
-			.AddNext(this._Pool.ToArray());
-
-		return n;
+		throw new NotImplementedException();
 	}
 
 	/// <summary>
