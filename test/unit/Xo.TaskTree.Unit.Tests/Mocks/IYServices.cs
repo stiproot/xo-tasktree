@@ -57,6 +57,17 @@ public class Y_InBoolStr_OutConstInt_AsyncService : IY_InBoolStr_OutConstInt_Asy
 	}
 }
 
+public interface IY_InBool_OutConstStr_AsyncService { Task<string> GetConstStrAsync(bool flag); }
+public class Y_InBool_OutConstStr_AsyncService : IY_InBool_OutConstStr_AsyncService
+{
+	public async Task<string> GetConstStrAsync(bool flag)
+	{
+		var processTime = Utils.ProcessTimeGenerator();
+		await Task.Delay(processTime);
+		return flag is false ? Guid.Empty.ToString() : Guid.NewGuid().ToString();
+	}
+}
+
 /// <summary>
 ///   Test service that has some async operation that has two parameters, one of type object and one of type bool, that returns a string.
 /// </summary>

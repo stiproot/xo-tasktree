@@ -16,6 +16,12 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
         return this;
     }
 
+    public INodeConfigurationBuilder Key(string key)
+    {
+        this._config.Key = key;
+        return this;
+    }
+
     public INodeConfigurationBuilder AddArg<T>(
         T data, 
         string paramName
@@ -41,7 +47,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
     public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null) 
     {
-        var arg = new MetaNode { FunctoryType = typeof(T), NodeType = MetaNodeTypes.PromisedArgMatch };
+        var arg = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.PromisedArgMatch };
 
         if(configure is not null)
         {

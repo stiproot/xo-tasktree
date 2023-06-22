@@ -46,3 +46,13 @@ internal static class MetaExtensions
         return @this;
     }
 }
+
+internal static class TypeExtensions
+{
+    /* todo: this is sexy... but benchmarks need to be done... */
+    public static IMetaNode ToNode(this Type @this, 
+        Action<INodeConfigurationBuilder>? configure = null,
+        MetaNodeTypes nodeType = MetaNodeTypes.Default
+    )
+        => new MetaNode(@this) { NodeType = nodeType }.Configure(configure.Build());
+}

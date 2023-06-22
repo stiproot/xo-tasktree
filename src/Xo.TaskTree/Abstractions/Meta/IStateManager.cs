@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IRoot
+public interface IRootBranch
 {
     IStateManager Root<T>(Action<INodeConfigurationBuilder>? configure = null);
 }
@@ -19,6 +19,30 @@ public interface IThenBranch
     );
 }
 
+public interface IKeyBranch
+{
+    IStateManager Key<T>(
+        Action<INodeConfigurationBuilder>? configure = null,
+        Action<IStateManager>? then = null
+    );
+}
+
+public interface IHashBranch
+{
+    IStateManager Hash<T, U>(
+        Action<INodeConfigurationBuilder>? configureT = null,
+        Action<INodeConfigurationBuilder>? configureU = null,
+        Action<IStateManager>? then = null
+    );
+
+    IStateManager Hash<T, U, V>(
+        Action<INodeConfigurationBuilder>? configureT = null,
+        Action<INodeConfigurationBuilder>? configureU = null,
+        Action<INodeConfigurationBuilder>? configureV = null,
+        Action<IStateManager>? then = null
+    );
+}
+
 public interface IElseBranch
 {
     IStateManager Else<T>(
@@ -27,7 +51,13 @@ public interface IElseBranch
     );
 }
 
-public interface IStateManager : IIfBranch, IThenBranch, IElseBranch, IRoot
+public interface IStateManager : 
+    IRootBranch, 
+    IIfBranch, 
+    IThenBranch, 
+    IElseBranch, 
+    IKeyBranch, 
+    IHashBranch
 {
     IMetaNode? RootNode { get; set; }
     IMetaNode? StateNode { get; set; }
@@ -60,7 +90,7 @@ public interface IMetaNodeEdge
     IMetaNode? True { get; set; }
     IMetaNode? False { get; set; }
     IMetaNode? Next { get; set; }
-    IMetaNode?[]? Nexts { get; set; }
+    List<IMetaNode?>? Nexts { get; set; }
 }
 
 public class MetaNodeEdge : IMetaNodeEdge
@@ -68,7 +98,7 @@ public class MetaNodeEdge : IMetaNodeEdge
     public IMetaNode? True { get; set; }
     public IMetaNode? False { get; set; }
     public IMetaNode? Next { get; set; }
-    public IMetaNode?[]? Nexts { get; set; }
+    public List<IMetaNode?>? Nexts { get; set; }
 }
 
 public enum MetaNodeTypes

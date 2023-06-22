@@ -4,6 +4,7 @@ public interface INodeConfigurationBuilder
 {
     INodeConfigurationBuilder RequireResult();
     INodeConfigurationBuilder NextParam(string nextParamName);
+    INodeConfigurationBuilder Key(string key);
 
     INodeConfigurationBuilder AddArg<T>(
         T data, 
