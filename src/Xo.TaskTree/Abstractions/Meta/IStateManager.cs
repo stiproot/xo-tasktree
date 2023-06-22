@@ -7,7 +7,8 @@ public interface IStateManager :
     IElseBranch, 
     IKeyBranch, 
     IHashBranch,
-    IBranchBranch
+    IBranchBranch,
+    IPathBranch
 {
     IMetaNode? RootNode { get; set; }
     IMetaNode? StateNode { get; set; }

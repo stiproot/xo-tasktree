@@ -78,4 +78,19 @@ public class StateManagerTests
 				then => then.Then<IY_InStr_AsyncService>(c => c.MatchArg("<<arg>>"))
 			);
 	}
+
+	[Fact]
+	public async Task PATH()
+	{
+		var cancellationToken = NewCancellationToken();
+
+		var mn = manager
+			.Root<IY_OutConstBool_SyncService>()
+			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
+			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
+				c => c.Key("key-a"),
+				c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),
+				then => then.Then<IY_InStr_AsyncService>(c => c.MatchArg("<<arg>>"))
+			);
+	}
 }

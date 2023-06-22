@@ -154,6 +154,28 @@ public class StateManager : IStateManager
         return this;
     }
 
+    public IStateManager Path<T, U, V>(
+        Action<INodeConfigurationBuilder>? configureT = null,
+        Action<INodeConfigurationBuilder>? configureU = null,
+        Action<INodeConfigurationBuilder>? configureV = null
+    )
+    {
+        if(this.StateNode!.NodeEdge is null) this.StateNode!.NodeEdge = new MetaNodeEdge();
+
+        IMetaNode transitionT = typeof(T).ToNode(configureT);
+        IMetaNode transitionU = typeof(U).ToNode(configureU);
+        IMetaNode transitionV = typeof(V).ToNode(configureV);
+
+        transitionT.NodeEdge = new MetaNodeEdge { Next = transitionU };
+        transitionU.NodeEdge = new MetaNodeEdge { Next = transitionV };
+
+        this.StateNode!.NodeEdge!.Next = transitionT;
+
+        this.StateNode = transitionV;
+
+        return this;
+    }
+
     private IStateManager Transition(
         IMetaNode? @ref,
         IMetaNode transition,
