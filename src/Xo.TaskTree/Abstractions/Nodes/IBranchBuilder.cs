@@ -1,5 +1,5 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IBranchBuilder : INodeBuilder
+public interface IBranchBuilder
 {
 }

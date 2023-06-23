@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class CoreNodeBuilder : ICoreNodeBuilder
+public abstract class CoreNodeBuilder : ICoreNodeBuilder
 {
 	protected ILogger? _Logger;
 	protected IAsyncFunctory? _AsyncFunctory;
@@ -130,7 +130,7 @@ public class CoreNodeBuilder : ICoreNodeBuilder
 	}
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="BaseNodeBuilder"/>. 
+	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
 	/// </summary>
 	public CoreNodeBuilder(
 		ILogger? logger = null,

@@ -1,8 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaHashBranchBuilder : BaseNodeBuilder, IMetaHashBranchBuilder
+public class MetaHashBranchBuilder : NodeBuilder, IMetaHashBranchBuilder
 {
-	protected IMetaNodeMapper _MetaNodeMapper;
 	protected IMetaNode? _MetaNode;
 
 	public IMetaHashBranchBuilder Init(IMetaNode metaNode)
@@ -11,13 +10,13 @@ public class MetaHashBranchBuilder : BaseNodeBuilder, IMetaHashBranchBuilder
 		return this;
 	}
 
-	public override INode Build()
+	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
 		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, this.Id, this._Context);
-		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  this._MetaNodeMapper.Map(p)).ToArray();
+		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
-		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildTrue(v)).ToArray();
+		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildTrue(metaNodeMapper, v)).ToArray();
 
 		INodeEdge e = new MultusNodeEdge { Edges = decisions };
 
@@ -30,13 +29,16 @@ public class MetaHashBranchBuilder : BaseNodeBuilder, IMetaHashBranchBuilder
 		return n;
 	}
 
-	protected INode BuildTrue(IMetaNode? mn) 
+	protected INode BuildTrue(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode? mn
+	) 
 	{
 		if(mn is null) throw new InvalidOperationException();
 
 		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, context: this._Context);
-		INode[] promisedArgs = mn.PromisedArgs.Select(p => this._MetaNodeMapper.Map(p)).ToArray();
+		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
 		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = 
@@ -63,5 +65,5 @@ public class MetaHashBranchBuilder : BaseNodeBuilder, IMetaHashBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Binary;
 }

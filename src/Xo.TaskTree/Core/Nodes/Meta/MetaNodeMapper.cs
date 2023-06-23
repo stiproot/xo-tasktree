@@ -11,18 +11,18 @@ public class MetaNodeMapper : IMetaNodeMapper
     {
         return source.NodeType switch
         {
-            MetaNodeTypes.Binary => this.Create<IMetaBinaryBranchBuilder>(source.NodeType).Init(source).Build(),
+            MetaNodeTypes.Binary => this.Create<IMetaBinaryBranchBuilder>(source.NodeType).Init(source).Build(this),
             _ => throw new InvalidOperationException()
         };
     }
 
     private TBuilder Create<TBuilder>(MetaNodeTypes nodeType) => (TBuilder)this.Create(nodeType);
 
-    private INodeBuilder Create(MetaNodeTypes nodeType)
+    private ICoreNodeBuilder Create(MetaNodeTypes nodeType)
     {
         return nodeType switch
         {
-            MetaNodeTypes.Binary => this._NodeBuilderFactory.Create(BranchTypes.Binary),
+            MetaNodeTypes.Binary => this._NodeBuilderFactory.Create(NodeBuilderTypes.Binary),
             _ => throw new NotSupportedException()
         };
     }

@@ -1,8 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaPathBranchBuilder : BaseNodeBuilder, IMetaPathBranchBuilder
+public class MetaPathBranchBuilder : NodeBuilder, IMetaPathBranchBuilder
 {
-	protected IMetaNodeMapper _MetaNodeMapper;
 	protected IMetaNode? _MetaNode;
 
 	public IMetaPathBranchBuilder Init(IMetaNode metaNode)
@@ -11,22 +10,25 @@ public class MetaPathBranchBuilder : BaseNodeBuilder, IMetaPathBranchBuilder
 		return this;
 	}
 
-	public override INode Build() => this.Build(this._MetaNode);
+	public INode Build(IMetaNodeMapper metaNodeMapper) => this.Build(metaNodeMapper, this._MetaNode);
 
-	protected INode Build(IMetaNode? mn) 
+	protected INode Build(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode? mn
+	) 
 	{
 		if(mn is null) throw new InvalidOperationException();
 
 		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
 
-		INode[] promisedArgs = mn.PromisedArgs.Select(p => this._MetaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
-		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, context: this._Context)
+		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context)
 			.SetFunctory(fn)
 			.AddArg(promisedArgs)
 			.AddArg(mn.NodeConfiguration!.Args.ToArray());
 
-		if(mn.NodeEdge is not null) n.SetNodeEdge(new MonariusNodeEdge { Edge = this.Build(mn.NodeEdge.Next)});
+		if(mn.NodeEdge is not null) n.SetNodeEdge(new MonariusNodeEdge { Edge = this.Build(metaNodeMapper, mn.NodeEdge.Next)});
 	
 		return n;
 	}
@@ -41,5 +43,5 @@ public class MetaPathBranchBuilder : BaseNodeBuilder, IMetaPathBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Binary;
 }

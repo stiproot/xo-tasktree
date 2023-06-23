@@ -1,8 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
+public class MetaBinaryBranchBuilder : NodeBuilder, IMetaBinaryBranchBuilder
 {
-	protected IMetaNodeMapper _MetaNodeMapper;
 	protected IMetaNode? _MetaNode;
 
 	public IMetaBinaryBranchBuilder Init(IMetaNode metaNode)
@@ -11,14 +10,14 @@ public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 		return this;
 	}
 
-	public override INode Build()
+	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
 		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, this.Id, this._Context);
-		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  this._MetaNodeMapper.Map(p)).ToArray();
+		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
-		INode @true = this.BuildTrue(this._MetaNode.NodeEdge!.True);
-		INode @false = this.BuildFalse(this._MetaNode.NodeEdge!.False);
+		INode @true = this.BuildTrue(metaNodeMapper, this._MetaNode.NodeEdge!.True);
+		INode @false = this.BuildFalse(metaNodeMapper, this._MetaNode.NodeEdge!.False);
 		INodeEdge e = new BinariusNodeEdge { Edge1 = @true, Edge2 = @false };
 
 		n
@@ -30,13 +29,16 @@ public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 		return n;
 	}
 
-	protected INode BuildTrue(IMetaNode? mn) 
+	protected INode BuildTrue(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode? mn
+	) 
 	{
 		if(mn is null) throw new InvalidOperationException();
 
 		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, context: this._Context);
-		INode[] promisedArgs = mn.PromisedArgs.Select(p => this._MetaNodeMapper.Map(p)).ToArray();
+		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
 		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => this._MsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
@@ -51,13 +53,16 @@ public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 	}
 
 	// todo: this is duplication... not cool bro!
-	protected INode BuildFalse(IMetaNode? mn) 
+	protected INode BuildFalse(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode? mn
+	) 
 	{
 		if(mn is null) throw new InvalidOperationException();
 
 		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		INode n = this._NodeFactory.Create(BranchTypes.Default, this._Logger, context: this._Context);
-		INode[] promisedArgs = mn.PromisedArgs.Select(p => this._MetaNodeMapper.Map(p)).ToArray();
+		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
 		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => this._MsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false);
@@ -81,5 +86,5 @@ public class MetaBinaryBranchBuilder : BaseNodeBuilder, IMetaBinaryBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Binary;
 }

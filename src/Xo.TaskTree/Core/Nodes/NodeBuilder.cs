@@ -1,10 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class NodeBuilder : BaseNodeBuilder
+public class NodeBuilder : GenericNodeBuilder
 {
-	/// <inheritdoc />
-	public override INode Build() => this.BuildBase();
-
 	/// <summary>
 	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
 	/// </summary>
@@ -15,5 +12,5 @@ public class NodeBuilder : BaseNodeBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Default;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Default;
 }

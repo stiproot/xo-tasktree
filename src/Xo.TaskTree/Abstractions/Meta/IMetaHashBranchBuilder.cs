@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IMetaHashBranchBuilder : IBranchBuilder
+public interface IMetaHashBranchBuilder : IMetaBranchBuilder
 {
 	IMetaHashBranchBuilder Init(IMetaNode metaNode);
 }

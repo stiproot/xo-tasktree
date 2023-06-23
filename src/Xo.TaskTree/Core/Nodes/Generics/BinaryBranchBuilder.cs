@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class BinaryBranchBuilder : BaseNodeBuilder, IBinaryBranchBuilder
+public class BinaryBranchBuilder : NodeBuilder, IBinaryBranchBuilder
 {
 	protected INode? _TrueNode;
 	protected INode? _FalseNode;
@@ -109,5 +109,5 @@ public class BinaryBranchBuilder : BaseNodeBuilder, IBinaryBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Binary;
 }

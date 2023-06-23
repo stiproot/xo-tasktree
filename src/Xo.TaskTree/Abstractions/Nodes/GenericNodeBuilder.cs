@@ -2,17 +2,17 @@ using System.Reflection;
 
 namespace Xo.TaskTree.Abstractions;
 
-public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
+public abstract class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 {
 	protected readonly IFunctitect _Functitect;
 	protected readonly INodeFactory _NodeFactory;
 	protected readonly IMsgFactory _MsgFactory;
-	protected BranchTypes _NodeType;
+	protected NodeBuilderTypes _NodeType;
 
 	public bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
 
 	/// <inheritdoc />
-	public virtual IGenericNodeBuilder AddFunctory<T>(string? nextParamName = null)
+	public virtual ICoreNodeBuilder AddFunctory<T>(string? nextParamName = null)
 	{
 		// todo: what happens if this is not async?
 		this._AsyncFunctory = this._Functitect.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync();
@@ -20,7 +20,7 @@ public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public virtual IGenericNodeBuilder AddFunctory(
+	public virtual ICoreNodeBuilder AddFunctory(
 		Type serviceType, 
 		string? nextParamName = null
 	)
@@ -31,7 +31,7 @@ public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public IGenericNodeBuilder AddFunctory<TService, TArg>(
+	public ICoreNodeBuilder AddFunctory<TService, TArg>(
 		TArg arg,
 		string? nextParamName = null
 	)
@@ -61,7 +61,7 @@ public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public IGenericNodeBuilder AddArg<TArg>(TArg arg)
+	public ICoreNodeBuilder AddArg<TArg>(TArg arg)
 	{
 		var type = this._FunctoryType;
 
@@ -75,7 +75,7 @@ public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public IGenericNodeBuilder AddArg<TArgData>(
+	public ICoreNodeBuilder AddArg<TArgData>(
 		TArgData data,
 		string paramName
 	)
@@ -88,7 +88,7 @@ public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public IGenericNodeBuilder AddArg<TService, TServiceArg>(TServiceArg arg)
+	public ICoreNodeBuilder AddArg<TService, TServiceArg>(TServiceArg arg)
 	{
 		var serviceType = typeof(TService);
 		var serviceTypeArg = typeof(TServiceArg);
@@ -104,10 +104,10 @@ public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public virtual IGenericNodeBuilder AddArg<TService>() => this.AddArg(typeof(TService));
+	public virtual ICoreNodeBuilder AddArg<TService>() => this.AddArg(typeof(TService));
 
 	/// <inheritdoc />
-	public virtual IGenericNodeBuilder AddArg(
+	public virtual ICoreNodeBuilder AddArg(
 		Type serviceType,
 		IMsg[]? serviceArgs = null
 	)
@@ -186,7 +186,7 @@ public class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 		}
 	}
 
-	protected IGenericNodeBuilder MatchArgToNodesFunctory<TArg>(
+	protected ICoreNodeBuilder MatchArgToNodesFunctory<TArg>(
 		INode node,
 		TArg arg
 	)

@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class HashBranchBuilder : BaseNodeBuilder, IHashBranchBuilder
+public class HashBranchBuilder : NodeBuilder, IHashBranchBuilder
 {
 	protected readonly IDictionary<string, INode> _Hash = new Dictionary<string, INode>();
 
@@ -37,5 +37,5 @@ public class HashBranchBuilder : BaseNodeBuilder, IHashBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Hash;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Hash;
 }

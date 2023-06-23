@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class LinkedBranchBuilder : BaseNodeBuilder, ILinkedBranchBuilder
+public class LinkedBranchBuilder : NodeBuilder, ILinkedBranchBuilder
 {
 	protected INode _Next;
 
@@ -37,5 +37,5 @@ public class LinkedBranchBuilder : BaseNodeBuilder, ILinkedBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = BranchTypes.Linked;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Linked;
 }
