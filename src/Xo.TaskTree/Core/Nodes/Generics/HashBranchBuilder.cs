@@ -37,5 +37,7 @@ public class HashBranchBuilder : NodeBuilder, IHashBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Hash;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	{
+	}
 }

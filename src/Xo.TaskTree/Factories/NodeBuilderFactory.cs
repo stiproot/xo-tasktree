@@ -27,6 +27,10 @@ public class NodeBuilderFactory : INodeBuilderFactory
         => this.Create(nodeType, this._functitect, this._nodeFactory, this._msgFactory);
 
     /// <inheritdoc />
+    public TBuilder Create<TBuilder>(NodeBuilderTypes nodeType)
+        => (TBuilder)this.Create(nodeType, this._functitect, this._nodeFactory, this._msgFactory);
+
+    /// <inheritdoc />
     public ICoreNodeBuilder Create(ILogger logger)
         => this.Create(NodeBuilderTypes.Default, this._functitect, this._nodeFactory, this._msgFactory, logger);
 

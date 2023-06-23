@@ -37,5 +37,7 @@ public class LinkedBranchBuilder : NodeBuilder, ILinkedBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Linked;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	{
+	}
 }

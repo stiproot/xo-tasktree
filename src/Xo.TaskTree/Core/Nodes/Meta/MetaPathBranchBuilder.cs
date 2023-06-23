@@ -34,7 +34,7 @@ public class MetaPathBranchBuilder : NodeBuilder, IMetaPathBranchBuilder
 	}
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
+	///   Initializes a new instance of <see cref="MetaPathBranchBuilder"/>. 
 	/// </summary>
 	public MetaPathBranchBuilder(
 		IFunctitect functitect,
@@ -43,5 +43,7 @@ public class MetaPathBranchBuilder : NodeBuilder, IMetaPathBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	{
+	}
 }

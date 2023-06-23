@@ -12,5 +12,7 @@ public class NodeBuilder : GenericNodeBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Default;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	{ 
+	}
 }

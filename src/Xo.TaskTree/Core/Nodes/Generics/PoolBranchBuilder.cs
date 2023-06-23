@@ -49,5 +49,7 @@ public class PoolBranchBuilder : NodeBuilder, IPoolBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Pool;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	{
+	}
 }

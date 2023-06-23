@@ -86,5 +86,7 @@ public class MetaBinaryBranchBuilder : NodeBuilder, IMetaBinaryBranchBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context) => this._NodeType = NodeBuilderTypes.Binary;
+	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	{
+	}
 }

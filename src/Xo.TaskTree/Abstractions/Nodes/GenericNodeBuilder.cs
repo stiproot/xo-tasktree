@@ -7,7 +7,6 @@ public abstract class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 	protected readonly IFunctitect _Functitect;
 	protected readonly INodeFactory _NodeFactory;
 	protected readonly IMsgFactory _MsgFactory;
-	protected NodeBuilderTypes _NodeType;
 
 	public bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
 
@@ -292,7 +291,6 @@ public abstract class GenericNodeBuilder : CoreNodeBuilder, IGenericNodeBuilder
 
 		return clone;
 	}
-
 
 	public GenericNodeBuilder(
 		IFunctitect functitect,
