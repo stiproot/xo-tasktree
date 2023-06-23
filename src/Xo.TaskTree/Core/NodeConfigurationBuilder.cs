@@ -47,7 +47,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
     public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null) 
     {
-        var arg = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.PromisedArgMatch };
+        var arg = new MetaNode(typeof(T));
 
         if(configure is not null)
         {

@@ -4,7 +4,7 @@ public class MetaBranchBranchBuilder : NodeBuilder, IMetaBranchBranchBuilder
 {
 	protected IMetaNode? _MetaNode;
 
-	public IMetaBranchBranchBuilder Init(IMetaNode metaNode)
+	public IMetaBranchBuilder Init(IMetaNode metaNode)
 	{
 		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
 		return this;

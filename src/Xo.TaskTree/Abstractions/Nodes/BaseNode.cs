@@ -4,7 +4,7 @@ namespace Xo.TaskTree.Abstractions;
 public abstract class BaseNode : INode
 {
 	protected ILogger? _Logger;
-	protected readonly IMsgFactory _MsgFactory;
+	// protected readonly IMsgFactory _MsgFactory;
 
 	protected IAsyncFunctory? _AsyncFunctory;
 	protected ISyncFunctory? _SyncFunctory;
@@ -149,7 +149,8 @@ public abstract class BaseNode : INode
 	{
 		if (data is null || paramName is null) throw new InvalidOperationException("Null values cannot be passed into AddArg<T>...");
 
-		this._Params.Add(this._MsgFactory.Create<T>(data, paramName));
+		// this._Params.Add(this._MsgFactory.Create<T>(data, paramName));
+		this._Params.Add(StMsgFactory.Create<T>(data, paramName));
 
 		return this;
 	}
@@ -335,15 +336,13 @@ public abstract class BaseNode : INode
 	///   Initializes a new instance of <see cref="Node"/>. 
 	/// </summary>
 	public BaseNode(
-			IMsgFactory msgFactory,
+			IMsgFactory? msgFactory = null,
 			ILogger? logger = null,
 			string? id = null,
 			IWorkflowContext? context = null
 	)
 	{
-		this._MsgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 		this._Logger = logger;
-
 		if (id is not null) this.Id = id;
 		this._Context = context;
 	}

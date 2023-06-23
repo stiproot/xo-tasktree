@@ -10,5 +10,6 @@ public enum NodeBuilderTypes
 	DefaultMetaBranch = 5,
 	BranchMetaBranch = 6,
 	BinaryMetaBranch = 7,
-	HashMetaBranch = 8
+	HashMetaBranch = 8,
+	PathMetaBranch = 9,
 }

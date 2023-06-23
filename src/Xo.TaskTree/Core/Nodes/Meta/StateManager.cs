@@ -97,6 +97,8 @@ public class StateManager : IStateManager
     {
         if(this.StateNode!.NodeEdge is null) this.StateNode!.NodeEdge = new MetaNodeEdge { Nexts = new() };
 
+        this.StateNode!.NodeType = MetaNodeTypes.Branch;
+
         IMetaNode transitionT = typeof(T).ToNode(configureT);
         IMetaNode transitionU = typeof(U).ToNode(configureU);
 
@@ -119,6 +121,8 @@ public class StateManager : IStateManager
     )
     {
         if(this.StateNode!.NodeEdge is null) this.StateNode!.NodeEdge = new MetaNodeEdge { Nexts = new() };
+
+        this.StateNode!.NodeType = MetaNodeTypes.Branch;
 
         IMetaNode transitionT = typeof(T).ToNode(configureT);
         IMetaNode transitionU = typeof(U).ToNode(configureU);
