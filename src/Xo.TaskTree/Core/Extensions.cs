@@ -49,15 +49,18 @@ internal static class TypeExtensions
     )
         => new MetaNode(@this) { NodeType = nodeType }.Configure(configure.Build());
 
-	public static IAsyncFunctory ToFunctory(this Type @this) 
-		=> XFunctitect.Build(@this).SetServiceType(@this).AsAsync();
+	public static IAsyncFunctory ToFunctory(this Type @this,
+        IFunctitect functitect
+    ) 
+		=> functitect.Build(@this).SetServiceType(@this).AsAsync();
 
 	public static INode ToNode(this Type @this,
+        IFunctitect functitect,
 		string? methodName = null,
 		string? nextParamName = null
 	)
 	{
-		var functory = XFunctitect.Build(@this, methodName, nextParamName).AsAsync();
+		var functory = functitect.Build(@this, methodName, nextParamName).AsAsync();
 
         // todo: what about other dependencies?...
 		return new Node().SetFunctory(functory);

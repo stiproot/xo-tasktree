@@ -2,20 +2,11 @@ namespace Xo.TaskTree.Abstractions;
 
 public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 {
-	// protected ILogger? _Logger;
-	// protected IAsyncFunctory? _AsyncFunctory;
-	// protected ISyncFunctory? _SyncFunctory;
-	// protected IWorkflowContext? _Context;
-	// protected Func<Exception, Task>? _ExceptionHandlerAsync;
-	// protected Action<Exception>? _ExceptionHandler;
+	/// <inheritdoc />
+	public virtual bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
+	public virtual IFunctitect Functitect => this._Functitect;
 
-	// protected readonly IList<IMsg> _Params = new List<IMsg>();
-	// protected readonly List<INode> _PromisedParams = new List<INode>();
-	// protected readonly IList<Func<IWorkflowContext, IMsg>> _ContextParams = new List<Func<IWorkflowContext, IMsg>>();
-
-	// public string Id { get; internal set; } = Guid.NewGuid().ToString();
-	// public bool RequiresResult { get; internal set; } = false;
-
+	/// <inheritdoc />
 	public Type? FunctoryType
 	{
 		get
@@ -25,8 +16,6 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 			return null;
 		}
 	}
-
-	public virtual bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
 
 	/// <inheritdoc />
 	public ICoreNodeBuilder RequireResult(bool requiresResult = true)
@@ -124,7 +113,7 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	public virtual INode Build()
 	{
 		// todo: inject msg-factory?
-		INode n = new Node(null, this._Logger, this.Id, this._Context);
+		INode n = new Node(this._Logger, this.Id, this._Context);
 
 		if (this._AsyncFunctory is not null) n.SetFunctory(this._AsyncFunctory);
 		if (this._SyncFunctory is not null) n.SetFunctory(this._SyncFunctory);
@@ -145,13 +134,18 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
 	/// </summary>
 	public CoreNodeBuilder(
+		IFunctitect functitect,
+		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(logger, id, context)
+	) : base(
+			functitect, 
+			nodeFactory,
+			logger, 
+			id, 
+			context
+	)
 	{
-		// this._Logger = logger;
-		// if (id is not null) this.Id = id;
-		// this._Context = context;
 	}
 }

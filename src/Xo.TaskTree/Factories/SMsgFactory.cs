@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Factories;
 
-public static class StMsgFactory
+public static class SMsgFactory
 {
 	/// <inheritdoc />
 	public static IMsg Create<T>(

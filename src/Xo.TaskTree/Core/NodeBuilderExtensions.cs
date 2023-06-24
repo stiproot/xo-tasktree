@@ -10,7 +10,7 @@ public static class NodeBuildeExtensions
 		string? nextParamName = null
 	)
 	{
-		IAsyncFunctory fn = XFunctitect.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync(); 
+		IAsyncFunctory fn = @this.Functitect.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync(); 
 
 		@this.AddFunctory(fn);
 
@@ -24,7 +24,7 @@ public static class NodeBuildeExtensions
 		string? nextParamName = null
 	)
 	{
-		IAsyncFunctory fn = XFunctitect.Build(serviceType, nextParamName).AsAsync();
+		IAsyncFunctory fn = @this.Functitect.Build(serviceType, nextParamName).AsAsync();
 
 		@this.AddFunctory(fn);
 
@@ -43,7 +43,7 @@ public static class NodeBuildeExtensions
 		{
 			@this.AddArg<TArg>(arg);
 
-			var fn = XFunctitect
+			var fn = @this.Functitect
 				.Build<TService>(nextParamName: nextParamName)
 				.SetServiceType(typeof(TService))
 				.AsAsync();
@@ -52,7 +52,7 @@ public static class NodeBuildeExtensions
 		}
 		else
 		{
-			var fn = XFunctitect
+			var fn = @this.Functitect
 				.Build<TService, TArg>(arg: arg, nextParamName: nextParamName)
 				.SetServiceType(typeof(TService))
 				.AsAsync();
@@ -74,7 +74,7 @@ public static class NodeBuildeExtensions
 
 		string paramName = MatchArgToTypeMethodParam<TArg>(type);
 
-		var msg = StMsgFactory.Create<TArg>(arg, paramName);
+		var msg = SMsgFactory.Create<TArg>(arg, paramName);
 
 		@this.AddArg(msg);
 
@@ -89,7 +89,7 @@ public static class NodeBuildeExtensions
 	{
 		if (data is null || paramName is null) throw new InvalidOperationException("Null values cannot be passed into AddArg<T>...");
 
-		var msg = StMsgFactory.Create<TArgData>(data, paramName);
+		var msg = SMsgFactory.Create<TArgData>(data, paramName);
 
 		@this.AddArg(msg);
 
@@ -107,7 +107,7 @@ public static class NodeBuildeExtensions
 		var method = serviceType.GetMethods().First()!;
 		var parameters = method.GetParameters();
 		var paramName = parameters.First(p => p.ParameterType == serviceTypeArg).Name!;
-		var serviceArg = StMsgFactory.Create<TServiceArg>(arg, paramName);
+		var serviceArg = SMsgFactory.Create<TServiceArg>(arg, paramName);
 
 		@this.AddArg(serviceType, new IMsg[] { serviceArg });
 
@@ -130,7 +130,7 @@ public static class NodeBuildeExtensions
 		// in the case of anonymous functories, the functoryServiceType will be null...
 		if (functoryServiceType is null)
 		{
-			var n = serviceType.ToNode();
+			var n = serviceType.ToNode(@this.Functitect);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -144,7 +144,7 @@ public static class NodeBuildeExtensions
 
 		if (parameterInfo.Length == 0)
 		{
-			var n = serviceType.ToNode();
+			var n = serviceType.ToNode(@this.Functitect);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -160,7 +160,7 @@ public static class NodeBuildeExtensions
 
 			var paramName = parameterInfo[0].Name;
 
-			var n = serviceType.ToNode(nextParamName: paramName);
+			var n = serviceType.ToNode(@this.Functitect, nextParamName: paramName);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -186,7 +186,7 @@ public static class NodeBuildeExtensions
 
 			if (paramName is null) return @this;
 
-			var n = serviceType.ToNode(paramName);
+			var n = serviceType.ToNode(@this.Functitect, paramName);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -234,7 +234,7 @@ public static class NodeBuildeExtensions
 			paramName = parameters.First(p => p.ParameterType == argType).Name!;
 		}
 
-		node.AddArg(StMsgFactory.Create<TArg>(arg, paramName));
+		node.AddArg(SMsgFactory.Create<TArg>(arg, paramName));
 	}
 
 	private static string MatchArgToTypeMethodParam<TArg>(Type type)
@@ -313,7 +313,7 @@ public static class NodeBuildeExtensions
 	{
 		if (msg is null) return null;
 
-		var clone = XFunctitect.CreateMsg(msg.ObjectData, msg.ParamName);
+		var clone = Functitect.CreateMsg(msg.ObjectData, msg.ParamName);
 
 		return clone;
 	}

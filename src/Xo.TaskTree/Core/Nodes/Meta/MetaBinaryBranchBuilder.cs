@@ -12,7 +12,7 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory();
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
 		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
 		INode n = new Node();
 
@@ -38,15 +38,14 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
 
-		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
-		INode n = new Node(); 
+		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => StMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
+		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 		var decisionNode  = new Node() 
 			.SetFunctory(decisionFn)
@@ -64,13 +63,12 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
-		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
-		INode n = new Node(); 
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
+		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => StMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false);
+		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false);
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 		var decisionNode = new Node()
 			.SetFunctory(decisionFn)
@@ -84,14 +82,18 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaBinaryBranchBuilder(
-		// IFunctitect functitect,
-		// INodeFactory nodeFactory,
-		// IMsgFactory msgFactory,
+		IFunctitect functitect,
+		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
-	) : base(logger, id, context)
+	) : base(
+			functitect, 
+			nodeFactory,
+			logger, 
+			id, 
+			context
+	)
 	{
 	}
 }

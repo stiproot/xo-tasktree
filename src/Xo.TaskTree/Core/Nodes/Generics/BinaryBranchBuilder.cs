@@ -15,6 +15,7 @@ public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 		// if (requiresResult) this._True.RequireResult();
 
 		this._TrueType = typeof(TTrue);
+
 		this._ConfigureTrue = configure;
 
 		return this;
@@ -103,14 +104,18 @@ public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public BinaryBranchBuilder(
-		// IFunctitect functitect,
-		// INodeFactory nodeFactory,
-		// IMsgFactory msgFactory,
+		IFunctitect functitect,
+		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
-	) : base(logger, id, context)
+	) : base(
+			functitect, 
+			nodeFactory,
+			logger, 
+			id, 
+			context
+	)
 	{
 	}
 }

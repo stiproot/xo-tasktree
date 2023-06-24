@@ -437,7 +437,8 @@ public class CoreFrameworkTests
 										 .Build();
 
 		 // Act
-		 var msg = await n3.Run(cancellationToken);
+		 var msgs = await n3.Run(cancellationToken);
+		 var msg = msgs.First();
 
 		 // Assert
 		 Assert.NotNull(n1);

@@ -12,10 +12,8 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		// IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory();
-		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
-		INode n = new Node(); 
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
+		INode n = this._NodeFactory.Create(this._Logger, this.Id, this._Context);
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildTrue(metaNodeMapper, v)).ToArray();
@@ -38,16 +36,14 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		// IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
-		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
-		INode n = new Node(); 
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
+		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
 		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = 
 			(p) => 
-				() => StMsgFactory.Create<bool>(((p.First().Value) as Msg<string>)!.GetData().Equals(mn.NodeConfiguration!.Key));
+				() => SMsgFactory.Create<bool>(((p.First().Value) as Msg<string>)!.GetData().Equals(mn.NodeConfiguration!.Key));
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 		var decisionNode  = new Node() 
@@ -62,14 +58,18 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaHashBranchBuilder(
-		// IFunctitect functitect,
-		// INodeFactory nodeFactory,
-		// IMsgFactory msgFactory,
+		IFunctitect functitect,
+		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
-	) : base(logger, id, context)
+	) : base(
+			functitect, 
+			nodeFactory,
+			logger, 
+			id, 
+			context
+	)
 	{
 	}
 }

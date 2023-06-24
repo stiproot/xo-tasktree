@@ -20,12 +20,11 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 		if(mn is null) throw new InvalidOperationException();
 
 		// IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
-		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context)
-		INode n = new Node()
+		INode n = this._NodeFactory.Create(this._Logger, context: this._Context)
 			.SetFunctory(fn)
 			.AddArg(promisedArgs)
 			.AddArg(mn.NodeConfiguration!.Args.ToArray());
@@ -39,14 +38,18 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 	///   Initializes a new instance of <see cref="MetaPathBranchBuilder"/>. 
 	/// </summary>
 	public MetaPathBranchBuilder(
-		// IFunctitect functitect,
-		// INodeFactory nodeFactory,
-		// IMsgFactory msgFactory,
+		IFunctitect functitect,
+		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
-	) : base(logger, id, context)
+	) : base(
+			functitect, 
+			nodeFactory,
+			logger, 
+			id, 
+			context
+	)
 	{
 	}
 }
