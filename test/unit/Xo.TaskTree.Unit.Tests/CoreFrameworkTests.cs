@@ -413,38 +413,38 @@ public class CoreFrameworkTests
 		Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
 	}
 
-	// [Fact]
-	// public async Task NodesProvidedTypesForConstructingFunctory()
-	// {
-		// // Arrange
-		// var cancellationToken = this.CancellationTokenFactory();
+	 [Fact]
+	 public async Task NodesProvidedTypesForConstructingFunctory()
+	 {
+		 // Arrange
+		 var cancellationToken = this.CancellationTokenFactory();
 
-		// // Service types are irrelevant in this scenario... so let's just use the singleton...
-		// var n1 = this._nodeBuilderFactory.Create()
-										// .AddFunctory<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg1")
-										// .SetExceptionHandler(Substitute.For<Action<Exception>>())
-										// .AddArg<object>(new object(), "arg1")
-										// .Build();
-		// var n2 = this._nodeBuilderFactory.Create()
-										// .AddFunctory<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg2")
-										// .SetExceptionHandler(Substitute.For<Action<Exception>>())
-										// .AddArg<object>(new object(), "arg1")
-										// .Build();
-		// var n3 = this._nodeBuilderFactory.Create()
-										// .AddFunctory<Mocked.IY_InObjObj_OutObj_AsyncService>()
-										// .SetExceptionHandler(Substitute.For<Action<Exception>>())
-										// .AddArg(n1, n2)
-										// .Build();
+		 // Service types are irrelevant in this scenario... so let's just use the singleton...
+		 var n1 = this._nodeBuilderFactory.Create()
+										 .AddFunctory<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg1")
+										 .SetExceptionHandler(Substitute.For<Action<Exception>>())
+										 .AddArg<object>(new object(), "arg1")
+										 .Build();
+		 var n2 = this._nodeBuilderFactory.Create()
+										 .AddFunctory<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg2")
+										 .SetExceptionHandler(Substitute.For<Action<Exception>>())
+										 .AddArg<object>(new object(), "arg1")
+										 .Build();
+		 var n3 = this._nodeBuilderFactory.Create()
+										 .AddFunctory<Mocked.IY_InObjObj_OutObj_AsyncService>()
+										 .SetExceptionHandler(Substitute.For<Action<Exception>>())
+										 .AddArg(n1, n2)
+										 .Build();
 
-		// // Act
-		// var msg = await n3.Run(cancellationToken);
+		 // Act
+		 var msg = await n3.Run(cancellationToken);
 
-		// // Assert
-		// Assert.NotNull(n1);
-		// Assert.NotNull(n2);
-		// Assert.NotNull(n3);
-		// Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
-	// }
+		 // Assert
+		 Assert.NotNull(n1);
+		 Assert.NotNull(n2);
+		 Assert.NotNull(n3);
+		 Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
+	 }
 
 	//[Fact]
 	//public async Task WorkflowComposedOfAsyncAndSyncNodesThatAreBuiltFromFunctionPointers()
