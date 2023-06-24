@@ -3,6 +3,7 @@ namespace Xo.TaskTree.Core;
 public class NodeConfigurationBuilder : INodeConfigurationBuilder
 {
     private readonly INodeConfiguration _config = new NodeConfiguration();
+    private Type? _functoryType;
 
     public INodeConfigurationBuilder RequireResult()
     {
@@ -37,8 +38,9 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
     public INodeConfigurationBuilder MatchArg<T>(T arg)
     {
         // todo: how to get param name in this context?...
+        string paramName = this._functoryType!.GetMethods().First().GetParameters().First().Name!;
 
-        var msg = new Msg<T>(arg);
+        var msg = new Msg<T>(arg, paramName);
 
         this._config.Args.Add(msg);
 
@@ -65,4 +67,8 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
     // todo: delay build operation, or just reference config directly -> Build() is misleading.
     public INodeConfiguration Build() => this._config;
+
+    public NodeConfigurationBuilder() { }
+    public NodeConfigurationBuilder(Type functoryType) => this._functoryType = functoryType;
+    
 }

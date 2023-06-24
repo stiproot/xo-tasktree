@@ -20,6 +20,17 @@ internal static class LambdaExtensions
         @this(builder);
         return builder.Build();
     }
+
+    public static INodeConfiguration? Build(this Action<INodeConfigurationBuilder>? @this,
+        Type functoryType
+    )
+    {
+        if(@this is null) return null;
+
+        var builder = new NodeConfigurationBuilder();
+        @this(builder);
+        return builder.Build();
+    }
 }
 
 internal static class MetaExtensions

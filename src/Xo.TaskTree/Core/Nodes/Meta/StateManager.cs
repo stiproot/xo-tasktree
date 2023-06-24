@@ -197,7 +197,7 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        INodeConfiguration? config = configure.Build();
+        INodeConfiguration? config = configure.Build(transition.FunctoryType);
         transition.Configure(config);
 
         /* PROCESS THEN */
