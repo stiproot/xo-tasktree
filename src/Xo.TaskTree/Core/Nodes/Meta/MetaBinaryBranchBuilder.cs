@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaBinaryBranchBuilder : NodeBuilder, IMetaBinaryBranchBuilder
+public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 {
 	protected IMetaNode? _MetaNode;
 
@@ -12,8 +12,10 @@ public class MetaBinaryBranchBuilder : NodeBuilder, IMetaBinaryBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory();
+		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		INode n = new Node();
+
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode @true = this.BuildTrue(metaNodeMapper, this._MetaNode.NodeEdge!.True);
@@ -36,15 +38,17 @@ public class MetaBinaryBranchBuilder : NodeBuilder, IMetaBinaryBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
+
+		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		INode n = new Node(); 
+
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => this._MsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
+		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => StMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
 		var decisionEdge = new MonariusNodeEdge().Add(n);
-		var decisionNode  = this._NodeFactory
-			.Create()
+		var decisionNode  = new Node() 
 			.SetFunctory(decisionFn)
 			.SetController(new TrueController())
 			.SetNodeEdge(decisionEdge);
@@ -60,15 +64,15 @@ public class MetaBinaryBranchBuilder : NodeBuilder, IMetaBinaryBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
+		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		INode n = new Node(); 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => this._MsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false);
+		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => StMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false);
 		var decisionEdge = new MonariusNodeEdge().Add(n);
-		var decisionNode  = this._NodeFactory
-			.Create()
+		var decisionNode = new Node()
 			.SetFunctory(decisionFn)
 			.SetController(new TrueController())
 			.SetNodeEdge(decisionEdge);
@@ -80,13 +84,14 @@ public class MetaBinaryBranchBuilder : NodeBuilder, IMetaBinaryBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaBinaryBranchBuilder(
-		IFunctitect functitect,
-		INodeFactory nodeFactory,
-		IMsgFactory msgFactory,
+		// IFunctitect functitect,
+		// INodeFactory nodeFactory,
+		// IMsgFactory msgFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	) : base(logger, id, context)
 	{
 	}
 }

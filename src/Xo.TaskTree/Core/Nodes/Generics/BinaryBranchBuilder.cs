@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class BinaryBranchBuilder : NodeBuilder, IBinaryBranchBuilder
+public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 {
 	protected INode? _TrueNode;
 	protected INode? _FalseNode;
@@ -103,13 +103,14 @@ public class BinaryBranchBuilder : NodeBuilder, IBinaryBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public BinaryBranchBuilder(
-		IFunctitect functitect,
-		INodeFactory nodeFactory,
-		IMsgFactory msgFactory,
+		// IFunctitect functitect,
+		// INodeFactory nodeFactory,
+		// IMsgFactory msgFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	) : base(logger, id, context)
 	{
 	}
 }

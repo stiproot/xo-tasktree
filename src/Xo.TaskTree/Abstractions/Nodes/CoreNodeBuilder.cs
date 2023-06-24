@@ -1,20 +1,32 @@
 namespace Xo.TaskTree.Abstractions;
 
-public abstract class CoreNodeBuilder : ICoreNodeBuilder
+public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 {
-	protected ILogger? _Logger;
-	protected IAsyncFunctory? _AsyncFunctory;
-	protected ISyncFunctory? _SyncFunctory;
-	protected IWorkflowContext? _Context;
-	protected Func<Exception, Task>? _ExceptionHandlerAsync;
-	protected Action<Exception>? _ExceptionHandler;
+	// protected ILogger? _Logger;
+	// protected IAsyncFunctory? _AsyncFunctory;
+	// protected ISyncFunctory? _SyncFunctory;
+	// protected IWorkflowContext? _Context;
+	// protected Func<Exception, Task>? _ExceptionHandlerAsync;
+	// protected Action<Exception>? _ExceptionHandler;
 
-	protected readonly IList<IMsg> _Params = new List<IMsg>();
-	protected readonly List<INode> _PromisedParams = new List<INode>();
-	protected readonly IList<Func<IWorkflowContext, IMsg>> _ContextParams = new List<Func<IWorkflowContext, IMsg>>();
+	// protected readonly IList<IMsg> _Params = new List<IMsg>();
+	// protected readonly List<INode> _PromisedParams = new List<INode>();
+	// protected readonly IList<Func<IWorkflowContext, IMsg>> _ContextParams = new List<Func<IWorkflowContext, IMsg>>();
 
-	public string Id { get; internal set; } = Guid.NewGuid().ToString();
-	public bool RequiresResult { get; internal set; } = false;
+	// public string Id { get; internal set; } = Guid.NewGuid().ToString();
+	// public bool RequiresResult { get; internal set; } = false;
+
+	public Type? FunctoryType
+	{
+		get
+		{
+			if (this._AsyncFunctory is not null) return (this._AsyncFunctory as IFunctory)!.ServiceType!;
+			if (this._SyncFunctory is not null) return (this._SyncFunctory as IFunctory)!.ServiceType!;
+			return null;
+		}
+	}
+
+	public virtual bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
 
 	/// <inheritdoc />
 	public ICoreNodeBuilder RequireResult(bool requiresResult = true)
@@ -136,10 +148,10 @@ public abstract class CoreNodeBuilder : ICoreNodeBuilder
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	)
+	) : base(logger, id, context)
 	{
-		this._Logger = logger;
-		if (id is not null) this.Id = id;
-		this._Context = context;
+		// this._Logger = logger;
+		// if (id is not null) this.Id = id;
+		// this._Context = context;
 	}
 }

@@ -43,9 +43,23 @@ internal static class MetaExtensions
 internal static class TypeExtensions
 {
     /* todo: this is sexy... but benchmarks need to be done... */
-    public static IMetaNode ToNode(this Type @this, 
+    public static IMetaNode ToMetaNode(this Type @this, 
         Action<INodeConfigurationBuilder>? configure = null,
         MetaNodeTypes nodeType = MetaNodeTypes.Default
     )
         => new MetaNode(@this) { NodeType = nodeType }.Configure(configure.Build());
+
+	public static IAsyncFunctory ToFunctory(this Type @this) 
+		=> XFunctitect.Build(@this).SetServiceType(@this).AsAsync();
+
+	public static INode ToNode(this Type @this,
+		string? methodName = null,
+		string? nextParamName = null
+	)
+	{
+		var functory = XFunctitect.Build(@this, methodName, nextParamName).AsAsync();
+
+        // todo: what about other dependencies?...
+		return new Node().SetFunctory(functory);
+	}
 }

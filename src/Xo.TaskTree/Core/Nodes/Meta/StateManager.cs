@@ -62,7 +62,7 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = typeof(T).ToNode(configure, MetaNodeTypes.Hash);
+        IMetaNode transition = typeof(T).ToMetaNode(configure, MetaNodeTypes.Hash);
 
         if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { Nexts = new() };
 
@@ -76,8 +76,8 @@ public class StateManager : IStateManager
         Action<IStateManager>? thenU = null
     )
     {
-        IMetaNode transitionT = typeof(T).ToNode(configureT);
-        IMetaNode transitionU = typeof(U).ToNode(configureU);
+        IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
+        IMetaNode transitionU = typeof(U).ToMetaNode(configureU);
 
         if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
         if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
@@ -99,8 +99,8 @@ public class StateManager : IStateManager
 
         this.StateNode!.NodeType = MetaNodeTypes.Branch;
 
-        IMetaNode transitionT = typeof(T).ToNode(configureT);
-        IMetaNode transitionU = typeof(U).ToNode(configureU);
+        IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
+        IMetaNode transitionU = typeof(U).ToMetaNode(configureU);
 
         if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
         if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
@@ -124,9 +124,9 @@ public class StateManager : IStateManager
 
         this.StateNode!.NodeType = MetaNodeTypes.Branch;
 
-        IMetaNode transitionT = typeof(T).ToNode(configureT);
-        IMetaNode transitionU = typeof(U).ToNode(configureU);
-        IMetaNode transitionV = typeof(V).ToNode(configureV);
+        IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
+        IMetaNode transitionU = typeof(U).ToMetaNode(configureU);
+        IMetaNode transitionV = typeof(V).ToMetaNode(configureV);
 
         if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
         if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
@@ -147,9 +147,9 @@ public class StateManager : IStateManager
         Action<IStateManager>? thenT = null
     )
     {
-        IMetaNode transitionT = typeof(T).ToNode(configureT);
-        IMetaNode transitionU = typeof(U).ToNode(configureU);
-        IMetaNode transitionV = typeof(V).ToNode(configureV);
+        IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
+        IMetaNode transitionU = typeof(U).ToMetaNode(configureU);
+        IMetaNode transitionV = typeof(V).ToMetaNode(configureV);
 
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionT);
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionU);
@@ -166,9 +166,9 @@ public class StateManager : IStateManager
     {
         if(this.StateNode!.NodeEdge is null) this.StateNode!.NodeEdge = new MetaNodeEdge();
 
-        IMetaNode transitionT = typeof(T).ToNode(configureT);
-        IMetaNode transitionU = typeof(U).ToNode(configureU);
-        IMetaNode transitionV = typeof(V).ToNode(configureV);
+        IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
+        IMetaNode transitionU = typeof(U).ToMetaNode(configureU);
+        IMetaNode transitionV = typeof(V).ToMetaNode(configureV);
 
         transitionT.NodeEdge = new MetaNodeEdge { Next = transitionU };
         transitionU.NodeEdge = new MetaNodeEdge { Next = transitionV };

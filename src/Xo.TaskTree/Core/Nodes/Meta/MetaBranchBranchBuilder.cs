@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaBranchBranchBuilder : NodeBuilder, IMetaBranchBranchBuilder
+public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 {
 	protected IMetaNode? _MetaNode;
 
@@ -12,8 +12,9 @@ public class MetaBranchBranchBuilder : NodeBuilder, IMetaBranchBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory();
+		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		INode n = new Node(); 
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode[] ns = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.Build(metaNodeMapper, v)).ToArray();
@@ -36,11 +37,12 @@ public class MetaBranchBranchBuilder : NodeBuilder, IMetaBranchBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
-		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context)
+		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context)
+		INode n = new Node()
 			.SetFunctory(fn)
 			.AddArg(promisedArgs)
 			.AddArg(mn.NodeConfiguration!.Args.ToArray());
@@ -52,13 +54,14 @@ public class MetaBranchBranchBuilder : NodeBuilder, IMetaBranchBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaBranchBranchBuilder(
-		IFunctitect functitect,
-		INodeFactory nodeFactory,
-		IMsgFactory msgFactory,
+		// IFunctitect functitect,
+		// INodeFactory nodeFactory,
+		// IMsgFactory msgFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	) : base(logger, id, context)
 	{
 	}
 }

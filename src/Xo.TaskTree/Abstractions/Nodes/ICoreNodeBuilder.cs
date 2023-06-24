@@ -2,6 +2,8 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface ICoreNodeBuilder
 {
+	bool HasParam(string paramName); 
+	Type? FunctoryType { get; }
 	ICoreNodeBuilder RequireResult(bool requiresResult = true);
 	ICoreNodeBuilder AddContext(IWorkflowContext? context);
 	ICoreNodeBuilder AddFunctory(IAsyncFunctory functory);

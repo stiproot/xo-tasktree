@@ -1,8 +1,8 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class LinkedBranchBuilder : NodeBuilder, ILinkedBranchBuilder
+public class LinkedBranchBuilder : CoreNodeBuilder, ILinkedBranchBuilder
 {
-	protected INode _Next;
+	protected INode? _Next;
 
 	public virtual ILinkedBranchBuilder SetNext(INode node)
 	{
@@ -12,8 +12,10 @@ public class LinkedBranchBuilder : NodeBuilder, ILinkedBranchBuilder
 
 	public virtual ILinkedBranchBuilder SetNext<T>(bool requiresResult = true)
 	{
-		this._Next = this.Build(typeof(T));
+		this._Next = typeof(T).ToNode();
+
 		if (requiresResult) this._Next.RequireResult();
+
 		return this;
 	}
 
@@ -31,13 +33,14 @@ public class LinkedBranchBuilder : NodeBuilder, ILinkedBranchBuilder
 	///   Initializes a new instance of <see cref="LinkedBranchBuilder"/>. 
 	/// </summary>
 	public LinkedBranchBuilder(
-		IFunctitect functitect,
-		INodeFactory nodeFactory,
-		IMsgFactory msgFactory,
+		// IFunctitect functitect,
+		// INodeFactory nodeFactory,
+		// IMsgFactory msgFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	) : base(logger, id, context)
 	{
 	}
 }

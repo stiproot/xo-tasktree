@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaHashBranchBuilder : NodeBuilder, IMetaHashBranchBuilder
+public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 {
 	protected IMetaNode? _MetaNode;
 
@@ -12,8 +12,10 @@ public class MetaHashBranchBuilder : NodeBuilder, IMetaHashBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		// IAsyncFunctory fn = this.TypeToFunctory(this._MetaNode!.FunctoryType);
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory();
+		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
+		INode n = new Node(); 
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildTrue(metaNodeMapper, v)).ToArray();
@@ -36,18 +38,19 @@ public class MetaHashBranchBuilder : NodeBuilder, IMetaHashBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		// IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory();
+		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, context: this._Context);
+		INode n = new Node(); 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
 		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = 
 			(p) => 
-				() => this._MsgFactory.Create<bool>(((p.First().Value) as Msg<string>)!.GetData().Equals(mn.NodeConfiguration!.Key));
+				() => StMsgFactory.Create<bool>(((p.First().Value) as Msg<string>)!.GetData().Equals(mn.NodeConfiguration!.Key));
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
-		var decisionNode  = this._NodeFactory
-			.Create()
+		var decisionNode  = new Node() 
 			.SetFunctory(decisionFn)
 			.SetController(new TrueController())
 			.SetNodeEdge(decisionEdge);
@@ -59,13 +62,14 @@ public class MetaHashBranchBuilder : NodeBuilder, IMetaHashBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaHashBranchBuilder(
-		IFunctitect functitect,
-		INodeFactory nodeFactory,
-		IMsgFactory msgFactory,
+		// IFunctitect functitect,
+		// INodeFactory nodeFactory,
+		// IMsgFactory msgFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	) : base(logger, id, context)
 	{
 	}
 }

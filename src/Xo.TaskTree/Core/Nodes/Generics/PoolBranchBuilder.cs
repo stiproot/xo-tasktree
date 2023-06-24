@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class PoolBranchBuilder : NodeBuilder, IPoolBranchBuilder
+public class PoolBranchBuilder : CoreNodeBuilder, IPoolBranchBuilder
 {
 	protected readonly List<INode> _Pool = new();
 
@@ -20,7 +20,7 @@ public class PoolBranchBuilder : NodeBuilder, IPoolBranchBuilder
 
 	public IPoolBranchBuilder AddNext<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		var n = this.Build(typeof(T));
+		var n = typeof(T).ToNode();
 
 		// if (requiresResult) n.RequireResult();
 
@@ -43,13 +43,14 @@ public class PoolBranchBuilder : NodeBuilder, IPoolBranchBuilder
 	///   Initializes a new instance of <see cref="PoolBranchBuilder"/>. 
 	/// </summary>
 	public PoolBranchBuilder(
-		IFunctitect functitect,
-		INodeFactory nodeFactory,
-		IMsgFactory msgFactory,
+		// IFunctitect functitect,
+		// INodeFactory nodeFactory,
+		// IMsgFactory msgFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
-	) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	// ) : base(functitect, nodeFactory, msgFactory, logger, id, context)
+	) : base(logger, id, context)
 	{
 	}
 }
