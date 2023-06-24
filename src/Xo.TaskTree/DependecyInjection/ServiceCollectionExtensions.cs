@@ -15,7 +15,9 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddTaskFlowServices(this IServiceCollection services)
 	{
 		services.TryAddSingleton<IFunctitect, Functitect>();
+		services.TryAddSingleton<IMetaNodeMapper, MetaNodeMapper>();
 		services.TryAddSingleton<INodeBuilderFactory, NodeBuilderFactory>();
+		services.TryAddSingleton<IStateManager, StateManager>();
 		services.TryAddSingleton<INodeFactory, NodeFactory>();
 		services.TryAddSingleton<IMsgFactory, MsgFactory>();
 		services.TryAddSingleton<IWorkflowContextFactory, WorkflowContextFactory>();

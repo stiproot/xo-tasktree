@@ -9,4 +9,5 @@ public interface IStateManager :
 {
     IMetaNode? RootNode { get; set; }
     IMetaNode? StateNode { get; set; }
+    INode Build();
 }

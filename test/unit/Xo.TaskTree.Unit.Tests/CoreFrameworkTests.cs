@@ -447,75 +447,77 @@ public class CoreFrameworkTests
 		 Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
 	 }
 
-	//[Fact]
-	//public async Task WorkflowComposedOfAsyncAndSyncNodesThatAreBuiltFromFunctionPointers()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
+	[Fact]
+	public async Task WorkflowComposedOfAsyncAndSyncNodesThatAreBuiltFromFunctionPointers()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
 
-		//var n1 = this._nodeFactory.Create()
-										//.SetFunctory((p) => () =>
-										//{
-											//var msg = p["sleep"] as BaseMsg<int>;
-											//var data = msg!.GetData();
-											//Assert.Equal(300, data);
-											//return this._msgFactory.Create<int>(data).SetParam("next_param_name");
-										//})
-										//.AddArg(this._msgFactory.Create<int>(300, "sleep"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		var n1 = this._nodeFactory.Create()
+										.SetFunctory((p) => () =>
+										{
+											var msg = p["sleep"] as BaseMsg<int>;
+											var data = msg!.GetData();
+											Assert.Equal(300, data);
+											return this._msgFactory.Create<int>(data).SetParam("next_param_name");
+										})
+										.AddArg(this._msgFactory.Create<int>(300, "sleep"))
+										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 
-		//var n2 = this._nodeFactory.Create()
-										//.SetFunctory(p => async () =>
-										//{
-											//await Task.Delay(150);
-											//var msg = p["next_param_name"] as BaseMsg<int>;
-											//var msg2 = p["args2"] as BaseMsg<object>;
-											//Assert.NotNull(msg2!.GetData());
-											//var data = msg!.GetData();
-											//return this._msgFactory.Create<int>(data);
-										//})
-										//.AddArg(n1)
-										//.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		var n2 = this._nodeFactory.Create()
+										.SetFunctory(p => async () =>
+										{
+											await Task.Delay(150);
+											var msg = p["next_param_name"] as BaseMsg<int>;
+											var msg2 = p["args2"] as BaseMsg<object>;
+											Assert.NotNull(msg2!.GetData());
+											var data = msg!.GetData();
+											return this._msgFactory.Create<int>(data);
+										})
+										.AddArg(n1)
+										.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
+										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 
-		//// Act
-		//var msg = await n2.Run(cancellationToken);
-		//var data = (msg as BaseMsg<int>)!.GetData();
+		// Act
+		var msgs = await n2.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var data = (msg as BaseMsg<int>)!.GetData();
 
-		//// Assert
-		//Assert.Equal(300, data);
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+		// Assert
+		Assert.Equal(300, data);
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
 
-	//[Fact]
-	//public async Task GIVEN_AMultiNodeWorkflow_WHEN_SyncFunctoryAdapterUsingWorkflowContext_THEN_BuildsOffContext()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = new WorkflowContext();
+	[Fact]
+	public async Task GIVEN_AMultiNodeWorkflow_WHEN_SyncFunctoryAdapterUsingWorkflowContext_THEN_BuildsOffContext()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		var context = new WorkflowContext();
 
-		//var n1 =
-			//this._nodeBuilderFactory.Create(context)
-				//.AddFunctory<Mocked.IY_InBoolStr_OutConstInt_AsyncService, bool>(true)
-				//.AddArg("arg1")
-				//.Build();
+		var n1 =
+			this._nodeBuilderFactory.Create(context)
+				.AddFunctory<Mocked.IY_InBoolStr_OutConstInt_AsyncService, bool>(true)
+				.AddArg("arg1")
+				.Build();
 
-		//var root =
-			//this._nodeBuilderFactory.Create(context)
-				//.AddArg(n1)
-				//.AddFunctory(c => () =>
-				//{
-					//var d = c.GetMsgData<int>(n1.Id);
-					//return this._msgFactory.Create<int>(d == 1 ? 1 : 0);
-				//})
-				//.Build();
+		var root =
+			this._nodeBuilderFactory.Create(context)
+				.AddArg(n1)
+				.AddFunctory(c => () =>
+				{
+					var d = c.GetMsgData<int>(n1.Id);
+					return this._msgFactory.Create<int>(d == 1 ? 1 : 0);
+				})
+				.Build();
 
-		//// Act
-		//var msg = await root.Run(cancellationToken);
-		//var data = (msg as BaseMsg<int>)!.GetData();
+		// Act
+		var msgs = await root.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var data = (msg as BaseMsg<int>)!.GetData();
 
-		//// Assert
-		//Assert.Equal(1, data);
-	//}
+		// Assert
+		Assert.Equal(1, data);
+	}
 }

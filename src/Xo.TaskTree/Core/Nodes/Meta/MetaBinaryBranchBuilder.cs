@@ -13,8 +13,7 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
 		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
-		// INode n = this._NodeFactory.Create(NodeBuilderTypes.Default, this._Logger, this.Id, this._Context);
-		INode n = new Node();
+		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
 
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 

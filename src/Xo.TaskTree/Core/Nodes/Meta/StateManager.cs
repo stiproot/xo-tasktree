@@ -2,6 +2,7 @@ namespace Xo.TaskTree.Core;
 
 public class StateManager : IStateManager 
 {
+    private readonly IMetaNodeMapper _metaNodeMapper;
     public IMetaNode? RootNode { get; set; }
     public IMetaNode? StateNode { get; set; }
 
@@ -15,7 +16,7 @@ public class StateManager : IStateManager
     public IStateManager RootIf<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
         // todo: double check pointers...
-        this.RootNode = this.StateNode = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Binary }.Configure(configure.Build());
+        this.RootNode = this.StateNode = typeof(T).ToMetaNode(nodeType:MetaNodeTypes.Binary).Configure(configure.Build());
 
         return this;
     }
@@ -30,17 +31,22 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Default };
 
-        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
+        IMetaNode transition = typeof(T).ToMetaNode();
 
-        IMetaNode? @ref = this.StateNode.NodeType switch
-        {
-            MetaNodeTypes.Binary => this.StateNode.NodeEdge.True,
-            _ => this.StateNode.NodeEdge.Next
-        };
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
 
-        return this.Transition(@ref, transition, configure, then);
+        // todo: what about next?...
+        if(this.StateNode.NodeEdge.True is null) this.StateNode.NodeEdge.True = transition;
+
+        // IMetaNode? @ref = this.StateNode.NodeType switch
+        // {
+            // MetaNodeTypes.Binary => this.StateNode.NodeEdge.True,
+            // _ => this.StateNode.NodeEdge.Next
+        // };
+
+        // return this.Transition(@ref, transition, configure, then);
+        return this.Transition(transition, configure, then);
     }
 
     public IStateManager Else<T>(
@@ -48,13 +54,15 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Default };
+        IMetaNode transition = typeof(T).ToMetaNode();
 
-        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { };
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
 
-        IMetaNode? @ref = this.StateNode.NodeEdge.False;
+        // IMetaNode? @ref = this.StateNode.NodeEdge.False;
+        this.StateNode.NodeEdge.False = transition;
 
-        return this.Transition(@ref, transition, configure, then);
+        // return this.Transition(@ref, transition, configure, then);
+        return this.Transition(transition, configure, then);
     }
 
     public IStateManager Key<T>(
@@ -66,7 +74,7 @@ public class StateManager : IStateManager
 
         if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { Nexts = new() };
 
-        return this.Transition(null, transition, configure, then);
+        return this.Transition(transition, configure, then);
     }
 
     public IStateManager Hash<T, U>(
@@ -180,8 +188,10 @@ public class StateManager : IStateManager
         return this;
     }
 
+    public INode Build() => this._metaNodeMapper.Map(this.RootNode!);
+
     private IStateManager Transition(
-        IMetaNode? @ref,
+        // IMetaNode? @ref,
         IMetaNode transition,
         Action<INodeConfigurationBuilder>? configure = null,
         Action<IStateManager>? then = null
@@ -194,9 +204,7 @@ public class StateManager : IStateManager
         if(then is not null)
         {
             // NEW LEVEL
-            IStateManager manager = new StateManager();
-            then(manager);
-            IMetaNode root = manager.RootNode!;
+            var root = this.NestedThen(then);
 
             transition.NodeEdge = new MetaNodeEdge { Next = root };
 
@@ -205,8 +213,8 @@ public class StateManager : IStateManager
             // this.StateNode = state;
         }
 
-        if(@ref is not null) @ref = this.StateNode = transition;
-        else this.StateNode = transition;
+        // if(@ref is not null) @ref = this.StateNode = transition;
+        this.StateNode = transition;
 
         return this;
     }
@@ -218,10 +226,13 @@ public class StateManager : IStateManager
         if(then is null) throw new InvalidOperationException();
 
         // NEW LEVEL
-        IStateManager manager = new StateManager();
+        IStateManager manager = new StateManager(this._metaNodeMapper);
         then(manager);
         IMetaNode root = manager.RootNode!;
 
         return root;
     }
+
+    public StateManager(IMetaNodeMapper metaNodeMapper) 
+        => this._metaNodeMapper = metaNodeMapper ?? throw new ArgumentNullException(nameof(metaNodeMapper));
 }

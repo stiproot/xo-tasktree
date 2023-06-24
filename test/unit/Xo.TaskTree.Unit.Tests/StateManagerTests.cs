@@ -3,26 +3,30 @@ namespace Xo.TaskTree.Unit.Tests;
 public class StateManagerTests
 {
     private static CancellationToken NewCancellationToken() => new CancellationToken();
-	private static IStateManager manager = null!;
-	private static IMetaNodeMapper mapper = null!;
+	private readonly IStateManager _stateManager;
+
+	public StateManagerTests(IStateManager stateManager) => this._stateManager = stateManager ?? throw new ArgumentNullException(nameof(stateManager));
 
 	[Fact]
 	public async Task IF_THEN_ELSE()
 	{
 		var cancellationToken = NewCancellationToken();
 
-		var mn = manager
+		var mn = this._stateManager
 			.RootIf<IY_OutConstBool_SyncService>()
 			.Then<IY_InStr_OutConstInt_AsyncService>(
 				configure => configure.MatchArg("<<arg>>"),
 				then => then.Then<IY_InInt_OutBool_SyncService>(configure: c => c.RequireResult())
 			)
 			.Else<IY_InStr_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg>>")));
-
-		var r = mn.RootNode;
-
-		var n = mapper.Map(r);
 		
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = (msg as Msg<bool>)!.GetData();
+
+		Assert.True(d);
 	}
 
 	[Fact]
@@ -30,7 +34,7 @@ public class StateManagerTests
 	{
 		var cancellationToken = NewCancellationToken();
 
-		var mn = manager
+		var mn = this._stateManager
 			.RootIf<IY_OutConstBool_SyncService>()
 			.Then<IY_InStr_OutConstInt_AsyncService>(
 				configure => configure.MatchArg("<<arg>>"),
@@ -44,7 +48,7 @@ public class StateManagerTests
 	{
 		var cancellationToken = NewCancellationToken();
 
-		var mn = manager
+		var mn = this._stateManager
 			.Root<IY_OutConstBool_SyncService>()
 			.Then<IY_InBoolStr_OutConstInt_AsyncService>(c => c.MatchArg("<<arg>>").RequireResult())
 			.Then<IY_InInt_OutBool_SyncService>(c => c.RequireResult());
@@ -55,7 +59,7 @@ public class StateManagerTests
 	{
 		var cancellationToken = NewCancellationToken();
 
-		var mn = manager
+		var mn = this._stateManager
 			.Root<IY_OutConstBool_SyncService>()
 			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
 			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
@@ -69,7 +73,7 @@ public class StateManagerTests
 	{
 		var cancellationToken = NewCancellationToken();
 
-		var mn = manager
+		var mn = this._stateManager
 			.Root<IY_OutConstBool_SyncService>()
 			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
 			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
@@ -84,7 +88,7 @@ public class StateManagerTests
 	{
 		var cancellationToken = NewCancellationToken();
 
-		var mn = manager
+		var mn = this._stateManager
 			.Root<IY_OutConstBool_SyncService>()
 			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
 			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
