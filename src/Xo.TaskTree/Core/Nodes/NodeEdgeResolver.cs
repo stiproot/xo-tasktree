@@ -10,11 +10,26 @@ public class NodeEdgeResolver : INodeEdgeResolver
 	{
 		return nodeEdge.NodeEdgeType switch
 		{
-			NodeEdgeTypes.Monarius => (nodeEdge as IMonariusNodeEdge)!.Edge!.AddArg(msgs).Run(cancellationToken),
+			NodeEdgeTypes.Monarius => ResolveMonariusNodeEdge(nodeEdge, msgs, cancellationToken),
 			NodeEdgeTypes.Binarius => ResolveBinariusNodeEdge(nodeEdge, msgs, cancellationToken),
 			NodeEdgeTypes.Multus => ResolveMultusNodeEdge(nodeEdge, msgs, cancellationToken),
 			_ => throw new InvalidOperationException()
 		};
+	}
+
+	private static async Task<IMsg?[]> ResolveMonariusNodeEdge(
+		INodeEdge nodeEdge,
+		IMsg?[] msgs,
+		CancellationToken cancellationToken
+	)
+	{
+		var edge = (nodeEdge as IMonariusNodeEdge)?.Edge;
+
+		if(edge is null) throw new InvalidOperationException();
+
+		if(edge.RequiresResult) edge.AddArg(msgs);
+
+		return await edge.Run(cancellationToken);
 	}
 
 	private static async Task<IMsg?[]> ResolveBinariusNodeEdge(
