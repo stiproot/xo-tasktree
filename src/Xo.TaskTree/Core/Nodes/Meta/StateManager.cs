@@ -31,22 +31,34 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-
         IMetaNode transition = typeof(T).ToMetaNode();
+        INodeConfiguration? config = configure.Build(transition.FunctoryType);
+        IMetaNode? levelTransition = this.NestedThen(then);
+
+        transition.Configure(config);
+
+        if(levelTransition is not null)
+        {
+            transition.NodeEdge = new MetaNodeEdge { Next = levelTransition };
+        }
+
+        if(this.RootNode is null)
+        {
+            this.RootNode = this.StateNode = transition;
+            return this;
+        }
 
         if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
 
-        // todo: what about next?...
-        if(this.StateNode.NodeEdge.True is null) this.StateNode.NodeEdge.True = transition;
+        if(this.StateNode.NodeType is MetaNodeTypes.Binary)
+        {
+            this.StateNode.NodeEdge.True = transition;
+            return this;
+        }
 
-        // IMetaNode? @ref = this.StateNode.NodeType switch
-        // {
-            // MetaNodeTypes.Binary => this.StateNode.NodeEdge.True,
-            // _ => this.StateNode.NodeEdge.Next
-        // };
+        this.StateNode = this.StateNode.NodeEdge.Next = transition;
 
-        // return this.Transition(@ref, transition, configure, then);
-        return this.Transition(transition, configure, then);
+        return this;
     }
 
     public IStateManager Else<T>(
@@ -191,13 +203,13 @@ public class StateManager : IStateManager
     public INode Build() => this._metaNodeMapper.Map(this.RootNode!);
 
     private IStateManager Transition(
-        // IMetaNode? @ref,
         IMetaNode transition,
         Action<INodeConfigurationBuilder>? configure = null,
         Action<IStateManager>? then = null
     )
     {
         INodeConfiguration? config = configure.Build(transition.FunctoryType);
+
         transition.Configure(config);
 
         /* PROCESS THEN */
@@ -219,11 +231,11 @@ public class StateManager : IStateManager
         return this;
     }
 
-    private IMetaNode NestedThen(
+    private IMetaNode? NestedThen(
         Action<IStateManager>? then
     )
     {
-        if(then is null) throw new InvalidOperationException();
+        if(then is null) return null; 
 
         // NEW LEVEL
         IStateManager manager = new StateManager(this._metaNodeMapper);

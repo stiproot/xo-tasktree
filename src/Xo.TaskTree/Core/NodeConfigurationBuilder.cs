@@ -37,8 +37,9 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
     public INodeConfigurationBuilder MatchArg<T>(T arg)
     {
-        // todo: how to get param name in this context?...
-        string paramName = this._functoryType!.GetMethods().First().GetParameters().First().Name!;
+        if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
+
+        string paramName = this._functoryType.GetMethods().First().GetParameters().First().Name!;
 
         var msg = new Msg<T>(arg, paramName);
 
@@ -53,7 +54,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
         if(configure is not null)
         {
-            var configBuilder = new NodeConfigurationBuilder();
+            var configBuilder = new NodeConfigurationBuilder(arg.FunctoryType);
             configure(configBuilder);
             var config = configBuilder.Build();
 

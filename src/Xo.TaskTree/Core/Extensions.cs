@@ -27,7 +27,7 @@ internal static class LambdaExtensions
     {
         if(@this is null) return null;
 
-        var builder = new NodeConfigurationBuilder();
+        var builder = new NodeConfigurationBuilder(functoryType);
         @this(builder);
         return builder.Build();
     }

@@ -11,7 +11,7 @@ public abstract class BaseNode : INode
 	protected Action<Exception>? _ExceptionHandler;
 	protected INodeEdge? _NodeEdge;
 	protected IController? _Controller;
-	protected IInvoker? _Invoker;
+	protected IInvoker _Invoker = new Invoker(new NodeEdgeResolver());
 	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
 	protected readonly IList<IMsg> _Params = new List<IMsg>();
 	protected readonly List<INode> _PromisedParams = new List<INode>();
@@ -287,7 +287,7 @@ public abstract class BaseNode : INode
 
 		if(this._NodeEdge is not null)
 		{
-			return await this._Invoker!.Invoke(this._NodeEdge, result.ToArray(), cancellationToken);
+			return await this._Invoker.Invoke(this._NodeEdge, result.ToArray(), cancellationToken);
 		}
 
 		return result.ToArray();
