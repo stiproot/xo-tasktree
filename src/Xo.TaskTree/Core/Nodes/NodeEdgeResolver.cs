@@ -38,16 +38,30 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		CancellationToken cancellationToken
 	)
 	{
-		var binariusNodeEdge = (nodeEdge as IBinariusNodeEdge)!;
+		var edge1 = (nodeEdge as IBinariusNodeEdge)?.Edge1;
+		var edge2 = (nodeEdge as IBinariusNodeEdge)?.Edge2;
 
-		var c = Task.WhenAll(
-			binariusNodeEdge.Edge1!.AddArg(msgs).Run(cancellationToken),
-			binariusNodeEdge.Edge2!.AddArg(msgs).Run(cancellationToken)
-		);
+		if(edge1 is null && edge2 is null) throw new InvalidOperationException();
 
-		var r = await c;
+		if(edge1 is not null && edge1.RequiresResult) edge1.AddArg(msgs);
+		if(edge2 is not null && edge2.RequiresResult) edge2.AddArg(msgs);
 
-		return r[0].Concat(r[1]).ToArray();
+		if(edge1 is not null && edge1 is not null)
+		{
+			var c = Task.WhenAll(
+				edge1!.Run(cancellationToken),
+				edge2!.Run(cancellationToken)
+			);
+
+			var r = await c;
+
+			// todo: do something about this...
+			return r[0].Concat(r[1]).ToArray();
+		}
+
+		if(edge1 is not null) return await edge1!.Run(cancellationToken);
+
+		return await edge2!.Run(cancellationToken);
 	}
 
 	private static async Task<IMsg?[]> ResolveMultusNodeEdge(
@@ -56,11 +70,16 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		CancellationToken cancellationToken
 	)
 	{
-		var multusNodeEdge = (nodeEdge as IMultusNodeEdge)!;
+		var edges = (nodeEdge as IMultusNodeEdge)?.Edges;
 
-		// todo: non-nullable to-list extension method...
+		if(edges is null || edges.Any() is false) throw new InvalidOperationException();
 
-		var c = Task.WhenAll(multusNodeEdge.Edges.Select(e => e!.AddArg(msgs).Run(cancellationToken)));
+		foreach(var e in edges)
+		{
+			if(e is not null && e.RequiresResult) e.AddArg(msgs);
+		}
+
+		var c = Task.WhenAll(edges.Select(e => e!.AddArg(msgs).Run(cancellationToken)));
 
 		var r = await c;
 
