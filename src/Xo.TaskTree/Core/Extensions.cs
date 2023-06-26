@@ -65,6 +65,12 @@ internal static class TypeExtensions
     ) 
 		=> functitect.Build(@this).SetServiceType(@this).AsAsync();
 
+	public static IAsyncFunctory ToFunctory(this Type @this,
+        IFunctitect functitect,
+        string? nextParamName
+    ) 
+		=> functitect.Build(@this, nextParamName:nextParamName).SetServiceType(@this).AsAsync();
+
 	public static INode ToNode(this Type @this,
         IFunctitect functitect,
 		string? methodName = null,

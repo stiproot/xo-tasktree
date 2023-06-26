@@ -12,9 +12,8 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, "__");
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
-
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode @true = this.BuildTrue(metaNodeMapper, this._MetaNode.NodeEdge!.True);
@@ -37,19 +36,28 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
+		// HERE!
+		// todo: process node configuration then...
+		// mn could point to more nodes...
+
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration?.NextParamName ?? "__");
 
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
+		if(mn.NodeConfiguration?.RequiresResult is true)
+		{
+			n.RequireResult();
+		}
 
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData());
+		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is true, "__");
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 		var decisionNode  = new Node() 
 			.SetFunctory(decisionFn)
 			.SetController(new TrueController())
-			.SetNodeEdge(decisionEdge);
+			.SetNodeEdge(decisionEdge)
+			.RequireResult();
 	
 		return decisionNode;
 	}
@@ -62,17 +70,25 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration?.NextParamName ?? "__");
+
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
+
+		if(mn.NodeConfiguration?.RequiresResult is true)
+		{
+			n.RequireResult();
+		}
+
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false);
+		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false, "__");
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 		var decisionNode = new Node()
 			.SetFunctory(decisionFn)
 			.SetController(new TrueController())
-			.SetNodeEdge(decisionEdge);
+			.SetNodeEdge(decisionEdge)
+			.RequireResult();
 	
 		return decisionNode;
 	}

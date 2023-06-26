@@ -1,7 +1,6 @@
 namespace Xo.TaskTree.Core;
 
 /// <inheritdoc cref="INodevaluator"/>
-
 public class ParallelNodeEvaluator : INodevaluator
 {
 	/// <inheritdoc />
@@ -11,8 +10,11 @@ public class ParallelNodeEvaluator : INodevaluator
 	)
 	{
 		var promisedArgs = nodes.Select(p => p.Run(cancellationToken));
-		var continuation = Task.WhenAll(promisedArgs);
-		var results = await continuation;
-		return results.SelectMany(r => r).ToList();
+
+		var continuation = await Task.WhenAll(promisedArgs);
+
+		var results = continuation.SelectMany(r => r).ToList();
+
+		return results;
 	}
 }

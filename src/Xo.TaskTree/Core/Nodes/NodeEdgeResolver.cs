@@ -46,7 +46,7 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		if(edge1 is not null && edge1.RequiresResult) edge1.AddArg(msgs);
 		if(edge2 is not null && edge2.RequiresResult) edge2.AddArg(msgs);
 
-		if(edge1 is not null && edge1 is not null)
+		if(edge1 is not null && edge2 is not null)
 		{
 			var c = Task.WhenAll(
 				edge1!.Run(cancellationToken),
