@@ -12,14 +12,14 @@ internal static class Extensions
 
 internal static class LambdaExtensions
 {
-    public static INodeConfiguration? Build(this Action<INodeConfigurationBuilder>? @this)
-    {
-        if(@this is null) return null;
+    // public static INodeConfiguration? Build(this Action<INodeConfigurationBuilder>? @this)
+    // {
+        // if(@this is null) return null;
 
-        var builder = new NodeConfigurationBuilder();
-        @this(builder);
-        return builder.Build();
-    }
+        // var builder = new NodeConfigurationBuilder();
+        // @this(builder);
+        // return builder.Build();
+    // }
 
     public static INodeConfiguration? Build(this Action<INodeConfigurationBuilder>? @this,
         Type functoryType
@@ -58,7 +58,7 @@ internal static class TypeExtensions
         Action<INodeConfigurationBuilder>? configure = null,
         MetaNodeTypes nodeType = MetaNodeTypes.Default
     )
-        => new MetaNode(@this) { NodeType = nodeType }.Configure(configure.Build());
+        => new MetaNode(@this) { NodeType = nodeType }.Configure(configure.Build(@this));
 
 	public static IAsyncFunctory ToFunctory(this Type @this,
         IFunctitect functitect

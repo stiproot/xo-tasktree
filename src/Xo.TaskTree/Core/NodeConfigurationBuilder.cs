@@ -39,7 +39,12 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
     {
         if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
 
-        string paramName = this._functoryType.GetMethods().First().GetParameters().First().Name!;
+        string paramName = this._functoryType
+            .GetMethods()
+            .First()
+            .GetParameters()
+            .First()
+            .Name!;
 
         var msg = new Msg<T>(arg, paramName);
 
@@ -50,10 +55,12 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
     public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null) 
     {
-        var arg = new MetaNode(typeof(T));
+        // todo: how does arg get matched to its invoker node?
+        var arg = typeof(T).ToMetaNode(configure);
 
         if(configure is not null)
         {
+            // This will configure arg's arguments...
             var configBuilder = new NodeConfigurationBuilder(arg.FunctoryType);
             configure(configBuilder);
             var config = configBuilder.Build();

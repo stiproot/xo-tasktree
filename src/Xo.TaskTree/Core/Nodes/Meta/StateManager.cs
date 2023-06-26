@@ -8,15 +8,14 @@ public class StateManager : IStateManager
 
     public IStateManager Root<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
-        this.RootNode = this.StateNode = new MetaNode(typeof(T)) { NodeType = MetaNodeTypes.Default }.Configure(configure.Build());
+        this.RootNode = this.StateNode = typeof(T).ToMetaNode(configure);
 
         return this;
     }
 
     public IStateManager RootIf<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
-        // todo: double check pointers...
-        this.RootNode = this.StateNode = typeof(T).ToMetaNode(nodeType:MetaNodeTypes.Binary).Configure(configure.Build());
+        this.RootNode = this.StateNode = typeof(T).ToMetaNode(configure, nodeType:MetaNodeTypes.Binary);
 
         return this;
     }
@@ -31,11 +30,11 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = typeof(T).ToMetaNode();
-        INodeConfiguration? config = configure.Build(transition.FunctoryType);
+        IMetaNode transition = typeof(T).ToMetaNode(configure);
+        // INodeConfiguration? config = configure.Build(transition.FunctoryType);
         IMetaNode? levelTransition = this.NestedThen(then);
 
-        transition.Configure(config);
+        // transition.Configure(config);
 
         if(levelTransition is not null)
         {
@@ -66,15 +65,14 @@ public class StateManager : IStateManager
         Action<IStateManager>? then = null
     )
     {
-        IMetaNode transition = typeof(T).ToMetaNode();
+        IMetaNode transition = typeof(T).ToMetaNode(configure);
+        IMetaNode? levelTransition = this.NestedThen(then);
 
-        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
+        if(levelTransition is not null) transition.NodeEdge = new MetaNodeEdge { Next = levelTransition };
 
-        // IMetaNode? @ref = this.StateNode.NodeEdge.False;
-        this.StateNode.NodeEdge.False = transition;
+        this.StateNode!.NodeEdge!.False = transition;
 
-        // return this.Transition(@ref, transition, configure, then);
-        return this.Transition(transition, configure, then);
+        return this;
     }
 
     public IStateManager Key<T>(
