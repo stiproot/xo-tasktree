@@ -2,7 +2,7 @@ namespace Xo.TaskTree.Unit.Tests;
 
 public class StateManagerTests
 {
-    private static CancellationToken NewCancellationToken() => new CancellationToken();
+	private static CancellationToken NewCancellationToken() => new CancellationToken();
 	private readonly IStateManager _stateManager;
 
 	public StateManagerTests(IStateManager stateManager) => this._stateManager = stateManager ?? throw new ArgumentNullException(nameof(stateManager));
