@@ -83,3 +83,11 @@ internal static class TypeExtensions
 		return new Node().SetFunctory(functory);
 	}
 }
+
+public static class ObjectExtensions
+{
+    public static void ThrowIfNull(this object? @this)
+    {
+        if(@this is null) throw new InvalidOperationException();
+    }
+}

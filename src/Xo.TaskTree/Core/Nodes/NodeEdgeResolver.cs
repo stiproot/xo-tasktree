@@ -43,7 +43,31 @@ public class NodeEdgeResolver : INodeEdgeResolver
 
 		if(edge1 is null && edge2 is null) throw new InvalidOperationException();
 
-		if(edge1 is not null && edge1.RequiresResult) edge1.AddArg(msgs);
+		if(edge1 is not null && edge1.RequiresResult)
+		{
+			// todo: match param here... match and clone...
+
+			if(edge1.ArgCount() is 0)
+			{
+				if(msgs.Length is 1 && edge1.Functory.ServiceType is not null)
+				{
+					var paramName = edge1.Functory.ServiceType!
+						.GetMethods()
+						.First()
+						.GetParameters()
+						.First()
+						.Name;
+					
+					msgs[0]!.SetParam(paramName!);
+				}
+				edge1.AddArg(msgs);
+			}
+			else
+			{
+				edge1.AddArg(msgs);
+			}
+		}
+		
 		if(edge2 is not null && edge2.RequiresResult) edge2.AddArg(msgs);
 
 		if(edge1 is not null && edge2 is not null)

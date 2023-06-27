@@ -31,10 +31,8 @@ public class StateManager : IStateManager
     )
     {
         IMetaNode transition = typeof(T).ToMetaNode(configure);
-        // INodeConfiguration? config = configure.Build(transition.FunctoryType);
-        IMetaNode? levelTransition = this.NestedThen(then);
 
-        // transition.Configure(config);
+        IMetaNode? levelTransition = this.NestedThen(then);
 
         if(levelTransition is not null)
         {

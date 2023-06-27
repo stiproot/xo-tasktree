@@ -27,6 +27,9 @@ public abstract class BaseNode : INode
 	public bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
 
 	/// <inheritdoc />
+	public int ArgCount() => this._Params.Count() + this._PromisedParams.Count() + this._ContextParams.Count();
+
+	/// <inheritdoc />
 	public bool RequiresResult { get; internal set; }
 
 	/// <inheritdoc />

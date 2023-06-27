@@ -10,6 +10,13 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 		return this;
 	}
 
+	public virtual IMetaBranchBuilder Validate()
+	{
+		this._MetaNode.ThrowIfNull();
+		
+		return this;
+	}
+
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
 		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);

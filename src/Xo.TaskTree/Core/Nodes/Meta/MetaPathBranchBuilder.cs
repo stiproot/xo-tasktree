@@ -10,15 +10,29 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 		return this;
 	}
 
-	public INode Build(IMetaNodeMapper metaNodeMapper) => this.Build(metaNodeMapper, this._MetaNode);
+	public virtual IMetaBranchBuilder Validate()
+	{
+		this._MetaNode.ThrowIfNull();
+
+		this._MetaNode!.NodeEdge.ThrowIfNull();
+
+		this._MetaNode!.NodeEdge!.Next.ThrowIfNull();
+
+		return this;
+	}
+
+	public INode Build(IMetaNodeMapper metaNodeMapper)
+	{
+		this.Validate();
+
+		return this.Build(metaNodeMapper, this._MetaNode!);
+	}
 
 	protected INode Build(
 		IMetaNodeMapper metaNodeMapper,
-		IMetaNode? mn
+		IMetaNode mn
 	) 
 	{
-		if(mn is null) throw new InvalidOperationException();
-
 		// IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
 		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
 
@@ -29,7 +43,7 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 			.AddArg(promisedArgs)
 			.AddArg(mn.NodeConfiguration!.Args.ToArray());
 
-		if(mn.NodeEdge is not null) n.SetNodeEdge(new MonariusNodeEdge { Edge = this.Build(metaNodeMapper, mn.NodeEdge.Next)});
+		if(mn.NodeEdge is not null) n.SetNodeEdge(new MonariusNodeEdge { Edge = this.Build(metaNodeMapper, mn.NodeEdge.Next!)});
 	
 		return n;
 	}

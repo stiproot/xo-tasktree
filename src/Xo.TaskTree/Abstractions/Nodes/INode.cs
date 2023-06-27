@@ -9,6 +9,7 @@ public interface INode
 
 	INode RequireResult(bool requiresResult = true);
 	bool HasParam(string paramName);
+	int ArgCount();
 
 	INode SetId(string id);
 	INode SetContext(IWorkflowContext? context);
