@@ -10,16 +10,25 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 		return this;
 	}
 
+	public virtual IMetaBranchBuilder Validate()
+	{
+		this._MetaNode.ThrowIfNull();
+
+		return this;
+	}
+
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
-		INode n = this._NodeFactory.Create(this._Logger, this.Id, this._Context);
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode!.NodeConfiguration?.NextParamName);
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
-		n
+		INode n = this._NodeFactory
+			.Create(this._Logger, this.Id, this._Context)
 			.SetFunctory(fn)
 			.AddArg(this._MetaNode.Args.ToArray())
 			.AddArg(promisedArgs);
+		
+		if(this._MetaNode.NodeConfiguration?.RequiresResult is true) n.RequireResult();
 
 		return n;
 	}

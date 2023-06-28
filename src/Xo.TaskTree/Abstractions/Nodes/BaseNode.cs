@@ -27,6 +27,9 @@ public abstract class BaseNode : INode
 	public bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
 
 	/// <inheritdoc />
+	public int ArgCount() => this._Params.Count() + this._PromisedParams.Count() + this._ContextParams.Count();
+
+	/// <inheritdoc />
 	public bool RequiresResult { get; internal set; }
 
 	/// <inheritdoc />
@@ -220,16 +223,13 @@ public abstract class BaseNode : INode
 	{
 		this._Logger?.LogTrace($"Node.ResolvePromisedParams - running param nodes.");
 
-		// Are there any async operations, in the form of INodes, that need to run in order to provide params to our functory?
 		if (!this._PromisedParams.Any()) return;
 
 		var results = await this._Nodevaluator.RunAsync(this._PromisedParams, cancellationToken);
 
-		// We are only interested in adding non-null results to our params 
-		// If the result (IMsg) is null the Task was void.
+		// todo: double check this logic...
 		IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null && p.HasParam).ToList()!;
 
-		// Let's add the results to our list of params, for our functory.
 		foreach (var r in nonNullResults)
 		{
 			this._Params.Add(r);
@@ -265,7 +265,8 @@ public abstract class BaseNode : INode
 	{
 		this._Logger?.LogTrace($"BaseNode.ResolveFunctory - starting...");
 
-		var paramDic = this._Params.ToDictionary(p => p.ParamName!);
+		// todo: remove guid...
+		var paramDic = this._Params.ToDictionary(p => p.ParamName ?? Guid.NewGuid().ToString());
 
 		var result = this.IsSync
 				? this._SyncFunctory!.CreateFunc(paramDic, this._Context)()

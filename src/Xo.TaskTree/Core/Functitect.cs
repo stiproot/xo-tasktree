@@ -160,9 +160,20 @@ public sealed class Functitect : IFunctitect
 		object[]? staticArgs = null
 	)
 	{
-		if (staticArgs is null) return parameters.Select(p => arguments[p.Name!].ObjectData).ToArray();
+		// todo: multiple strategies for argument placement...
+		// todo: cleant this up...
+		if (staticArgs is null) 
+		{
+			if(parameters.Count() is 1)
+			{
+				return arguments.Select(a => a.Value.ObjectData).ToArray();
+			}
 
+			return parameters.Select(p => arguments[p.Name!].ObjectData).ToArray();
+		}
+		
 		object[] finalArgs = new object[parameters.Count()];
+
 		foreach (var p in parameters)
 		{
 			if (arguments.TryGetValue(p.Name!, out IMsg? msg))
