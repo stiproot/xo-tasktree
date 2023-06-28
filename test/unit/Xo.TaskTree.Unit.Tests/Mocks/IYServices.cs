@@ -113,6 +113,16 @@ public class Y_InStr_AsyncService : IY_InStr_AsyncService
 	}
 }
 
+// public interface IY_InStr_OutConstInt_AsyncService { Task<int> GetIntAsync(string args3); }
+// public class Y_InStr_OutConstIntAsyncService : IY_InStr_OutConstInt_AsyncService
+// {
+	// public async Task<int> GetIntAsync(string args3)
+	// {
+		// await Task.Delay(Utils.ProcessTimeGenerator());
+		// return 1;
+	// }
+// }
+
 public interface IY_InStrBool_AsyncService { Task ProcessStrBool(string args3, bool flag3); }
 public class Y_InStrBool_AsyncService : IY_InStrBool_AsyncService
 {
@@ -187,6 +197,12 @@ public interface IY_OutConstBool_SyncService { bool GetBool(); }
 public class Y_OutConstBool_SyncService : IY_OutConstBool_SyncService
 {
 	public bool GetBool() => true;
+}
+
+public interface IY_OutConstFalseBool_SyncService { bool GetBool(); }
+public class Y_OutConstFalseBool_SyncService : IY_OutConstFalseBool_SyncService
+{
+	public bool GetBool() => false;
 }
 
 /// <summary>

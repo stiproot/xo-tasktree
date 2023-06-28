@@ -8,7 +8,7 @@ public class StateManagerTests
 	public StateManagerTests(IStateManager stateManager) => this._stateManager = stateManager ?? throw new ArgumentNullException(nameof(stateManager));
 
 	[Fact]
-	public async Task IF_THEN_ELSE()
+	public async Task IF_THEN_ELSE_positive()
 	{
 		var cancellationToken = NewCancellationToken();
 
@@ -27,6 +27,25 @@ public class StateManagerTests
 		var d = (msg as Msg<bool>)!.GetData();
 
 		Assert.True(d);
+	}
+
+	[Fact]
+	public async Task IF_THEN_ELSE_negative()
+	{
+		var cancellationToken = NewCancellationToken();
+
+		var mn = this._stateManager
+			.RootIf<IY_OutConstFalseBool_SyncService>()
+			.Then<IY_InStr_OutConstInt_AsyncService>(configure => configure.MatchArg("<<arg-1>>"))
+			.Else<IY_InStr_OutConstInt_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg-2>>")));
+		
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = (msg as Msg<int>)!.GetData();
+
+		Assert.Equal(1, d);
 	}
 
 	[Fact]
