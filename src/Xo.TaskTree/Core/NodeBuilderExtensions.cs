@@ -52,6 +52,7 @@ public static class NodeBuildeExtensions
 		}
 		else
 		{
+			// todo: remove this static argument injection...
 			var fn = @this.Functitect
 				.Build<TService, TArg>(arg: arg, nextParamName: nextParamName)
 				.SetServiceType(typeof(TService))
