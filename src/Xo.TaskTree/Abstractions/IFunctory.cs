@@ -26,7 +26,7 @@ public interface IFunctory
 	/// <param name="pairs"></param>
 	/// <param name="key"></param>
 	IMsg SafeGet(
-		IReadOnlyList<IMsg> pairs,
+		IArgs pairs,
 		string key
 	);
 

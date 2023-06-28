@@ -456,7 +456,7 @@ public class CoreFrameworkTests
 		var n1 = this._nodeFactory.Create()
 										.SetFunctory((p) => () =>
 										{
-											var msg = p.First(_p => _p.ParamName == "sleep") as BaseMsg<int>;
+											var msg = p["sleep"] as BaseMsg<int>;
 											var data = msg!.GetData();
 											Assert.Equal(300, data);
 											return this._msgFactory.Create<int>(data).SetParam("next_param_name");
@@ -468,8 +468,8 @@ public class CoreFrameworkTests
 										.SetFunctory(p => async () =>
 										{
 											await Task.Delay(150);
-											var msg = p.First(_p => _p.ParamName == "next_param_name") as BaseMsg<int>;
-											var msg2 = p.First(_p => _p.ParamName == "args2") as BaseMsg<object>;
+											var msg = p["next_param_name"] as BaseMsg<int>;
+											var msg2 = p["args2"] as BaseMsg<object>;
 											Assert.NotNull(msg2!.GetData());
 											var data = msg!.GetData();
 											return this._msgFactory.Create<int>(data);

@@ -48,7 +48,7 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IReadOnlyList<IMsg>, Func<IMsg>> decisionFn = 
+		Func<IArgs, Func<IMsg>> decisionFn = 
 			(p) => 
 				() => SMsgFactory.Create<bool>(((p.First() as Msg<string>)!.GetData()).Equals(mn.NodeConfiguration!.Key));
 

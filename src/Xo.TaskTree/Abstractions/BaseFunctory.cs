@@ -34,11 +34,11 @@ public abstract class BaseFunctory : IFunctory
 
 	/// <inheritdoc />
 	public virtual IMsg SafeGet(
-		IReadOnlyList<IMsg> pairs,
+		IArgs pairs,
 		string key
 	)
 	{
-		var msg = pairs.FirstOrDefault(p => p.ParamName == key);
+		var msg = pairs[key];
 
 		if (msg is null) throw new KeyNotFoundException(key);
 

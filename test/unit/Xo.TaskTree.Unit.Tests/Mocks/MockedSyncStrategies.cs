@@ -19,7 +19,7 @@ public class TestSyncStrategy : BaseSyncFunctory
 	}
 
 	public override Func<IMsg?> CreateFunc(
-		IReadOnlyList<IMsg> param,
+		IArgs param,
 		IWorkflowContext? context = null
 	) => () =>
 	{

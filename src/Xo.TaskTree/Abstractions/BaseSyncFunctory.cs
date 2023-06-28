@@ -6,7 +6,7 @@ public abstract class BaseSyncFunctory : BaseFunctory, ISyncFunctory
 {
 	/// <inheritdoc />
 	public abstract Func<IMsg?> CreateFunc(
-		IReadOnlyList<IMsg> args,
+		IArgs args,
 		IWorkflowContext? context = null
 	);
 }

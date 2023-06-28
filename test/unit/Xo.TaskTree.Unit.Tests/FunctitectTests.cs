@@ -32,7 +32,7 @@ public class SFunctitectTests
 	public async Task FunctoryBuilder_ProvidedTypeAndSyncMethodName_ReturnsFactory()
 	{
 		// Arrange
-		IReadOnlyList<IMsg> @params = new List<IMsg>(); 
+		IArgs @params = new Args(new List<IMsg>()); 
 		var type = this._serviceThatReturnsBool.GetType();
 		var methodName = nameof(this._serviceThatReturnsBool.GetBool);
 		var serviceProvider = Substitute.For<IServiceProvider>();
@@ -54,7 +54,7 @@ public class SFunctitectTests
 	{
 		// Arrange
 		// var @params = new Dictionary<string, IMsg> { { "args", this._msgFactory.Create<string>("some-string", "args") } };
-		IReadOnlyList<IMsg> @params = new List<IMsg> { new Msg<string>("some-string", "args") };
+		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args") });
 		var type = this._testService1.GetType();
 		var methodName = nameof(this._testService1.GetBoolAsync);
 		var serviceProvider = Substitute.For<IServiceProvider>();
@@ -77,7 +77,7 @@ public class SFunctitectTests
 		// Arrange
 		// we will leave out "flag3" param of type bool that ITestServie3WithTwoArgs expects.
 		// var @params = new Dictionary<string, IMsg> { { "args3", this._msgFactory.Create<string>("some-string", "args3") } };
-		IReadOnlyList<IMsg> @params = new List<IMsg> { new Msg<string>("some-string", "args3") };
+		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args3") });
 		var type = this._testService3WithTwoArgs.GetType();
 		var methodName = nameof(this._testService3WithTwoArgs.ProcessStrBool);
 		var serviceProvider = Substitute.For<IServiceProvider>();
@@ -97,7 +97,7 @@ public class SFunctitectTests
 	{
 		// Arrange
 		// var @params = new Dictionary<string, IMsg> { { "args", this._msgFactory.Create<string>("some-string", "args") } };
-		IReadOnlyList<IMsg> @params = new List<IMsg> { new Msg<string>("some-string", "args") };
+		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args") });
 		var type = this._testService1.GetType();
 		var serviceProvider = Substitute.For<IServiceProvider>();
 		serviceProvider.GetService(type).Returns(x => new Y_InStr_OutBool_AsyncService());
@@ -118,7 +118,7 @@ public class SFunctitectTests
 	{
 		// Arrange
 		// var @params = new Dictionary<string, IMsg> { { "args", this._msgFactory.Create<string>("some-string", "args") } };
-		IReadOnlyList<IMsg> @params = new List<IMsg> { new Msg<string>("some-string", "args") };
+		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args") });
 		var serviceProvider = Substitute.For<IServiceProvider>();
 		serviceProvider.GetService(typeof(IY_InStr_OutBool_AsyncService)).Returns(x => new Y_InStr_OutBool_AsyncService());
 		var builder = new Functitect(serviceProvider);

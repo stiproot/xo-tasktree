@@ -6,7 +6,7 @@ public abstract class BaseAsyncFunctory : BaseFunctory, IAsyncFunctory
 {
 	/// <inheritdoc />
 	public abstract Func<Task<IMsg?>> CreateFunc(
-		IReadOnlyList<IMsg> args,
+		IArgs args,
 		IWorkflowContext? context = null
 	);
 }

@@ -21,7 +21,7 @@ public class FunctitectBenchmarks
   private readonly Type _serviceType = typeof(ITestService);
   private const string _methodName = "RunAsync";
   private const string _nextParamName = null;
-  private readonly IReadOnlyList<IMsg> _params
+  private readonly IArgs _params
     = new Dictionary<string, IMsg>
     {
       { "strArg", new Msg<string>("") },

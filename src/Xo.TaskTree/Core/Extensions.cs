@@ -8,19 +8,14 @@ internal static class Extensions
 
         return new IMsg?[1]{ @this };
     }
+
+		public static IArgs AsArgs(this IList<IMsg> @this) => new Args(@this);
+		public static IArgs AsArgs(this List<IMsg> @this) => new Args(@this);
+		public static IArgs AsArgs(this IReadOnlyCollection<IMsg> @this) => new Args(@this.ToList());
 }
 
 internal static class LambdaExtensions
 {
-    // public static INodeConfiguration? Build(this Action<INodeConfigurationBuilder>? @this)
-    // {
-        // if(@this is null) return null;
-
-        // var builder = new NodeConfigurationBuilder();
-        // @this(builder);
-        // return builder.Build();
-    // }
-
     public static INodeConfiguration? Build(this Action<INodeConfigurationBuilder>? @this,
         Type functoryType
     )
