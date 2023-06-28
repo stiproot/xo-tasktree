@@ -64,11 +64,16 @@ public class StateManager : IStateManager
     )
     {
         IMetaNode transition = typeof(T).ToMetaNode(configure);
+
         IMetaNode? levelTransition = this.NestedThen(then);
 
         if(levelTransition is not null) transition.NodeEdge = new MetaNodeEdge { Next = levelTransition };
 
-        this.StateNode!.NodeEdge!.False = transition;
+        // Not sure what else this could be? But anyway...
+        if(this.StateNode!.NodeType is MetaNodeTypes.Binary)
+        {
+            this.StateNode!.NodeEdge!.False = transition;
+        }
 
         return this;
     }

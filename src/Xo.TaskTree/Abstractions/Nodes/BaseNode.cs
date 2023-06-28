@@ -228,7 +228,8 @@ public abstract class BaseNode : INode
 		var results = await this._Nodevaluator.RunAsync(this._PromisedParams, cancellationToken);
 
 		// todo: double check this logic...
-		IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null && p.HasParam).ToList()!;
+		// IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null && p.HasParam).ToList()!;
+		IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null).ToList()!;
 
 		foreach (var r in nonNullResults)
 		{

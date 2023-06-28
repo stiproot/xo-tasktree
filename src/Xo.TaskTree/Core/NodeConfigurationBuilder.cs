@@ -67,6 +67,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
             .Name!;
 
         this._config.PromisedArgs.Add(arg);
+
         this.NextParam(paramName);
 
         return this;

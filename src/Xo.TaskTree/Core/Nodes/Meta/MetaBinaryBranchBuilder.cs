@@ -28,8 +28,8 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	{
 		this.Validate();
 
-		INode @true = this.BuildTrue(metaNodeMapper, this._MetaNode!.NodeEdge!.True);
-		INode @false = this.BuildFalse(metaNodeMapper, this._MetaNode!.NodeEdge!.False);
+		INode @true = this.BuildBinary(metaNodeMapper, this._MetaNode!.NodeEdge!.True, true);
+		INode @false = this.BuildBinary(metaNodeMapper, this._MetaNode!.NodeEdge!.False, false);
 		INodeEdge e = new BinariusNodeEdge { Edge1 = @true, Edge2 = @false };
 
 		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode.NodeConfiguration?.NextParamName);
@@ -44,9 +44,10 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 		return n;
 	}
 
-	protected INode BuildTrue(
+	protected INode BuildBinary(
 		IMetaNodeMapper metaNodeMapper,
-		IMetaNode? mn
+		IMetaNode? mn,
+		bool binaryBranchType
 	) 
 	{
 		// mn is true metanode...
@@ -71,53 +72,21 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 
 		if(mn.NodeEdge is not null)
 		{
-			INode trueThenNode = metaNodeMapper.Map(mn.NodeEdge.Next!);
+			INode thenNode = metaNodeMapper.Map(mn.NodeEdge.Next!);
 
-			INodeEdge trueThenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(trueThenNode);
+			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
 
-			n.SetNodeEdge(trueThenEdge);
+			n.SetNodeEdge(thenEdge);
 		}
 
-		// todo: this is ridiculous...
-		Func<IArgs, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is true, "__");
+		Func<IArgs, Func<IMsg>> decisionFn = binaryBranchType
+			? (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is true)
+			: (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is false);
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 
 		var decisionNode  = this._NodeFactory
 			.Create() 
-			.SetFunctory(decisionFn)
-			.SetController(new TrueController())
-			.SetNodeEdge(decisionEdge)
-			.RequireResult();
-	
-		return decisionNode;
-	}
-
-	// todo: this is duplication... not cool bro!
-	protected INode BuildFalse(
-		IMetaNodeMapper metaNodeMapper,
-		IMetaNode? mn
-	) 
-	{
-		if(mn is null) throw new InvalidOperationException();
-
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration?.NextParamName ?? "__");
-		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
-		INode n = this._NodeFactory
-			.Create(this._Logger, context: this._Context)
-			.SetFunctory(fn)
-			.AddArg(promisedArgs);
-
-		if(mn.NodeConfiguration?.RequiresResult is true)
-		{
-			n.RequireResult();
-		}
-
-
-		// todo: this is ridiculous...
-		Func<IArgs, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is false, "__");
-		var decisionEdge = new MonariusNodeEdge().Add(n);
-		var decisionNode = new Node()
 			.SetFunctory(decisionFn)
 			.SetController(new TrueController())
 			.SetNodeEdge(decisionEdge)

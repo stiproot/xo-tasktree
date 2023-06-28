@@ -70,6 +70,7 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		
 		if(edge2 is not null && edge2.RequiresResult) edge2.AddArg(msgs);
 
+		// todo: in the case of a binary node, we actually do not want the "false" response, just the "true-path" result.
 		if(edge1 is not null && edge2 is not null)
 		{
 			var c = Task.WhenAll(

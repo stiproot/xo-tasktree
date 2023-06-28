@@ -36,13 +36,13 @@ public class StateManagerTests
 
 		var mn = this._stateManager
 			.RootIf<IY_OutConstFalseBool_SyncService>()
-			.Then<IY_InStr_OutConstInt_AsyncService>(configure => configure.MatchArg("<<arg-1>>"))
+			.Then<IY_InStr_AsyncService>(configure => configure.MatchArg("<<arg-1>>"))
 			.Else<IY_InStr_OutConstInt_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg-2>>")));
 		
 		var n = mn.Build();
 
 		var msgs = await n.Run(cancellationToken);
-		var msg = msgs.First(); 
+		var msg = msgs.Second(); 
 		var d = (msg as Msg<int>)!.GetData();
 
 		Assert.Equal(1, d);
