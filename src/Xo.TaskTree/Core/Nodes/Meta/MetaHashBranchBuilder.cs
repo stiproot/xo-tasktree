@@ -48,9 +48,9 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = 
+		Func<IReadOnlyList<IMsg>, Func<IMsg>> decisionFn = 
 			(p) => 
-				() => SMsgFactory.Create<bool>(((p.First().Value) as Msg<string>)!.GetData().Equals(mn.NodeConfiguration!.Key));
+				() => SMsgFactory.Create<bool>(((p.First() as Msg<string>)!.GetData()).Equals(mn.NodeConfiguration!.Key));
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 		var decisionNode  = new Node() 

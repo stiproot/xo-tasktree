@@ -67,7 +67,7 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> fn)
+	public INode SetFunctory(Func<IReadOnlyList<IMsg>, Func<Task<IMsg?>>> fn)
 	{
 		this._AsyncFunctory = new AsyncFunctoryAdaptor(fn);
 		return this;
@@ -81,7 +81,7 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IDictionary<string, IMsg>, Func<IMsg?>> fn)
+	public INode SetFunctory(Func<IReadOnlyList<IMsg>, Func<IMsg?>> fn)
 	{
 		this._SyncFunctory = new SyncFunctoryAdapter(fn);
 		return this;
@@ -266,11 +266,11 @@ public abstract class BaseNode : INode
 		this._Logger?.LogTrace($"BaseNode.ResolveFunctory - starting...");
 
 		// todo: remove guid...
-		var paramDic = this._Params.ToDictionary(p => p.ParamName ?? Guid.NewGuid().ToString());
+		// var paramDic = this._Params.ToDictionary(p => p.ParamName ?? Guid.NewGuid().ToString());
 
 		var result = this.IsSync
-				? this._SyncFunctory!.CreateFunc(paramDic, this._Context)()
-				: await this._AsyncFunctory!.CreateFunc(paramDic, this._Context)();
+				? this._SyncFunctory!.CreateFunc(this._Params.AsReadOnly(), this._Context)()
+				: await this._AsyncFunctory!.CreateFunc(this._Params.AsReadOnly(), this._Context)();
 
 		if (result is not null && this._Context is not null)
 		{

@@ -17,7 +17,7 @@ public interface IAsyncFunctory
 	/// <param name="context">The workflow context.</param>
 	/// <returns>Factory that will produce Task of IIMsg.</returns>
 	Func<Task<IMsg?>> CreateFunc(
-		IDictionary<string, IMsg> args,
+		IReadOnlyList<IMsg> args,
 		IWorkflowContext? context = null
 	);
 }

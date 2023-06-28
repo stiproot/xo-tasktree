@@ -79,7 +79,7 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 		}
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is true, "__");
+		Func<IReadOnlyList<IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is true, "__");
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 
@@ -115,7 +115,7 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 
 
 		// todo: this is ridiculous...
-		Func<IDictionary<string, IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First().Value) as Msg<bool>)!.GetData() is false, "__");
+		Func<IReadOnlyList<IMsg>, Func<IMsg>> decisionFn = (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is false, "__");
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 		var decisionNode = new Node()
 			.SetFunctory(decisionFn)

@@ -32,7 +32,7 @@ public sealed class Functitect : IFunctitect
 		object[]? staticArgs = null
 	)
 	{
-		Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
+		Func<IReadOnlyList<IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
 			{
 				var service = this.GetService(serviceType);
 
@@ -68,7 +68,7 @@ public sealed class Functitect : IFunctitect
 
 	public IAsyncFunctory BuildAsyncFunctory<T>(string? methodName = null)
 	{
-		Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
+		Func<IReadOnlyList<IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
 			{
 				var serviceType = typeof(T);
 
@@ -99,7 +99,7 @@ public sealed class Functitect : IFunctitect
 
 	public ISyncFunctory BuildSyncFunctory<T>(string? methodName = null)
 	{
-		Func<IDictionary<string, IMsg>, Func<IMsg?>> functory = (args) => () =>
+		Func<IReadOnlyList<IMsg>, Func<IMsg?>> functory = (args) => () =>
 			{
 				var serviceType = typeof(T);
 
@@ -128,7 +128,7 @@ public sealed class Functitect : IFunctitect
 
 	// todo: this static arg business needs to go... it's a hack...	
 	private static void ValidateMethod(
-		in IDictionary<string, IMsg> arguments,
+		in IReadOnlyList<IMsg> arguments,
 		in MethodInfo methodInfo,
 		in IEnumerable<ParameterInfo> parameters,
 		in object[]? staticArgs = null
@@ -138,7 +138,7 @@ public sealed class Functitect : IFunctitect
 		{
 			throw new ArgumentException(
 				$"Invalid parameters for method {methodInfo.Name}. " +
-				$"Arguments provided: {string.Join(",", arguments.Select(p => p.Key))}, " +
+				$"Arguments provided: {string.Join(",", arguments.Select(p => p.ParamName))}, " +
 				$"Parameters expected: {string.Join(",", parameters.Select(p => p.Name))}"
 			);
 		}
@@ -155,7 +155,7 @@ public sealed class Functitect : IFunctitect
 		};
 
 	private static object[] GetArguments(
-		IDictionary<string, IMsg> arguments,
+		IReadOnlyList<IMsg> arguments,
 		IEnumerable<ParameterInfo> parameters,
 		object[]? staticArgs = null
 	)
@@ -166,18 +166,20 @@ public sealed class Functitect : IFunctitect
 		{
 			if(parameters.Count() is 1)
 			{
-				return arguments.Select(a => a.Value.ObjectData).ToArray();
+				return arguments.Select(a => a.ObjectData).ToArray();
 			}
 
-			return parameters.Select(p => arguments[p.Name!].ObjectData).ToArray();
+			return parameters.Select(p => arguments.First(a => a.ParamName == p.Name!).ObjectData).ToArray();
 		}
 		
 		object[] finalArgs = new object[parameters.Count()];
 
 		foreach (var p in parameters)
 		{
-			if (arguments.TryGetValue(p.Name!, out IMsg? msg))
+			// todo: optimize this.
+			if (arguments.Any(a => a.ParamName == p.Name!))
 			{
+				var msg = arguments.First(a => a.ParamName == p.Name!);
 				finalArgs[p.Position] = msg.ObjectData;
 			}
 			else

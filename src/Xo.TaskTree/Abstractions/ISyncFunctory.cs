@@ -17,7 +17,7 @@ public interface ISyncFunctory
 	/// <param name="context">The workflow context.</param>
 	/// <returns>Factory that will produce IMsg.</returns>
 	Func<IMsg?> CreateFunc(
-		IDictionary<string, IMsg> args,
+		IReadOnlyList<IMsg> args,
 		IWorkflowContext? context = null
 	);
 }

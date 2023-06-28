@@ -34,12 +34,15 @@ public abstract class BaseFunctory : IFunctory
 
 	/// <inheritdoc />
 	public virtual IMsg SafeGet(
-		IDictionary<string, IMsg> pairs,
+		IReadOnlyList<IMsg> pairs,
 		string key
 	)
 	{
-		if (!pairs.TryGetValue(key, out IMsg? value)) throw new KeyNotFoundException(key);
-		return value;
+		var msg = pairs.FirstOrDefault(p => p.ParamName == key);
+
+		if (msg is null) throw new KeyNotFoundException(key);
+
+		return msg;
 	}
 
 	/// <inheritdoc />

@@ -103,7 +103,7 @@
 	//}
 
 	///// <inheritdoc />
-	//public INodeBuilder AddFunctory(Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> fn)
+	//public INodeBuilder AddFunctory(Func<IReadOnlyList<IMsg>, Func<Task<IMsg?>>> fn)
 	//{
 		//this._AsyncFunctory = new AsyncFunctoryAdaptor(fn);
 		//return this;
@@ -124,7 +124,7 @@
 	//}
 
 	///// <inheritdoc />
-	//public INodeBuilder AddFunctory(Func<IDictionary<string, IMsg>, Func<IMsg?>> fn)
+	//public INodeBuilder AddFunctory(Func<IReadOnlyList<IMsg>, Func<IMsg?>> fn)
 	//{
 		//this._SyncFunctory = new SyncFunctoryAdapter(fn);
 		//return this;
@@ -132,7 +132,7 @@
 
 	///// <inheritdoc />
 	//public INodeBuilder AddFunctory(
-		//Func<IDictionary<string, IMsg>, Func<IMsg?>> fn,
+		//Func<IReadOnlyList<IMsg>, Func<IMsg?>> fn,
 		//string nextParamName
 	//)
 	//{

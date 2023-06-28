@@ -19,11 +19,11 @@ public class IY_InStr_OutBool_AsyncService_Functory : BaseAsyncFunctory
 	}
 
 	public override Func<Task<IMsg?>> CreateFunc(
-		IDictionary<string, IMsg> param,
+		IReadOnlyList<IMsg> param,
 		IWorkflowContext? context = null
 	) => async () =>
 	{
-		var serviceArgs = (param[serviceParamName] as Msg<string>)!.GetData();
+		var serviceArgs = (param.First(p => p.ParamName == serviceParamName) as Msg<string>)!.GetData();
 
 		if (string.IsNullOrEmpty(serviceArgs))
 		{
@@ -58,7 +58,7 @@ public class TestStrategy2 : BaseAsyncFunctory
 	}
 
 	public override Func<Task<IMsg?>> CreateFunc(
-		IDictionary<string, IMsg> param,
+		IReadOnlyList<IMsg> param,
 		IWorkflowContext? context = null
 	) => async () =>
 	{

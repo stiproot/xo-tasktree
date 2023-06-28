@@ -34,7 +34,7 @@
 		//object[]? staticArgs = null
 	//)
 	//{
-		//Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
+		//Func<IReadOnlyList<IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
 			//{
 				//var service = GetService(serviceType);
 
@@ -70,7 +70,7 @@
 
 	//public static IAsyncFunctory BuildAsyncFunctory<T>(string? methodName = null)
 	//{
-		//Func<IDictionary<string, IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
+		//Func<IReadOnlyList<IMsg>, Func<Task<IMsg?>>> functory = (args) => async () =>
 			//{
 				//var serviceType = typeof(T);
 
@@ -101,7 +101,7 @@
 
 	//public static ISyncFunctory BuildSyncFunctory<T>(string? methodName = null)
 	//{
-		//Func<IDictionary<string, IMsg>, Func<IMsg?>> functory = (args) => () =>
+		//Func<IReadOnlyList<IMsg>, Func<IMsg?>> functory = (args) => () =>
 			//{
 				//var serviceType = typeof(T);
 
@@ -130,7 +130,7 @@
 
 	//// todo: this static arg business needs to go... it's a hack...	
 	//private static void ValidateMethod(
-		//in IDictionary<string, IMsg> arguments,
+		//in IReadOnlyList<IMsg> arguments,
 		//in MethodInfo methodInfo,
 		//in IEnumerable<ParameterInfo> parameters,
 		//in object[]? staticArgs = null
@@ -157,7 +157,7 @@
 		//};
 
 	//private static object[] GetArguments(
-		//IDictionary<string, IMsg> arguments,
+		//IReadOnlyList<IMsg> arguments,
 		//IEnumerable<ParameterInfo> parameters,
 		//object[]? staticArgs = null
 	//)
