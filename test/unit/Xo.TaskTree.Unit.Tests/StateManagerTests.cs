@@ -30,7 +30,7 @@ public class StateManagerTests
 	}
 
 	[Fact]
-	public async Task IF_ELSE_args()
+	public async Task IF_then_ELSE_args()
 	{
 		var cancellationToken = NewCancellationToken();
 
@@ -69,6 +69,24 @@ public class StateManagerTests
 
 			Assert.NotNull(d);
 			Assert.IsType<Guid>(Guid.Parse(d));
+	}
+
+	[Fact]
+	public async Task IF_ELSE_args()
+	{
+		var cancellationToken = NewCancellationToken();
+
+		var mn = this._stateManager
+			.RootIf<IY_OutConstFalseBool_SyncService>()
+			.Else<IY_InStr_OutConstInt_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg>>")));
+
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = (msg as Msg<int>)!.GetData();
+
+		Assert.Equal(1, d);
 	}
 
 	[Fact]

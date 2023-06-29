@@ -83,6 +83,8 @@ public class StateManager : IStateManager
 
         if(levelTransition is not null) transition.NodeEdge = new MetaNodeEdge { Next = levelTransition };
 
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
+
         // Not sure what else this could be? But anyway...
         if(this.StateNode!.NodeType is MetaNodeTypes.Binary)
         {
