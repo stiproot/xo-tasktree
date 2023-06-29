@@ -24,6 +24,7 @@ public class Startup
 		services.AddTransient<IY_InBoolStr_OutConstInt_AsyncService, Y_InBoolStr_OutConstInt_AsyncService>();
 		services.AddTransient<IY_OutConstFalseBool_SyncService, Y_OutConstFalseBool_SyncService>();
 		services.AddTransient<IY_InStr_OutConstStr_AsyncService, Y_InStr_OutConstStr_AsyncService>();
+		services.AddTransient<IY_InBool_OutConstStr_AsyncService, Y_InBool_OutConstStr_AsyncService>();
 
 		services.AddTaskFlowServices();
 	}

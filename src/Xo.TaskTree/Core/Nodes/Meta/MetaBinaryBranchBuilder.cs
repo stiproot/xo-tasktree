@@ -40,6 +40,11 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 			.AddArg(this._MetaNode.Args.ToArray())
 			.AddArg(promisedArgs)
 			.SetNodeEdge(e);
+		
+		if(this._MetaNode.NodeConfiguration?.RequiresResult is true)
+		{
+			n.RequireResult();
+		}
 
 		return n;
 	}

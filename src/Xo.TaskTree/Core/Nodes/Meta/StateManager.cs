@@ -22,7 +22,21 @@ public class StateManager : IStateManager
 
     public IStateManager If<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
-        throw new NotImplementedException();
+        IMetaNode transition = typeof(T).ToMetaNode(configure, MetaNodeTypes.Binary);
+
+				// todo: add level transition capability...
+
+        if(this.RootNode is null)
+        {
+            this.RootNode = this.StateNode = transition;
+            return this;
+        }
+
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
+
+        this.StateNode = this.StateNode.NodeEdge.Next = transition;
+
+        return this;
     }
 
     public IStateManager Then<T>(

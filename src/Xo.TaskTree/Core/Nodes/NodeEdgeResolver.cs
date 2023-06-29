@@ -47,25 +47,27 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		{
 			// todo: match param here... match and clone...
 
-			if(edge1.ArgCount() is 0)
-			{
-				if(msgs.Length is 1 && edge1.Functory.ServiceType is not null)
-				{
-					var paramName = edge1.Functory.ServiceType!
-						.GetMethods()
-						.First()
-						.GetParameters()
-						.First()
-						.Name;
+			//if(edge1.ArgCount() is 0)
+			//{
+				//if(msgs.Length is 1 && edge1.Functory.ServiceType is not null)
+				//{
+					//var paramName = edge1.Functory.ServiceType!
+						//.GetMethods()
+						//.First()
+						//.GetParameters()
+						//.First()
+						//.Name;
 					
-					msgs[0]!.SetParam(paramName!);
-				}
-				edge1.AddArg(msgs);
-			}
-			else
-			{
-				edge1.AddArg(msgs);
-			}
+					//msgs[0]!.SetParam(paramName!);
+				//}
+				//edge1.AddArg(msgs);
+			//}
+			//else
+			//{
+				//edge1.AddArg(msgs);
+			//}
+
+			edge1.AddArg(msgs);
 		}
 		
 		if(edge2 is not null && edge2.RequiresResult) edge2.AddArg(msgs);
