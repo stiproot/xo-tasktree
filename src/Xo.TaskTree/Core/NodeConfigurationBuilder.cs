@@ -57,18 +57,27 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
     {
         if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
 
-        var arg = typeof(T).ToMetaNode(configure);
+        var argType = typeof(T);
+        var argReturnTypeName = argType
+            .GetMethods()
+            .First()
+            .ReturnType
+            .Name;
 
-        string paramName = this._functoryType
+        var functoryParamName = this._functoryType
             .GetMethods()
             .First()
             .GetParameters()
-            .First()
-            .Name!;
+            .First(p => p.ParameterType.Name == argReturnTypeName)
+            .Name;
+
+        var arg = typeof(T).ToMetaNode(configure);
+
+        arg.NodeConfiguration!.NextParamName = functoryParamName;
 
         this._config.PromisedArgs.Add(arg);
 
-        this.NextParam(paramName);
+        // this.NextParam(paramName);
 
         return this;
     }

@@ -61,14 +61,14 @@ public class StateManagerTests
 			)
 			.Else<IY_InStr_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg>>")));
 
-			var n = mn.Build();
+		var n = mn.Build();
 
-			var msgs = await n.Run(cancellationToken);
-			var msg = msgs.First(); 
-			var d = (msg as Msg<string>)!.GetData();
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = (msg as Msg<string>)!.GetData();
 
-			Assert.NotNull(d);
-			Assert.IsType<Guid>(Guid.Parse(d));
+		Assert.NotNull(d);
+		Assert.IsType<Guid>(Guid.Parse(d));
 	}
 
 	[Fact]
@@ -90,14 +90,24 @@ public class StateManagerTests
 	}
 
 	[Fact]
-	public async Task THEN_THEN()
+	public async Task ARGS_ARGS()
 	{
 		var cancellationToken = NewCancellationToken();
 
 		var mn = this._stateManager
-			.Root<IY_OutConstBool_SyncService>()
-			.Then<IY_InBoolStr_OutConstInt_AsyncService>(c => c.MatchArg("<<arg>>").RequireResult())
-			.Then<IY_InInt_OutBool_SyncService>(c => c.RequireResult());
+			.Root<IY_InBoolStr_OutConstInt_AsyncService>(c => 
+				c
+					.MatchArg<IY_OutConstBool_SyncService>()
+					.MatchArg<IY_InBool_OutConstStr_AsyncService>(c => c.MatchArg("<<args>>"))
+			);
+
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = (msg as Msg<int>)!.GetData();
+
+		Assert.Equal(1, d);
 	}
 
 	[Fact]
