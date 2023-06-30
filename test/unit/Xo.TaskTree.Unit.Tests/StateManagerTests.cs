@@ -90,7 +90,7 @@ public class StateManagerTests
 	}
 
 	[Fact]
-	public async Task ARGS_ARGS()
+	public async Task promised_ARGS_ARGS()
 	{
 		var cancellationToken = NewCancellationToken();
 
@@ -99,6 +99,27 @@ public class StateManagerTests
 				c
 					.MatchArg<IY_OutConstBool_SyncService>()
 					.MatchArg<IY_InBool_OutConstStr_AsyncService>(c => c.MatchArg(true))
+			);
+
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = (msg as Msg<int>)!.GetData();
+
+		Assert.Equal(1, d);
+	}
+
+	[Fact]
+	public async Task ARGS_ARGS()
+	{
+		var cancellationToken = NewCancellationToken();
+
+		var mn = this._stateManager
+			.Root<IY_InBoolStr_OutConstInt_AsyncService>(c => 
+				c
+					.MatchArg("<<args>>")
+					.MatchArg(true)
 			);
 
 		var n = mn.Build();
