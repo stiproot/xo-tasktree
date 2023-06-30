@@ -26,6 +26,17 @@ internal static class LambdaExtensions
         @this(builder);
         return builder.Build();
     }
+
+    public static INodeConfiguration? SafeBuild(this Action<INodeConfigurationBuilder>? @this,
+        Type functoryType
+    )
+    {
+        var builder = new NodeConfigurationBuilder(functoryType);
+
+				if(@this is not null) @this(builder);
+
+        return builder.Build();
+    }
 }
 
 internal static class MetaExtensions
@@ -51,9 +62,10 @@ internal static class TypeExtensions
     /* todo: this is sexy... but benchmarks need to be done... */
     public static IMetaNode ToMetaNode(this Type @this, 
         Action<INodeConfigurationBuilder>? configure = null,
-        MetaNodeTypes nodeType = MetaNodeTypes.Default
+        MetaNodeTypes nodeType = MetaNodeTypes.Default,
+				bool safe = false
     )
-        => new MetaNode(@this) { NodeType = nodeType }.Configure(configure.Build(@this));
+        => new MetaNode(@this) { NodeType = nodeType }.Configure(safe ? configure.SafeBuild(@this) : configure.Build(@this));
 
 	public static IAsyncFunctory ToFunctory(this Type @this,
         IFunctitect functitect

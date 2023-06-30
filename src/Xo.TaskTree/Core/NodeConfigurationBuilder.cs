@@ -58,11 +58,22 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
         if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
 
         var argType = typeof(T);
-        var argReturnTypeName = argType
+        var argReturnType = argType
             .GetMethods()
             .First()
-            .ReturnType
-            .Name;
+            .ReturnType;
+					
+				string? argReturnTypeName;
+
+				if(argReturnType.IsGenericType && argReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+				{
+					Type genericArgument = argReturnType.GetGenericArguments()[0];
+					argReturnTypeName = genericArgument.Name;
+				}
+				else
+				{
+					argReturnTypeName = argReturnType.Name;
+				}
 
         var functoryParamName = this._functoryType
             .GetMethods()
@@ -71,7 +82,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
             .First(p => p.ParameterType.Name == argReturnTypeName)
             .Name;
 
-        var arg = typeof(T).ToMetaNode(configure);
+        var arg = typeof(T).ToMetaNode(configure, safe:true);
 
         arg.NodeConfiguration!.NextParamName = functoryParamName;
 

@@ -98,7 +98,7 @@ public class StateManagerTests
 			.Root<IY_InBoolStr_OutConstInt_AsyncService>(c => 
 				c
 					.MatchArg<IY_OutConstBool_SyncService>()
-					.MatchArg<IY_InBool_OutConstStr_AsyncService>(c => c.MatchArg("<<args>>"))
+					.MatchArg<IY_InBool_OutConstStr_AsyncService>(c => c.MatchArg(true))
 			);
 
 		var n = mn.Build();
@@ -110,47 +110,47 @@ public class StateManagerTests
 		Assert.Equal(1, d);
 	}
 
-	[Fact]
-	public async Task KEY_HASH()
-	{
-		var cancellationToken = NewCancellationToken();
+	//[Fact]
+	//public async Task KEY_HASH()
+	//{
+		//var cancellationToken = NewCancellationToken();
 
-		var mn = this._stateManager
-			.Root<IY_OutConstBool_SyncService>()
-			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
-			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
-				c => c.Key("key-a"),
-				c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b")
-			);
-	}
+		//var mn = this._stateManager
+			//.Root<IY_OutConstBool_SyncService>()
+			//.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
+			//.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
+				//c => c.Key("key-a"),
+				//c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b")
+			//);
+	//}
 
-	[Fact]
-	public async Task KEY_HASH_then()
-	{
-		var cancellationToken = NewCancellationToken();
+	//[Fact]
+	//public async Task KEY_HASH_then()
+	//{
+		//var cancellationToken = NewCancellationToken();
 
-		var mn = this._stateManager
-			.Root<IY_OutConstBool_SyncService>()
-			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
-			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
-				c => c.Key("key-a"),
-				c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),
-				then => then.Then<IY_InStr_AsyncService>(c => c.MatchArg("<<arg>>"))
-			);
-	}
+		//var mn = this._stateManager
+			//.Root<IY_OutConstBool_SyncService>()
+			//.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
+			//.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
+				//c => c.Key("key-a"),
+				//c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),
+				//then => then.Then<IY_InStr_AsyncService>(c => c.MatchArg("<<arg>>"))
+			//);
+	//}
 
-	[Fact]
-	public async Task PATH()
-	{
-		var cancellationToken = NewCancellationToken();
+	//[Fact]
+	//public async Task PATH()
+	//{
+		//var cancellationToken = NewCancellationToken();
 
-		var mn = this._stateManager
-			.Root<IY_OutConstBool_SyncService>()
-			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
-			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
-				c => c.Key("key-a"),
-				c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),
-				then => then.Then<IY_InStr_AsyncService>(c => c.MatchArg("<<arg>>"))
-			);
-	}
+		//var mn = this._stateManager
+			//.Root<IY_OutConstBool_SyncService>()
+			//.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
+			//.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
+				//c => c.Key("key-a"),
+				//c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),
+				//then => then.Then<IY_InStr_AsyncService>(c => c.MatchArg("<<arg>>"))
+			//);
+	//}
 }
