@@ -39,14 +39,11 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
     {
         if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
 
-        string paramName = this._functoryType
-            .GetMethods()
-            .First()
-            .GetParameters()
-            .First()
-            .Name!;
+        var argType = typeof(T);
 
-        var msg = new Msg<T>(arg, paramName);
+        var functoryParamName = TypeInspector.MatchTypeToParamType(argType, this._functoryType);
+
+        var msg = new Msg<T>(arg, functoryParamName);
 
         this._config.Args.Add(msg);
 
@@ -58,37 +55,14 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
         if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
 
         var argType = typeof(T);
-        var argReturnType = argType
-            .GetMethods()
-            .First()
-            .ReturnType;
-					
-				string? argReturnTypeName;
 
-				if(argReturnType.IsGenericType && argReturnType.GetGenericTypeDefinition() == typeof(Task<>))
-				{
-					Type genericArgument = argReturnType.GetGenericArguments()[0];
-					argReturnTypeName = genericArgument.Name;
-				}
-				else
-				{
-					argReturnTypeName = argReturnType.Name;
-				}
+        var arg = argType.ToMetaNode(configure, safe:true);
 
-        var functoryParamName = this._functoryType
-            .GetMethods()
-            .First()
-            .GetParameters()
-            .First(p => p.ParameterType.Name == argReturnTypeName)
-            .Name;
-
-        var arg = typeof(T).ToMetaNode(configure, safe:true);
+        var functoryParamName = TypeInspector.MatchReturnTypeToParamType(argType, this._functoryType);
 
         arg.NodeConfiguration!.NextParamName = functoryParamName;
 
         this._config.PromisedArgs.Add(arg);
-
-        // this.NextParam(paramName);
 
         return this;
     }
@@ -98,5 +72,4 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
     public NodeConfigurationBuilder() { }
     public NodeConfigurationBuilder(Type functoryType) => this._functoryType = functoryType;
-    
 }
