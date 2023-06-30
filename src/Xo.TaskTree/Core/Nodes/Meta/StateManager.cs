@@ -94,16 +94,17 @@ public class StateManager : IStateManager
         return this;
     }
 
-    public IStateManager Key<T>(
-        Action<INodeConfigurationBuilder>? configure = null,
-        Action<IStateManager>? then = null
-    )
+    public IStateManager Key<T>(Action<INodeConfigurationBuilder>? configure = null)
     {
         IMetaNode transition = typeof(T).ToMetaNode(configure, MetaNodeTypes.Hash);
 
-        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { Nexts = new() };
+        transition.NodeEdge = new MetaNodeEdge { Nexts = new() };
 
-        return this.Transition(transition, configure, then);
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
+
+        this.StateNode = this.StateNode.NodeEdge.Next = transition;
+
+        return this;
     }
 
     public IStateManager Hash<T, U>(
@@ -181,7 +182,9 @@ public class StateManager : IStateManager
         Action<INodeConfigurationBuilder>? configureT = null,
         Action<INodeConfigurationBuilder>? configureU = null,
         Action<INodeConfigurationBuilder>? configureV = null,
-        Action<IStateManager>? thenT = null
+        Action<IStateManager>? thenT = null,
+        Action<IStateManager>? thenU = null,
+        Action<IStateManager>? thenV = null
     )
     {
         IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
