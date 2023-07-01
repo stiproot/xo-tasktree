@@ -176,18 +176,25 @@ public class StateManagerTests
 		Assert.Equal(1, d);
 	}
 
-	//[Fact]
-	//public async Task PATH()
-	//{
-		//var cancellationToken = NewCancellationToken();
+	[Fact]
+	public async Task PATH()
+	{
+		var cancellationToken = NewCancellationToken();
 
-		//var mn = this._stateManager
-			//.Root<IY_OutConstBool_SyncService>()
-			//.Key<IY_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.RequireResult())
-			//.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
-				//c => c.Key("key-a"),
-				//c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),
-				//then => then.Then<IY_InStr_AsyncService>(c => c.MatchArg("<<arg>>"))
-			//);
-	//}
+		var mn = this._stateManager
+			.Root<IY_OutConstBool_SyncService>()
+			.Path<IY_InBool_OutConstStr_AsyncService, IY_InStr_OutConstInt_AsyncService, IY_InInt_OutConstInt_AsyncService>(
+				c => c.RequireResult(),
+				c => c.RequireResult(),
+				c => c.RequireResult()
+			);
+
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = (msg as Msg<int>)!.GetData();
+
+		Assert.Equal(1, d);
+	}
 }

@@ -46,6 +46,17 @@ public class Y_InStr_OutConstInt_AsyncService : IY_InStr_OutConstInt_AsyncServic
 	}
 }
 
+public interface IY_InInt_OutConstInt_AsyncService { Task<int> GetConstIntAsync(int args); }
+public class Y_InInt_OutConstInt_AsyncService : IY_InInt_OutConstInt_AsyncService
+{
+	public async Task<int> GetConstIntAsync(int args)
+	{
+		var processTime = Utils.ProcessTimeGenerator();
+		await Task.Delay(processTime);
+		return 1;
+	}
+}
+
 public interface IY_InBoolStr_OutConstInt_AsyncService { Task<int> GetConstIntAsync(bool flag, string args); }
 public class Y_InBoolStr_OutConstInt_AsyncService : IY_InBoolStr_OutConstInt_AsyncService
 {
