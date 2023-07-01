@@ -3,13 +3,13 @@ namespace Xo.TaskTree.Unit.Tests.Mocks;
 /// <summary>
 ///   Test functory extending the  
 /// </summary>
-public class TestSyncStrategy : BaseSyncFunctory
+public class TestSyncFunctory : BaseSyncFunctory
 {
 	private const string paramName = "sleep";
 	private readonly IY_InInt_OutBool_SyncService _synchronousService;
 	private readonly IMsgFactory _msgFactory;
 
-	public TestSyncStrategy(
+	public TestSyncFunctory(
 		IY_InInt_OutBool_SyncService synchronousService,
 		IMsgFactory msgFactory
 	)

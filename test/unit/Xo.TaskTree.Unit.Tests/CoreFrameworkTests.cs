@@ -208,14 +208,16 @@ public class CoreFrameworkTests
 										.SetContext(context)
 										.SetFunctory(this._functitect.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync)).AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										.AddArg(this._msgFactory.Create<string>(string.Empty, "args"));
+										.AddArg(this._msgFactory.Create<string>(string.Empty, "args"))
+										.IgnorePromisedResults();
 		var n2 = this._nodeFactory.Create()
 										.SetContext(context)
 										.SetFunctory(this._functitect.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
 										.AddArg(c => c.GetMsg(n1.Id).SetParam("flag2"))
-										.AddArg(n1);
+										.AddArg(n1)
+										.IgnorePromisedResults();
 		var n3 = this._nodeFactory.Create()
 										.SetContext(context)
 										.SetFunctory(this._functitect.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
@@ -224,7 +226,8 @@ public class CoreFrameworkTests
 												c => c.GetMsg(n1.Id).SetParam("flag3"),
 												c => c.GetMsg(n2.Id).SetParam("args3")
 										)
-										.AddArg(n2);
+										.AddArg(n2)
+										.IgnorePromisedResults();
 
 		// Act
 		await n3.Run(cancellationToken);
@@ -241,7 +244,7 @@ public class CoreFrameworkTests
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();
 		var n1 = this._nodeFactory.Create()
-										.SetFunctory(new Mocked.TestSyncStrategy(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory).SetNextParamName("flag2").AsSync())
+										.SetFunctory(new Mocked.TestSyncFunctory(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory).SetNextParamName("flag2").AsSync())
 										.AddArg(this._msgFactory.Create<int>(300, "sleep"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 
@@ -267,7 +270,7 @@ public class CoreFrameworkTests
 		var context = this._workflowContextFactory.Create();
 		var n1 = this._nodeFactory.Create()
 										.SetContext(context)
-										.SetFunctory(new Mocked.TestSyncStrategy(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+										.SetFunctory(new Mocked.TestSyncFunctory(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 										.AddArg(this._msgFactory.Create<int>(300, "sleep"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 		var n2 = this._nodeFactory.Create()
@@ -276,7 +279,8 @@ public class CoreFrameworkTests
 										.AddArg(n1)
 										.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
 										.AddArg(c => c.GetMsg(n1.Id).SetParam("flag2"))
-										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+										.IgnorePromisedResults();
 
 		// Act
 		await n2.Run(cancellationToken);
@@ -297,7 +301,7 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 		var n2 = this._nodeFactory.Create()
 										.AddArg(n1)
-										.SetFunctory(new Mocked.TestSyncStrategy(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+										.SetFunctory(new Mocked.TestSyncFunctory(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 
 		// Act
@@ -322,7 +326,7 @@ public class CoreFrameworkTests
 		var n2 = this._nodeFactory.Create()
 										.SetContext(context)
 										.AddArg(n1)
-										.SetFunctory(new Mocked.TestSyncStrategy(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+										.SetFunctory(new Mocked.TestSyncFunctory(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 										.AddArg(c => c.GetMsg(n1.Id).SetParam("sleep"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 
@@ -345,7 +349,7 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 		var n2 = this._nodeFactory.Create()
 										.AddArg(n1)
-										.SetFunctory(new Mocked.TestSyncStrategy(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+										.SetFunctory(new Mocked.TestSyncFunctory(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 
 		// Act
@@ -370,7 +374,7 @@ public class CoreFrameworkTests
 		var n2 = this._nodeFactory.Create()
 										.SetContext(context)
 										.AddArg(n1)
-										.SetFunctory(new Mocked.TestSyncStrategy(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+										.SetFunctory(new Mocked.TestSyncFunctory(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 										.AddArg(c => c.GetMsg(n1.Id).SetParam("sleep"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 

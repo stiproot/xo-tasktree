@@ -52,7 +52,7 @@ public sealed class Functitect : IFunctitect
 				{
 					var task = (Task)methodInfo.Invoke(service, arguments)!;
 					await task;
-					result = task.GetType().GetProperty("Result")?.GetValue(task);
+					if(methodInfo.ReturnType != typeof(Task)) result = task.GetType().GetProperty("Result")?.GetValue(task);
 				}
 				else
 				{
@@ -87,8 +87,10 @@ public sealed class Functitect : IFunctitect
 				object? result = null;
 
 				var task = (Task)methodInfo.Invoke(service, arguments)!;
+
 				await task;
-				result = task.GetType().GetProperty("Result")?.GetValue(task);
+
+				if(methodInfo.ReturnType != typeof(Task)) result = task.GetType().GetProperty("Result")?.GetValue(task);
 
 				return result == null ? null : CreateMsg(result, null);
 			};
@@ -138,7 +140,7 @@ public sealed class Functitect : IFunctitect
 		{
 			throw new ArgumentException(
 				$"Invalid parameters for method {methodInfo.Name}. " +
-				$"Arguments provided: {string.Join(",", arguments.Params())} " +
+				$"Arguments provided: {string.Join(",", arguments.Params())}, " +
 				$"Parameters expected: {string.Join(",", parameters.Select(p => p.Name))}"
 			);
 		}

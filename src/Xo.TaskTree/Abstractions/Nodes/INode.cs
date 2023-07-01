@@ -5,9 +5,11 @@ public interface INode
 	string Id { get; }
 	IFunctory Functory { get; }
 	bool RequiresResult { get; }
+	bool IgnoresPromisedResults { get; }
 	bool IsSync { get; }
 
 	INode RequireResult(bool requiresResult = true);
+	INode IgnorePromisedResults(bool ignorePromisedResults = true);
 	bool HasParam(string paramName);
 	int ArgCount();
 

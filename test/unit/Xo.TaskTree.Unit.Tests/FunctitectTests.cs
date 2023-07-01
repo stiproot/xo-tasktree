@@ -1,14 +1,14 @@
 namespace Xo.TaskTree.Unit.Tests;
 
 [ExcludeFromCodeCoverage]
-public class SFunctitectTests
+public class FunctitectTests
 {
 	private readonly IY_InStr_OutBool_AsyncService _testService1;
 	private readonly IY_InStrBool_AsyncService _testService3WithTwoArgs;
 	private readonly IY_OutConstBool_SyncService _serviceThatReturnsBool;
 	private readonly IMsgFactory _msgFactory;
 
-	public SFunctitectTests(
+	public FunctitectTests(
 		IY_InStr_OutBool_AsyncService testService1,
 		IY_InStrBool_AsyncService testService3WithTwoArgs,
 		IY_OutConstBool_SyncService serviceThatReturnsBool,

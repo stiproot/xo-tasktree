@@ -30,7 +30,9 @@ public abstract class BaseNode : INode
 	public int ArgCount() => this._Params.Count() + this._PromisedParams.Count() + this._ContextParams.Count();
 
 	/// <inheritdoc />
-	public bool RequiresResult { get; internal set; }
+	public bool RequiresResult { get; internal set; } = false;
+
+	public bool IgnoresPromisedResults { get; internal set; } = false;
 
 	/// <inheritdoc />
 	public IFunctory Functory => this._AsyncFunctory is not null ? (IFunctory)this._AsyncFunctory! : (IFunctory)this._SyncFunctory!;
@@ -231,6 +233,8 @@ public abstract class BaseNode : INode
 		// IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null && p.HasParam).ToList()!;
 		IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null).ToList()!;
 
+		if(this.IgnoresPromisedResults) return;
+
 		foreach (var r in nonNullResults)
 		{
 			this._Params.Add(r);
@@ -326,6 +330,12 @@ public abstract class BaseNode : INode
 	public virtual INode RequireResult(bool requiresResult = true)
 	{
 		this.RequiresResult = requiresResult;
+		return this;
+	}
+
+	public INode IgnorePromisedResults(bool ignorePromisedResults = true)
+	{
+		this.IgnoresPromisedResults = ignorePromisedResults;
 		return this;
 	}
 
