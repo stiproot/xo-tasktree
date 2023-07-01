@@ -57,7 +57,7 @@ public class StateManagerTests
 			.RootIf<IY_OutConstBool_SyncService>()
 			.Then<IY_InStr_OutConstInt_AsyncService>(
 				configure => configure.MatchArg("<<arg>>"),
-				then => then.If<IY_InInt_OutBool_SyncService>(configure: c => c.RequireResult()).Then<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult()).Else<IY_AsyncService>()
+				then => then.If<IY_InInt_OutBool_SyncService>(configure: c => c.RequireResult()).Then<IY_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.RequireResult()).Else<IY_AsyncService>()
 			)
 			.Else<IY_InStr_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg>>")));
 
@@ -98,7 +98,7 @@ public class StateManagerTests
 			.Root<IY_InBoolStr_OutConstInt_AsyncService>(c => 
 				c
 					.MatchArg<IY_OutConstBool_SyncService>()
-					.MatchArg<IY_InBool_OutConstStr_AsyncService>(c => c.MatchArg(true))
+					.MatchArg<IY_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.MatchArg(true))
 			);
 
 		var n = mn.Build();
@@ -141,8 +141,16 @@ public class StateManagerTests
 			.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
 			.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
 				c => c.Key("key-a"),
-				c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b")
+				c => c.MatchArg(true).MatchArg("<<arg>>").Key("<<str>>")
 			);
+
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.Second(); 
+		var d = (msg as Msg<int>)!.GetData();
+
+		Assert.Equal(1, d);
 	}
 
 	//[Fact]
@@ -152,7 +160,7 @@ public class StateManagerTests
 
 		//var mn = this._stateManager
 			//.Root<IY_OutConstBool_SyncService>()
-			//.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
+			//.Key<IY_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.RequireResult())
 			//.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
 				//c => c.Key("key-a"),
 				//c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),
@@ -167,7 +175,7 @@ public class StateManagerTests
 
 		//var mn = this._stateManager
 			//.Root<IY_OutConstBool_SyncService>()
-			//.Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
+			//.Key<IY_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.RequireResult())
 			//.Hash<IY_AsyncService, IY_InBoolStr_OutConstInt_AsyncService>(
 				//c => c.Key("key-a"),
 				//c => c.MatchArg(true).MatchArg("<<arg>>").Key("key-b"),

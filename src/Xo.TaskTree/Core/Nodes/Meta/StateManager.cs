@@ -100,9 +100,9 @@ public class StateManager : IStateManager
 
         transition.NodeEdge = new MetaNodeEdge { Nexts = new() };
 
-        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge();
+        if(this.StateNode!.NodeEdge is null) this.StateNode.NodeEdge = new MetaNodeEdge { Next = transition };
 
-        this.StateNode = this.StateNode.NodeEdge.Next = transition;
+        this.StateNode = this.StateNode.NodeEdge.Next;
 
         return this;
     }

@@ -20,6 +20,7 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
 		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode!.NodeConfiguration?.NextParamName);
+
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode n = this._NodeFactory
@@ -29,6 +30,15 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 			.AddArg(promisedArgs);
 		
 		if(this._MetaNode.NodeConfiguration?.RequiresResult is true) n.RequireResult();
+
+		if(this._MetaNode.NodeEdge is not null)
+		{
+			INode thenNode = metaNodeMapper.Map(this._MetaNode.NodeEdge.Next!);
+
+			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
+
+			n.SetNodeEdge(thenEdge);
+		}
 
 		return n;
 	}

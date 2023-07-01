@@ -19,11 +19,13 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
+		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode.NodeConfiguration?.NextParamName);
+
 		INode n = this._NodeFactory.Create(this._Logger, this.Id, this._Context);
+
 		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
-		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildTrue(metaNodeMapper, v)).ToArray();
+		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildDecision(metaNodeMapper, v)).ToArray();
 
 		INodeEdge e = new MultusNodeEdge { Edges = decisions };
 
@@ -33,30 +35,59 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 			.AddArg(promisedArgs)
 			.SetNodeEdge(e);
 
+		if(this._MetaNode.NodeConfiguration?.RequiresResult is true)
+		{
+			n.RequireResult();
+		}
+
 		return n;
 	}
 
-	protected INode BuildTrue(
+	protected INode BuildDecision(
 		IMetaNodeMapper metaNodeMapper,
 		IMetaNode? mn
 	) 
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
-		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration?.NextParamName);
 		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		INode n = this._NodeFactory
+			.Create(this._Logger, context: this._Context)
+			.SetFunctory(fn)
+			.AddArg(promisedArgs);
+		
+		if(mn.NodeConfiguration is not null)
+		{
+			n.AddArg(mn.NodeConfiguration.Args.ToArray());
+		}
 
-		// todo: this is ridiculous...
+		if(mn.NodeConfiguration?.RequiresResult is true)
+		{
+			n.RequireResult();
+		}
+
+		if(mn.NodeEdge is not null)
+		{
+			INode thenNode = metaNodeMapper.Map(mn.NodeEdge.Next!);
+
+			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
+
+			n.SetNodeEdge(thenEdge);
+		}
+
 		Func<IArgs, Func<IMsg>> decisionFn = 
 			(p) => 
 				() => SMsgFactory.Create<bool>(((p.First() as Msg<string>)!.GetData()).Equals(mn.NodeConfiguration!.Key));
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
-		var decisionNode  = new Node() 
+
+		var decisionNode  = this._NodeFactory
+			.Create() 
 			.SetFunctory(decisionFn)
 			.SetController(new TrueController())
-			.SetNodeEdge(decisionEdge);
+			.SetNodeEdge(decisionEdge)
+			.RequireResult();
 	
 		return decisionNode;
 	}
