@@ -24,8 +24,6 @@ public class StateManager : IStateManager
     {
         IMetaNode transition = typeof(T).ToMetaNode(configure, MetaNodeTypes.Binary);
 
-				// todo: add level transition capability...
-
         if(this.RootNode is null)
         {
             this.RootNode = this.StateNode = transition;
@@ -117,8 +115,17 @@ public class StateManager : IStateManager
         IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
         IMetaNode transitionU = typeof(U).ToMetaNode(configureU);
 
-        if(thenT is not null) transitionT.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenT) };
-        if(thenU is not null) transitionU.NodeEdge = new MetaNodeEdge { Next = this.NestedThen(thenU) };
+        IMetaNode? levelTransitionT = this.NestedThen(thenT);
+        IMetaNode? levelTransitionU = this.NestedThen(thenU);
+
+        if(levelTransitionT is not null)
+        {
+            transitionT.NodeEdge = new MetaNodeEdge { Next = levelTransitionT };
+        }
+        if(levelTransitionU is not null)
+        {
+            transitionU.NodeEdge = new MetaNodeEdge { Next = levelTransitionU };
+        }
 
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionT);
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionU);
@@ -177,7 +184,6 @@ public class StateManager : IStateManager
         return this;
     }
 
-    // todo: remaining thens...
     public IStateManager Hash<T, U, V>(
         Action<INodeConfigurationBuilder>? configureT = null,
         Action<INodeConfigurationBuilder>? configureU = null,
@@ -190,6 +196,23 @@ public class StateManager : IStateManager
         IMetaNode transitionT = typeof(T).ToMetaNode(configureT);
         IMetaNode transitionU = typeof(U).ToMetaNode(configureU);
         IMetaNode transitionV = typeof(V).ToMetaNode(configureV);
+
+        IMetaNode? levelTransitionT = this.NestedThen(thenT);
+        IMetaNode? levelTransitionU = this.NestedThen(thenU);
+        IMetaNode? levelTransitionV = this.NestedThen(thenV);
+
+        if(levelTransitionT is not null)
+        {
+            transitionT.NodeEdge = new MetaNodeEdge { Next = levelTransitionT };
+        }
+        if(levelTransitionU is not null)
+        {
+            transitionU.NodeEdge = new MetaNodeEdge { Next = levelTransitionU };
+        }
+        if(levelTransitionV is not null)
+        {
+            transitionV.NodeEdge = new MetaNodeEdge { Next = levelTransitionV };
+        }
 
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionT);
         this.StateNode!.NodeEdge!.Nexts!.Add(transitionU);
@@ -221,35 +244,6 @@ public class StateManager : IStateManager
     }
 
     public INode Build() => this._metaNodeMapper.Map(this.RootNode!);
-
-    private IStateManager Transition(
-        IMetaNode transition,
-        Action<INodeConfigurationBuilder>? configure = null,
-        Action<IStateManager>? then = null
-    )
-    {
-        INodeConfiguration? config = configure.Build(transition.FunctoryType);
-
-        transition.Configure(config);
-
-        /* PROCESS THEN */
-        if(then is not null)
-        {
-            // NEW LEVEL
-            var root = this.NestedThen(then);
-
-            transition.NodeEdge = new MetaNodeEdge { Next = root };
-
-            // todo: should this.StateNode not be set to the lower levels root?
-            // IMetaNode state = manager.StateNode;
-            // this.StateNode = state;
-        }
-
-        // if(@ref is not null) @ref = this.StateNode = transition;
-        this.StateNode = transition;
-
-        return this;
-    }
 
     private IMetaNode? NestedThen(
         Action<IStateManager>? then
