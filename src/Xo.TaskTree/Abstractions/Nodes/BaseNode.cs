@@ -229,8 +229,6 @@ public abstract class BaseNode : INode
 
 		var results = await this._Nodevaluator.RunAsync(this._PromisedParams, cancellationToken);
 
-		// todo: double check this logic...
-		// IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null && p.HasParam).ToList()!;
 		IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null).ToList()!;
 
 		if(this.IgnoresPromisedResults) return;
@@ -270,9 +268,6 @@ public abstract class BaseNode : INode
 	{
 		this._Logger?.LogTrace($"BaseNode.ResolveFunctory - starting...");
 
-		// todo: remove guid...
-		// var paramDic = this._Params.ToDictionary(p => p.ParamName ?? Guid.NewGuid().ToString());
-
 		var result = this.IsSync
 				? this._SyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context)()
 				: await this._AsyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context)();
@@ -281,8 +276,6 @@ public abstract class BaseNode : INode
 		{
 			this._Context.AddMsg(this.Id, result);
 		}
-
-		// todo: do we really want all these 'ToArray'? Should Functory not return an array?
 
 		if(this._Controller is not null)
 		{

@@ -112,7 +112,6 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 
 	public virtual INode Build()
 	{
-		// todo: inject msg-factory?
 		INode n = new Node(this._Logger, this.Id, this._Context);
 
 		if (this._AsyncFunctory is not null) n.SetFunctory(this._AsyncFunctory);

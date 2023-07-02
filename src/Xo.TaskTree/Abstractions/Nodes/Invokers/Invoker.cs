@@ -1,6 +1,5 @@
 namespace Xo.TaskTree.Abstractions;
 
-// todo: is this class necessary?
 public class Invoker : IInvoker
 {
 	protected readonly INodeEdgeResolver _NodeEdgeResolver;
@@ -12,8 +11,6 @@ public class Invoker : IInvoker
 		INodeEdge nodeEdge,
 		IMsg?[] msgs,
 		CancellationToken cancellationToken
-	)
-	{
-		return this._NodeEdgeResolver.Resolve(nodeEdge, msgs, cancellationToken);
-	}
+	) 
+		=> this._NodeEdgeResolver.Resolve(nodeEdge, msgs, cancellationToken);
 }
