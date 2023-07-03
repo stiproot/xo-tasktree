@@ -9,6 +9,6 @@ public class Program
 {
   public static void Main(string[] args)
   {
-    BenchmarkRunner.Run<FunctitectBenchmarks>();
+    BenchmarkRunner.Run<FnFactoryBenchmarks>();
   }
 }

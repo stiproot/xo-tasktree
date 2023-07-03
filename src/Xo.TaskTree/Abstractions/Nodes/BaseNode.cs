@@ -4,8 +4,8 @@ namespace Xo.TaskTree.Abstractions;
 public abstract class BaseNode : INode
 {
 	protected ILogger? _Logger;
-	protected IAsyncFunctoryInvoker? _AsyncFunctory;
-	protected ISyncFunctoryInvoker? _SyncFunctory;
+	protected IAsyncFn? _AsyncFn;
+	protected ISyncFn? _SyncFn;
 	protected IWorkflowContext? _Context;
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
@@ -35,10 +35,10 @@ public abstract class BaseNode : INode
 	public bool IgnoresPromisedResults { get; internal set; } = false;
 
 	/// <inheritdoc />
-	public IFunctoryInvoker Functory => this._AsyncFunctory is not null ? (IFunctoryInvoker)this._AsyncFunctory! : (IFunctoryInvoker)this._SyncFunctory!;
+	public IFn Fn => this._AsyncFn is not null ? (IFn)this._AsyncFn! : (IFn)this._SyncFn!;
 
 	/// <inheritdoc />
-	public bool IsSync => this._SyncFunctory != null;
+	public bool IsSync => this._SyncFn != null;
 
 	/// <inheritdoc />
 	public INode SetNodeEdge(INodeEdge nodeEdge)
@@ -62,37 +62,37 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(IAsyncFunctoryInvoker functory)
+	public INode SetFn(IAsyncFn functory)
 	{
-		this._AsyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._AsyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IArgs, Task<IMsg?>> fn)
+	public INode SetFn(Func<IArgs, Task<IMsg?>> fn)
 	{
-		this._AsyncFunctory = new AsyncFunctoryAdaptor(fn);
+		this._AsyncFn = new AsyncFnAdaptor(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(ISyncFunctoryInvoker functory)
+	public INode SetFn(ISyncFn functory)
 	{
-		this._SyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._SyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IArgs, IMsg?> fn)
+	public INode SetFn(Func<IArgs, IMsg?> fn)
 	{
-		this._SyncFunctory = new SyncFunctoryAdapter(fn);
+		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IWorkflowContext, IMsg?> fn)
+	public INode SetFn(Func<IWorkflowContext, IMsg?> fn)
 	{
-		this._SyncFunctory = new SyncFunctoryAdapter(fn);
+		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
@@ -197,7 +197,7 @@ public abstract class BaseNode : INode
 
 		try
 		{
-			return await this.ResolveFunctory(cancellationToken);
+			return await this.ResolveFn(cancellationToken);
 		}
 		catch (Exception ex)
 		{
@@ -211,7 +211,7 @@ public abstract class BaseNode : INode
 	{
 		this._Logger?.LogTrace($"Node.Validate - start.");
 
-		if (this._AsyncFunctory is null && this._SyncFunctory is null)
+		if (this._AsyncFn is null && this._SyncFn is null)
 		{
 			this._Logger?.LogError($"Node validation failed.");
 			throw new InvalidOperationException("Strategy factory has not been set.");
@@ -264,13 +264,13 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public virtual async Task<IMsg?[]> ResolveFunctory(CancellationToken cancellationToken)
+	public virtual async Task<IMsg?[]> ResolveFn(CancellationToken cancellationToken)
 	{
-		this._Logger?.LogTrace($"BaseNode.ResolveFunctory - starting...");
+		this._Logger?.LogTrace($"BaseNode.ResolveFn - starting...");
 
 		var result = this.IsSync
-				? this._SyncFunctory!.InvokeFunc(this._Params.AsArgs(), this._Context)
-				: await this._AsyncFunctory!.InvokeFunc(this._Params.AsArgs(), this._Context);
+				? this._SyncFn!.Invoke(this._Params.AsArgs(), this._Context)
+				: await this._AsyncFn!.Invoke(this._Params.AsArgs(), this._Context);
 
 		if (result is not null && this._Context is not null)
 		{

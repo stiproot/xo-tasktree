@@ -33,13 +33,13 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 		IMetaNode mn
 	) 
 	{
-		// IAsyncFunctoryInvoker fn = this.TypeToFunctory(mn.FunctoryType);
-		IAsyncFunctoryInvoker fn = mn.FunctoryType.ToFunctory(this._Functitect);
+		// IAsyncFn fn = this.TypeToFn(mn.FnType);
+		IAsyncFn fn = mn.FnType.ToFn(this._FnFactory);
 
 		INode[] promisedArgs = mn.NodeConfiguration.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context)
-			.SetFunctory(fn)
+			.SetFn(fn)
 			.AddArg(promisedArgs)
 			.AddArg(mn.NodeConfiguration!.Args.ToArray());
 
@@ -52,7 +52,7 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 	///   Initializes a new instance of <see cref="MetaPathBranchBuilder"/>. 
 	/// </summary>
 	public MetaPathBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

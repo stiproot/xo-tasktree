@@ -19,13 +19,13 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctoryInvoker fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode!.NodeConfiguration?.NextParamName);
+		IAsyncFn fn = this._MetaNode!.FnType.ToFn(this._FnFactory, this._MetaNode!.NodeConfiguration?.NextParamName);
 
 		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode n = this._NodeFactory
 			.Create(this._Logger, this.Id, this._Context)
-			.SetFunctory(fn)
+			.SetFn(fn)
 			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
 			.AddArg(promisedArgs);
 		
@@ -47,7 +47,7 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

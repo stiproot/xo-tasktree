@@ -27,7 +27,7 @@ public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 	)
 	{
 		// this._True = this.Build(typeof(TTrue));
-		// this.MatchArgToNodesFunctory<TArgs>(this._True, args);
+		// this.MatchArgToNodesFn<TArgs>(this._True, args);
 		// if (requiresResult) this._True.RequireResult();
 
 		this._TrueType = typeof(TTrue);
@@ -58,7 +58,7 @@ public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 	)
 	{
 		// this._False = this.Build(typeof(TFalse));
-		// this.MatchArgToNodesFunctory<TArgs>(this._False, args);
+		// this.MatchArgToNodesFn<TArgs>(this._False, args);
 		// if (requiresResult) this._False.RequireResult();
 
 		this._FalseType = typeof(TFalse);
@@ -77,7 +77,7 @@ public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 		Action<INodeConfigurationBuilder>? configure = null
 	)
 	{
-		// this.AddFunctory<TService, TArg>(arg: arg);
+		// this.AddFn<TService, TArg>(arg: arg);
 		// return this.AddIsNotNullPathResolver();
 
 		// todo: ...
@@ -87,7 +87,7 @@ public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 
 	public virtual IBinaryBranchBuilder IsNotNull<TService>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		// this.AddFunctory<TService>();
+		// this.AddFn<TService>();
 		// return this.AddIsNotNullPathResolver();
 
 		// todo: ...
@@ -104,7 +104,7 @@ public class BinaryBranchBuilder : CoreNodeBuilder, IBinaryBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public BinaryBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

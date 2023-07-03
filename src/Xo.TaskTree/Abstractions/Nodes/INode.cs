@@ -3,7 +3,7 @@ namespace Xo.TaskTree.Abstractions;
 public interface INode
 {
 	string Id { get; }
-	IFunctoryInvoker Functory { get; }
+	IFn Fn { get; }
 	bool RequiresResult { get; }
 	bool IgnoresPromisedResults { get; }
 	bool IsSync { get; }
@@ -24,11 +24,11 @@ public interface INode
 	INode SetNodevaluator(INodevaluator nodevaluator);
 	INode RunNodesInLoop();
 
-	INode SetFunctory(IAsyncFunctoryInvoker functory);
-	INode SetFunctory(Func<IArgs, Task<IMsg?>> fn);
-	INode SetFunctory(ISyncFunctoryInvoker functory);
-	INode SetFunctory(Func<IArgs, IMsg?> fn);
-	INode SetFunctory(Func<IWorkflowContext, IMsg?> fn);
+	INode SetFn(IAsyncFn functory);
+	INode SetFn(Func<IArgs, Task<IMsg?>> fn);
+	INode SetFn(ISyncFn functory);
+	INode SetFn(Func<IArgs, IMsg?> fn);
+	INode SetFn(Func<IWorkflowContext, IMsg?> fn);
 
 	INode AddArg(params INode[] args);
 	INode AddArg(params IMsg?[] args);
@@ -45,6 +45,6 @@ public interface INode
 	void Validate();
 	Task ResolvePromisedParams(CancellationToken cancellationToken);
 	void AddContextParamResultsToParams();
-	Task<IMsg?[]> ResolveFunctory(CancellationToken cancellationToken);
+	Task<IMsg?[]> ResolveFn(CancellationToken cancellationToken);
 	Task HandleException(Exception ex);
 }

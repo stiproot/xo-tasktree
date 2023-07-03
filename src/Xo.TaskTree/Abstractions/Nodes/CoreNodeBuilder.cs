@@ -4,15 +4,15 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 {
 	/// <inheritdoc />
 	public virtual bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
-	public virtual IFunctitect Functitect => this._Functitect;
+	public virtual IFnFactory FnFactory => this._FnFactory;
 
 	/// <inheritdoc />
-	public Type? FunctoryType
+	public Type? FnType
 	{
 		get
 		{
-			if (this._AsyncFunctory is not null) return (this._AsyncFunctory as IFunctoryInvoker)!.ServiceType!;
-			if (this._SyncFunctory is not null) return (this._SyncFunctory as IFunctoryInvoker)!.ServiceType!;
+			if (this._AsyncFn is not null) return (this._AsyncFn as IFn)!.ServiceType!;
+			if (this._SyncFn is not null) return (this._SyncFn as IFn)!.ServiceType!;
 			return null;
 		}
 	}
@@ -32,37 +32,37 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(IAsyncFunctoryInvoker functory)
+	public ICoreNodeBuilder AddFn(IAsyncFn functory)
 	{
-		this._AsyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._AsyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(ISyncFunctoryInvoker functory)
+	public ICoreNodeBuilder AddFn(ISyncFn functory)
 	{
-		this._SyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._SyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(Func<IArgs, Task<IMsg?>> fn)
+	public ICoreNodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn)
 	{
-		this._AsyncFunctory = new AsyncFunctoryAdaptor(fn);
+		this._AsyncFn = new AsyncFnAdaptor(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(Func<IArgs, IMsg?> fn)
+	public ICoreNodeBuilder AddFn(Func<IArgs, IMsg?> fn)
 	{
-		this._SyncFunctory = new SyncFunctoryAdapter(fn);
+		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(Func<IWorkflowContext, IMsg?> fn)
+	public ICoreNodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn)
 	{
-		this._SyncFunctory = new SyncFunctoryAdapter(fn);
+		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
@@ -114,8 +114,8 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	{
 		INode n = new Node(this._Logger, this.Id, this._Context);
 
-		if (this._AsyncFunctory is not null) n.SetFunctory(this._AsyncFunctory);
-		if (this._SyncFunctory is not null) n.SetFunctory(this._SyncFunctory);
+		if (this._AsyncFn is not null) n.SetFn(this._AsyncFn);
+		if (this._SyncFn is not null) n.SetFn(this._SyncFn);
 
 		if (this._Params.Any()) n.AddArg(this._Params.ToArray());
 		if (this._PromisedParams.Any()) n.AddArg(this._PromisedParams.ToArray());
@@ -133,7 +133,7 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
 	/// </summary>
 	public CoreNodeBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

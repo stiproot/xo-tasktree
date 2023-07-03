@@ -3,7 +3,7 @@ namespace Xo.TaskTree.Unit.Tests;
 [ExcludeFromCodeCoverage]
 public abstract class BaseBranchTests
 {
-	protected readonly IFunctitect _Functitect;
+	protected readonly IFnFactory _FnFactory;
 	protected readonly INodeFactory _NodeFactory;
 	protected readonly IMsgFactory _MsgFactory;
 	protected readonly IWorkflowContextFactory _WorkflowContextFactory;
@@ -11,14 +11,14 @@ public abstract class BaseBranchTests
 	protected CancellationToken CancellationTokenFactory() => new CancellationToken();
 
 	public BaseBranchTests(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		IMsgFactory msgFactory,
 		IWorkflowContextFactory workflowContextFactory,
 		INodeBuilderFactory nodeBuilderFactory
 	)
 	{
-		this._Functitect = functitect ?? throw new ArgumentNullException(nameof(functitect));
+		this._FnFactory = functitect ?? throw new ArgumentNullException(nameof(functitect));
 		this._NodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
 		this._MsgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 		this._WorkflowContextFactory = workflowContextFactory ?? throw new ArgumentNullException(nameof(workflowContextFactory));

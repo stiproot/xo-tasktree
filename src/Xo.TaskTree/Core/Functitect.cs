@@ -2,30 +2,30 @@ using System.Reflection;
 
 namespace Xo.TaskTree.Core;
 
-/// <inheritdoc cref="IFunctitect"/>
-public sealed class Functitect : IFunctitect
+/// <inheritdoc cref="IFnFactory"/>
+public sealed class FnFactory : IFnFactory
 {
 	private readonly IServiceProvider _serviceProvider;
 	private static readonly Type _msgType = typeof(Msg<>);
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="Functitect"/>.
+	///   Initializes a new instance of <see cref="FnFactory"/>.
 	/// </summary>
 	/// <param name="serviceProvider">Service provider used to retrived registered services by their type.</param>
-	public Functitect(IServiceProvider serviceProvider)
+	public FnFactory(IServiceProvider serviceProvider)
 		=> this._serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
 	/// <inheritdoc />
-	public IFunctoryInvoker Build<TService, TArg>(
+	public IFn Build<TService, TArg>(
 		TArg arg,
 		string? nextParamName = null
 	)
 		=> this.Build(typeof(TService), nextParamName: nextParamName, staticArgs: new object[] { arg! });
 
-	public IFunctoryInvoker Build<T>(string? nextParamName = null) => this.Build(typeof(T), nextParamName: nextParamName);
+	public IFn Build<T>(string? nextParamName = null) => this.Build(typeof(T), nextParamName: nextParamName);
 
 	/// <inheritdoc />
-	public IFunctoryInvoker Build(
+	public IFn Build(
 		Type serviceType,
 		string? methodName = null,
 		string? nextParamName = null,
@@ -62,11 +62,11 @@ public sealed class Functitect : IFunctitect
 				return result is null ? null : CreateMsg(result, nextParamName);
 			};
 
-		return new AsyncFunctoryAdaptor(functory!).SetServiceType(serviceType);
+		return new AsyncFnAdaptor(functory!).SetServiceType(serviceType);
 	}
 
 
-	public IAsyncFunctoryInvoker BuildAsyncFunctory<T>(string? methodName = null)
+	public IAsyncFn BuildAsyncFn<T>(string? methodName = null)
 	{
 		Func<IArgs, Task<IMsg?>> functory = async (args) =>
 			{
@@ -96,10 +96,10 @@ public sealed class Functitect : IFunctitect
 			};
 
 		// todo: clean this up...
-		return new AsyncFunctoryAdaptor(functory!).SetServiceType(serviceType: typeof(T)).AsAsync();
+		return new AsyncFnAdaptor(functory!).SetServiceType(serviceType: typeof(T)).AsAsync();
 	}
 
-	public ISyncFunctoryInvoker BuildSyncFunctory<T>(string? methodName = null)
+	public ISyncFn BuildSyncFn<T>(string? methodName = null)
 	{
 		Func<IArgs, IMsg?> functory = (args) =>
 			{
@@ -122,7 +122,7 @@ public sealed class Functitect : IFunctitect
 				return result == null ? null : CreateMsg(result, null);
 			};
 
-		return new SyncFunctoryAdapter(functory!);
+		return new SyncFnAdapter(functory!);
 	}
 
 	private object? GetService(Type serviceType)

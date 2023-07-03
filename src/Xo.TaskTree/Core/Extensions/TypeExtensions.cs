@@ -27,19 +27,19 @@ internal static class TypeExtensions
 		return metaNode;
 	}
 
-	public static IAsyncFunctoryInvoker ToFunctory(this Type @this,
-				IFunctitect functitect
+	public static IAsyncFn ToFn(this Type @this,
+				IFnFactory functitect
 	)
 		=> functitect.Build(@this).SetServiceType(@this).AsAsync();
 
-	public static IAsyncFunctoryInvoker ToFunctory(this Type @this,
-				IFunctitect functitect,
+	public static IAsyncFn ToFn(this Type @this,
+				IFnFactory functitect,
 				string? nextParamName
 	)
 		=> functitect.Build(@this, nextParamName: nextParamName).SetServiceType(@this).AsAsync();
 
 	public static INode ToNode(this Type @this,
-		IFunctitect functitect,
+		IFnFactory functitect,
 		string? methodName = null,
 		string? nextParamName = null
 	)
@@ -47,6 +47,6 @@ internal static class TypeExtensions
 		var functory = functitect.Build(@this, methodName, nextParamName).AsAsync();
 
 		// todo: what about other dependencies?...
-		return new Node().SetFunctory(functory);
+		return new Node().SetFn(functory);
 	}
 }

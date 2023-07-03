@@ -20,7 +20,7 @@ public class PoolBranchBuilder : CoreNodeBuilder, IPoolBranchBuilder
 
 	public IPoolBranchBuilder AddNext<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		var n = typeof(T).ToNode(this._Functitect);
+		var n = typeof(T).ToNode(this._FnFactory);
 
 		// if (requiresResult) n.RequireResult();
 
@@ -43,7 +43,7 @@ public class PoolBranchBuilder : CoreNodeBuilder, IPoolBranchBuilder
 	///   Initializes a new instance of <see cref="PoolBranchBuilder"/>. 
 	/// </summary>
 	public PoolBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

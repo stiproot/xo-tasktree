@@ -11,7 +11,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
-	public INodeConfigurationBuilder AddFunctoryType(Type functoryType)
+	public INodeConfigurationBuilder AddFnType(Type functoryType)
 	{
 		this._functoryType = functoryType;
 		return this;

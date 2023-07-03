@@ -19,7 +19,7 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctoryInvoker fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode.NodeConfiguration?.NextParamName);
+		IAsyncFn fn = this._MetaNode!.FnType.ToFn(this._FnFactory, this._MetaNode.NodeConfiguration?.NextParamName);
 
 		INode n = this._NodeFactory.Create(this._Logger, this.Id, this._Context);
 
@@ -30,7 +30,7 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 		INodeEdge e = new MultusNodeEdge { Edges = decisions };
 
 		n
-			.SetFunctory(fn)
+			.SetFn(fn)
 			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
 			.AddArg(promisedArgs)
 			.SetNodeEdge(e);
@@ -50,11 +50,11 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctoryInvoker fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration?.NextParamName);
+		IAsyncFn fn = mn.FnType.ToFn(this._FnFactory, mn.NodeConfiguration?.NextParamName);
 		INode[] promisedArgs = mn.NodeConfiguration!.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		INode n = this._NodeFactory
 			.Create(this._Logger, context: this._Context)
-			.SetFunctory(fn)
+			.SetFn(fn)
 			.AddArg(promisedArgs);
 		
 		if(mn.NodeConfiguration is not null)
@@ -83,7 +83,7 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 
 		var decisionNode  = this._NodeFactory
 			.Create() 
-			.SetFunctory(decisionFn)
+			.SetFn(decisionFn)
 			.SetController(new TrueController())
 			.SetNodeEdge(decisionEdge)
 			.RequireResult();
@@ -95,7 +95,7 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaHashBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

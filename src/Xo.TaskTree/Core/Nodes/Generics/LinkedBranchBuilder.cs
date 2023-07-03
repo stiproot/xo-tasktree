@@ -12,7 +12,7 @@ public class LinkedBranchBuilder : CoreNodeBuilder, ILinkedBranchBuilder
 
 	public virtual ILinkedBranchBuilder SetNext<T>(bool requiresResult = true)
 	{
-		this._Next = typeof(T).ToNode(this._Functitect);
+		this._Next = typeof(T).ToNode(this._FnFactory);
 
 		if (requiresResult) this._Next.RequireResult();
 
@@ -33,7 +33,7 @@ public class LinkedBranchBuilder : CoreNodeBuilder, ILinkedBranchBuilder
 	///   Initializes a new instance of <see cref="LinkedBranchBuilder"/>. 
 	/// </summary>
 	public LinkedBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

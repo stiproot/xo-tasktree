@@ -4,7 +4,7 @@
 //public class BinaryBranchNodeTests : BaseBranchTests
 //{
 	//public BinaryBranchNodeTests(
-		//IFunctitect functitect,
+		//IFnFactory functitect,
 		//INodeFactory nodeFactory,
 		//IMsgFactory msgFactory,
 		//IWorkflowContextFactory workflowContextFactory,
@@ -19,17 +19,17 @@
 		//var context = this._WorkflowContextFactory.Create();
 
 		//var branch1 = this._NodeFactory.Create(context)
-										//.SetFunctory(this._Functitect.Build(typeof(Mocked.IY_InStr_OutConstInt_AsyncService), nameof(Mocked.IY_InStr_OutConstInt_AsyncService.GetConstIntAsync)).AsAsync())
+										//.SetFn(this._FnFactory.Build(typeof(Mocked.IY_InStr_OutConstInt_AsyncService), nameof(Mocked.IY_InStr_OutConstInt_AsyncService.GetConstIntAsync)).AsAsync())
 										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										//.AddArg(this._MsgFactory.Create<string>("blah blah", "args"));
 
 		//var branch2 = this._NodeFactory.Create(context)
-										//.SetFunctory(this._Functitect.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
+										//.SetFn(this._FnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
 										//.SetExceptionHandler(Substitute.For<Action<Exception>>());
 		//branch2.AddArg(this._MsgFactory.Create<string>(nameof(branch2)));
 
 		//var n1 = this._NodeFactory.Create(context)
-										//.SetFunctory(this._Functitect.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
+										//.SetFn(this._FnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
 										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										//.AddArg(this._MsgFactory.Create<string>("some string", "args"));
 
@@ -39,7 +39,7 @@
 			//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			//.AddArg(this._MsgFactory.Create<object>(new object(), "args2"))
 			//.AddArg(n1)
-			//.SetFunctory(new SyncFunctoryAdapter(p => () => this._MsgFactory.Create((p["flag2"] as BaseMsg<bool>)!.GetData())).SetNextParamName("flag3").AsSync());
+			//.SetFn(new SyncFnAdapter(p => () => this._MsgFactory.Create((p["flag2"] as BaseMsg<bool>)!.GetData())).SetNextParamName("flag3").AsSync());
 
 		//// Act
 		//var msg = await binary.Run(cancellationToken);
@@ -50,7 +50,7 @@
 	//}
 
 	//[Fact]
-	//public async Task BinaryBranchUsingFunctitectInternallyTest()
+	//public async Task BinaryBranchUsingFnFactoryInternallyTest()
 	//{
 		//// Arrange
 		//var cancellationToken = this.CancellationTokenFactory();
@@ -58,14 +58,14 @@
 
 		//// The output of this Node will be used as a param for the Task produced by the functory contained in Node n2, "flag2" of type bool.
 		//var n1 = this._NodeFactory.Create(context)
-										//.SetFunctory(this._Functitect.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
+										//.SetFn(this._FnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
 										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										//.AddArg(this._MsgFactory.Create<string>("some string", "args"));
 
 		//var binary = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue<Mocked.IY_InStr_OutConstInt_AsyncService, string>("blah blah", requiresResult: false)
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("branch2", requiresResult: false)
-			//.AddFunctory(new SyncFunctoryAdapter(p => () => this._MsgFactory.Create((p["flag2"] as BaseMsg<bool>)!.GetData())).SetNextParamName("flag3").AsSync())
+			//.AddFn(new SyncFnAdapter(p => () => this._MsgFactory.Create((p["flag2"] as BaseMsg<bool>)!.GetData())).SetNextParamName("flag3").AsSync())
 			//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			//.AddArg(this._MsgFactory.Create<object>(new object(), "args2"))
 			//.AddArg(n1)
@@ -88,14 +88,14 @@
 
 		//// The output of this Node will be used as a param for the Task produced by the functory contained in Node n2, "flag2" of type bool.
 		//var p0 = this._NodeBuilderFactory.Create(context)
-			//.AddFunctory<Mocked.IY_InStr_OutBool_AsyncService>(nextParamName: "flag2")
+			//.AddFn<Mocked.IY_InStr_OutBool_AsyncService>(nextParamName: "flag2")
 			//.AddArg("some string")
 			//.Build();
 
 		//var binary = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue<Mocked.IY_InStr_OutConstInt_AsyncService, string>("blah blah", requiresResult: false)
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("branch2", requiresResult: false)
-			//.AddFunctory(p => () => this._MsgFactory.Create((p["flag2"] as BaseMsg<bool>)!.GetData()))
+			//.AddFn(p => () => this._MsgFactory.Create((p["flag2"] as BaseMsg<bool>)!.GetData()))
 			//.AddArg(new object(), "args2")
 			//.AddArg(p0)
 			//.Build();
@@ -118,7 +118,7 @@
 		//var binary = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue<Mocked.IY_InStr_OutConstInt_AsyncService, string>("blah blah", requiresResult: false)
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("str-argument", requiresResult: false)
-			//.AddFunctory<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
+			//.AddFn<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
 			//.AddArg("str-argument-3", "args")
 			//.Build();
 
@@ -140,7 +140,7 @@
 		//var binary = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue<Mocked.IY_InBoolStr_OutConstInt_AsyncService, string>("blah blah")
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("str-argument", requiresResult: false)
-			//.AddFunctory<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
+			//.AddFn<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
 			//.AddArg("str-argument-3", "args")
 			//.Build();
 
@@ -162,14 +162,14 @@
 		//var binary0 = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue<Mocked.IY_InBoolStr_OutConstInt_AsyncService, string>("blah blah")
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("str-argument", requiresResult: false)
-			//.AddFunctory<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
+			//.AddFn<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
 			//.AddArg("str-argument-3", "args")
 			//.Build();
 
 		//var root = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue(binary0)
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("str-argument", requiresResult: false)
-			//.AddFunctory<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
+			//.AddFn<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
 			//.AddArg("str-argument-3", "args")
 			//.Build();
 
@@ -191,7 +191,7 @@
 		//var binary0 = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue<Mocked.IY_InBoolStr_OutConstInt_AsyncService, string>("blah blah")
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("str-argument", requiresResult: false)
-			//.AddFunctory<Mocked.IY_InObjBool_OutBool_AsyncService, string>("str-argument-2")
+			//.AddFn<Mocked.IY_InObjBool_OutBool_AsyncService, string>("str-argument-2")
 			//.AddArg(new object(), "args2")
 			//.RequireResult()
 			//.Build();
@@ -199,7 +199,7 @@
 		//var root = this._NodeBuilderFactory.Binary(context)
 			//.AddTrue(binary0)
 			//.AddFalse<Mocked.IY_InStr_AsyncService, string>("str-argument", requiresResult: false)
-			//.AddFunctory<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
+			//.AddFn<Mocked.IY_InStr_OutBool_AsyncService, string>("str-argument-2")
 			//.AddArg("str-argument-3", "args")
 			//.Build();
 

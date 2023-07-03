@@ -2,11 +2,11 @@ namespace Xo.TaskTree.Abstractions;
 
 public abstract class BaseNodeBuilder
 {
-	protected readonly IFunctitect _Functitect;
+	protected readonly IFnFactory _FnFactory;
 	protected readonly INodeFactory _NodeFactory;
 	protected ILogger? _Logger;
-	protected IAsyncFunctoryInvoker? _AsyncFunctory;
-	protected ISyncFunctoryInvoker? _SyncFunctory;
+	protected IAsyncFn? _AsyncFn;
+	protected ISyncFn? _SyncFn;
 	protected IWorkflowContext? _Context;
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
@@ -18,14 +18,14 @@ public abstract class BaseNodeBuilder
 	public bool RequiresResult { get; internal set; } = false;
 
 	public BaseNodeBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
 	)
 	{
-		this._Functitect = functitect ?? throw new ArgumentNullException(nameof(functitect));
+		this._FnFactory = functitect ?? throw new ArgumentNullException(nameof(functitect));
 		this._NodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
 		this._Logger = logger;
 		if (id is not null) this.Id = id;

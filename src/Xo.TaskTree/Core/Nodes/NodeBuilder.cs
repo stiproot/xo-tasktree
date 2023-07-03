@@ -6,7 +6,7 @@ public sealed class NodeBuilder : CoreNodeBuilder
 	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
 	/// </summary>
 	public NodeBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

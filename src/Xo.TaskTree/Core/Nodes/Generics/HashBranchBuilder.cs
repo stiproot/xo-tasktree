@@ -12,7 +12,7 @@ public class HashBranchBuilder : CoreNodeBuilder, IHashBranchBuilder
 
 	public virtual IHashBranchBuilder AddNext<T>(string key)
 	{
-		var n = typeof(T).ToNode(this._Functitect);
+		var n = typeof(T).ToNode(this._FnFactory);
 
 		this._Hash.Add(key, n);
 
@@ -33,7 +33,7 @@ public class HashBranchBuilder : CoreNodeBuilder, IHashBranchBuilder
 	///   Initializes a new instance of <see cref="HashBranchBuilder"/>. 
 	/// </summary>
 	public HashBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,

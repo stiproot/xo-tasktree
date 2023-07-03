@@ -1,8 +1,8 @@
 namespace Xo.TaskTree.Abstractions;
 
-/// <inheritdoc cref="IFunctoryInvoker"/>
+/// <inheritdoc cref="IFn"/>
 [ExcludeFromCodeCoverage]
-public abstract class BaseFunctoryInvoker : IFunctoryInvoker
+public abstract class BaseFn : IFn
 {
 	protected Type? _ServiceType;
 
@@ -10,7 +10,7 @@ public abstract class BaseFunctoryInvoker : IFunctoryInvoker
 	public Type? ServiceType => this._ServiceType;
 
 	/// <inheritdoc />
-	public virtual IFunctoryInvoker SetServiceType(Type serviceType)
+	public virtual IFn SetServiceType(Type serviceType)
 	{
 		this._ServiceType = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
 		return this;
@@ -26,7 +26,7 @@ public abstract class BaseFunctoryInvoker : IFunctoryInvoker
 	protected string? _NextParamName;
 
 	/// <inheritdoc />
-	public virtual IFunctoryInvoker SetNextParamName(string? nextParamName = null)
+	public virtual IFn SetNextParamName(string? nextParamName = null)
 	{
 		this._NextParamName = nextParamName;
 		return this;
@@ -50,13 +50,13 @@ public abstract class BaseFunctoryInvoker : IFunctoryInvoker
 
 	/// <inheritdoc />
 	protected virtual T As<T>()
-		=> (T)(IFunctoryInvoker)this;
+		=> (T)(IFn)this;
 
 	/// <inheritdoc />
-	public virtual ISyncFunctoryInvoker AsSync()
-		=> this.As<ISyncFunctoryInvoker>();
+	public virtual ISyncFn AsSync()
+		=> this.As<ISyncFn>();
 
 	/// <inheritdoc />
-	public virtual IAsyncFunctoryInvoker AsAsync()
-		=> this.As<IAsyncFunctoryInvoker>();
+	public virtual IAsyncFn AsAsync()
+		=> this.As<IAsyncFn>();
 }

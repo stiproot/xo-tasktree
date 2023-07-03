@@ -5,60 +5,60 @@ namespace Xo.TaskTree.Core;
 public static class NodeBuildeExtensions
 {
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddFunctory<T>(
+	public static ICoreNodeBuilder AddFn<T>(
 		this ICoreNodeBuilder @this,
 		string? nextParamName = null
 	)
 	{
-		IAsyncFunctoryInvoker fn = @this.Functitect.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync(); 
+		IAsyncFn fn = @this.FnFactory.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync(); 
 
-		@this.AddFunctory(fn);
+		@this.AddFn(fn);
 
 		return @this;
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddFunctory(
+	public static ICoreNodeBuilder AddFn(
 		this ICoreNodeBuilder @this,
 		Type serviceType, 
 		string? nextParamName = null
 	)
 	{
-		IAsyncFunctoryInvoker fn = @this.Functitect.Build(serviceType, nextParamName).AsAsync();
+		IAsyncFn fn = @this.FnFactory.Build(serviceType, nextParamName).AsAsync();
 
-		@this.AddFunctory(fn);
+		@this.AddFn(fn);
 
 		return @this;
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddFunctory<TService, TArg>(this ICoreNodeBuilder @this,
+	public static ICoreNodeBuilder AddFn<TService, TArg>(this ICoreNodeBuilder @this,
 		TArg arg,
 		string? nextParamName = null
 	)
 	{
 		// todo: what happens if @this.is not async?
 
-		if (@this.FunctoryType is not null)
+		if (@this.FnType is not null)
 		{
 			@this.AddArg<TArg>(arg);
 
-			var fn = @this.Functitect
+			var fn = @this.FnFactory
 				.Build<TService>(nextParamName: nextParamName)
 				.SetServiceType(typeof(TService))
 				.AsAsync();
 
-			@this.AddFunctory(fn);
+			@this.AddFn(fn);
 		}
 		else
 		{
 			// todo: remove this static argument injection...
-			var fn = @this.Functitect
+			var fn = @this.FnFactory
 				.Build<TService, TArg>(arg: arg, nextParamName: nextParamName)
 				.SetServiceType(typeof(TService))
 				.AsAsync();
 			
-			@this.AddFunctory(fn);
+			@this.AddFn(fn);
 		}
 
 		return @this;
@@ -69,7 +69,7 @@ public static class NodeBuildeExtensions
 		TArg arg
 	)
 	{
-		var type = @this.FunctoryType;
+		var type = @this.FnType;
 
 		if (type is null) throw new InvalidOperationException("Unable to find functory type...");
 
@@ -126,12 +126,12 @@ public static class NodeBuildeExtensions
 	{
 		// Get the name of the parameter that the result of @this.node will be used for.
 
-		var functoryServiceType = @this.FunctoryType;
+		var functoryServiceType = @this.FnType;
 
 		// in the case of anonymous functories, the functoryServiceType will be null...
 		if (functoryServiceType is null)
 		{
-			var n = serviceType.ToNode(@this.Functitect);
+			var n = serviceType.ToNode(@this.FnFactory);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -145,7 +145,7 @@ public static class NodeBuildeExtensions
 
 		if (parameterInfo.Length == 0)
 		{
-			var n = serviceType.ToNode(@this.Functitect);
+			var n = serviceType.ToNode(@this.FnFactory);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -161,7 +161,7 @@ public static class NodeBuildeExtensions
 
 			var paramName = parameterInfo[0].Name;
 
-			var n = serviceType.ToNode(@this.Functitect, nextParamName: paramName);
+			var n = serviceType.ToNode(@this.FnFactory, nextParamName: paramName);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -187,7 +187,7 @@ public static class NodeBuildeExtensions
 
 			if (paramName is null) return @this;
 
-			var n = serviceType.ToNode(@this.Functitect, paramName);
+			var n = serviceType.ToNode(@this.FnFactory, paramName);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -200,26 +200,26 @@ public static class NodeBuildeExtensions
 		return @this;
 	}
 
-	// protected IAsyncFunctoryInvoker TypeToFunctory(Type functoryType) 
-		// => @this._Functitect.Build(functoryType).SetServiceType(functoryType).AsAsync();
+	// protected IAsyncFn TypeToFn(Type functoryType) 
+		// => @this._FnFactory.Build(functoryType).SetServiceType(functoryType).AsAsync();
 
 	// todo: there is a possibility that @this.will be null -> if a functory adapter is being used...
-	// protected Type? _FunctoryType
+	// protected Type? _FnType
 	// {
 		// get
 		// {
-			// if (@this._AsyncFunctory is not null) return (@this._AsyncFunctory as IFunctoryInvoker)!.ServiceType!;
-			// if (@this._SyncFunctory is not null) return (@this._SyncFunctory as IFunctoryInvoker)!.ServiceType!;
+			// if (@this._AsyncFn is not null) return (@this._AsyncFn as IFn)!.ServiceType!;
+			// if (@this._SyncFn is not null) return (@this._SyncFn as IFn)!.ServiceType!;
 			// return null;
 		// }
 	// }
 
-	public static void MatchArgToNodesFunctory<TArg>(
+	public static void MatchArgToNodesFn<TArg>(
 		INode node, 
 		TArg arg
 	)
 	{
-		var serviceType = node.Functory.ServiceType;
+		var serviceType = node.Fn.ServiceType;
 		var argType = typeof(TArg);
 		var method = serviceType!.GetMethods().First()!;
 		var parameters = method.GetParameters();
@@ -260,8 +260,8 @@ public static class NodeBuildeExtensions
 		// string? nextParamName = null
 	// )
 	// {
-		// var functory = @this._Functitect.Build(serviceType, methodName, nextParamName).AsAsync();
-		// return @this._NodeFactory.Create().SetFunctory(functory);
+		// var functory = @this._FnFactory.Build(serviceType, methodName, nextParamName).AsAsync();
+		// return @this._NodeFactory.Create().SetFn(functory);
 	// }
 
 	public static void PropogateMsg(
@@ -269,7 +269,7 @@ public static class NodeBuildeExtensions
 		INode next
 	)
 	{
-		var targetServiceType = next.Functory.ServiceType;
+		var targetServiceType = next.Fn.ServiceType;
 		var targetMethodInfo = targetServiceType!.GetMethods().First();
 		var targetMethodParams = targetMethodInfo.GetParameters();
 
@@ -286,7 +286,7 @@ public static class NodeBuildeExtensions
 
 		if (paramName is null) throw new ArgumentException("Unable to find parameter name for type TArg...");
 
-		var clone = Functitect.CreateMsg(msg!.ObjectData, paramName);
+		var clone = FnFactory.CreateMsg(msg!.ObjectData, paramName);
 		next.AddArg(clone);
 	}
 
@@ -307,20 +307,20 @@ public static class NodeBuildeExtensions
 			// @this.PropogateMsg(msg, next);
 		// }
 
-		// return await next.ResolveFunctory(cancellationToken);
+		// return await next.ResolveFn(cancellationToken);
 	// }
 
 	public static IMsg? CloneMsg(IMsg? msg)
 	{
 		if (msg is null) return null;
 
-		var clone = Functitect.CreateMsg(msg.ObjectData, msg.ParamName);
+		var clone = FnFactory.CreateMsg(msg.ObjectData, msg.ParamName);
 
 		return clone;
 	}
 
 	// public GenericNodeBuilder(
-		// IFunctitect functitect,
+		// IFnFactory functitect,
 		// INodeFactory nodeFactory,
 		// IMsgFactory msgFactory,
 		// ILogger? logger = null,
@@ -328,7 +328,7 @@ public static class NodeBuildeExtensions
 		// IWorkflowContext? context = null
 	// )
 	// {
-		// @this._Functitect = functitect ?? throw new ArgumentNullException(nameof(functitect));
+		// @this._FnFactory = functitect ?? throw new ArgumentNullException(nameof(functitect));
 		// @this._NodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
 		// @this._MsgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 		// @this._Logger = logger;

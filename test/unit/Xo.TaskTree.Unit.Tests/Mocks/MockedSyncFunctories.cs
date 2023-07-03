@@ -3,13 +3,13 @@ namespace Xo.TaskTree.Unit.Tests.Mocks;
 /// <summary>
 ///   Test functory extending the  
 /// </summary>
-public class TestSyncFunctory : BaseSyncFunctoryInvoker
+public class TestSyncFn : BaseSyncFn
 {
 	private const string paramName = "sleep";
 	private readonly IY_InInt_OutBool_SyncService _synchronousService;
 	private readonly IMsgFactory _msgFactory;
 
-	public TestSyncFunctory(
+	public TestSyncFn(
 		IY_InInt_OutBool_SyncService synchronousService,
 		IMsgFactory msgFactory
 	)
@@ -18,7 +18,7 @@ public class TestSyncFunctory : BaseSyncFunctoryInvoker
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
-	public override IMsg? InvokeFunc(
+	public override IMsg? Invoke(
 		IArgs param,
 		IWorkflowContext? context = null
 	)

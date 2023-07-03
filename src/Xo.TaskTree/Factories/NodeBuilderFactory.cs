@@ -4,11 +4,11 @@ namespace Xo.TaskTree.Factories;
 public class NodeBuilderFactory : INodeBuilderFactory
 {
     private readonly INodeFactory _nodeFactory;
-    private readonly IFunctitect _functitect;
+    private readonly IFnFactory _functitect;
 
     public NodeBuilderFactory(
         INodeFactory nodeFactory,
-        IFunctitect functitect
+        IFnFactory functitect
     )
     {
         this._nodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
@@ -45,7 +45,7 @@ public class NodeBuilderFactory : INodeBuilderFactory
 
     private ICoreNodeBuilder Create(
         NodeBuilderTypes nodeType,
-        IFunctitect functitect,
+        IFnFactory functitect,
         INodeFactory nodeFactory,
         ILogger? logger = null,
         string? id = null,

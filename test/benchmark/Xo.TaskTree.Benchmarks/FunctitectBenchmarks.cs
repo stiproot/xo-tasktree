@@ -15,9 +15,9 @@ namespace Xo.TaskTree.Benchmarks;
 
 [ExcludeFromCodeCoverage]
 [MemoryDiagnoser]
-public class FunctitectBenchmarks
+public class FnFactoryBenchmarks
 {
-  private IFunctitect _functitect;
+  private IFnFactory _functitect;
   private readonly Type _serviceType = typeof(ITestService);
   private const string _methodName = "RunAsync";
   private const string _nextParamName = null;
@@ -31,11 +31,11 @@ public class FunctitectBenchmarks
   [GlobalSetup]
   public void GlobalSetup()
   {
-    this._functitect = new Functitect(ServiceCollectionFactory.CreateServiceProvider());
+    this._functitect = new FnFactory(ServiceCollectionFactory.CreateServiceProvider());
   }
 
   [Benchmark]
-  public IFunctoryInvoker Build()
+  public IFn Build()
   {
     return this._functitect.Build(_serviceType, _methodName, _nextParamName);
   }
@@ -43,7 +43,7 @@ public class FunctitectBenchmarks
   [Benchmark]
   public async Task Run()
   {
-    var builder = this._functitect.Build(_serviceType, _methodName, _nextParamName) as IAsyncFunctoryInvoker;
-    await builder.InvokeFunc(_params)();
+    var builder = this._functitect.Build(_serviceType, _methodName, _nextParamName) as IAsyncFn;
+    await builder.Invoke(_params)();
   }
 }

@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
 	/// <returns><see cref="IServiceCollection"/></returns>
 	public static IServiceCollection AddTaskFlowServices(this IServiceCollection services)
 	{
-		services.TryAddSingleton<IFunctitect, Functitect>();
+		services.TryAddSingleton<IFnFactory, FnFactory>();
 		services.TryAddSingleton<IMetaNodeMapper, MetaNodeMapper>();
 		services.TryAddSingleton<INodeBuilderFactory, NodeBuilderFactory>();
 		services.TryAddSingleton<IStateManager, StateManager>();

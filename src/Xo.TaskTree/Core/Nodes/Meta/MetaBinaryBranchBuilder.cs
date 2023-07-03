@@ -32,11 +32,11 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 		INode? @false = this.BuildBinary(metaNodeMapper, this._MetaNode!.NodeEdge!.False, false);
 		INodeEdge e = new BinariusNodeEdge { Edge1 = @true, Edge2 = @false };
 
-		IAsyncFunctoryInvoker fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode.NodeConfiguration?.NextParamName);
+		IAsyncFn fn = this._MetaNode!.FnType.ToFn(this._FnFactory, this._MetaNode.NodeConfiguration?.NextParamName);
 		INode[] promisedArgs = _MetaNode.NodeConfiguration!.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 		INode n = this._NodeFactory
 			.Create(this._Logger, context: this._Context)
-			.SetFunctory(fn)
+			.SetFn(fn)
 			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
 			.AddArg(promisedArgs)
 			.SetNodeEdge(e);
@@ -57,11 +57,11 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	{
 		if(mn is null) return null;
 
-		IAsyncFunctoryInvoker fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration.NextParamName);
+		IAsyncFn fn = mn.FnType.ToFn(this._FnFactory, mn.NodeConfiguration.NextParamName);
 		INode[] promisedArgs = mn.NodeConfiguration!.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		INode n = this._NodeFactory
 			.Create(this._Logger, context: this._Context)
-			.SetFunctory(fn)
+			.SetFn(fn)
 			.AddArg(promisedArgs);
 		
 		if(mn.NodeConfiguration is not null)
@@ -91,7 +91,7 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 
 		var decisionNode  = this._NodeFactory
 			.Create() 
-			.SetFunctory(decisionFn)
+			.SetFn(decisionFn)
 			.SetController(new TrueController())
 			.SetNodeEdge(decisionEdge)
 			.RequireResult();
@@ -103,7 +103,7 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaBinaryBranchBuilder(
-		IFunctitect functitect,
+		IFnFactory functitect,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
