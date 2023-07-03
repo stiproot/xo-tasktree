@@ -21,7 +21,7 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 	{
 		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
-		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = this._MetaNode.NodeConfiguration.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode[] ns = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.Build(metaNodeMapper, v)).ToArray();
 
@@ -29,7 +29,7 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 
 		n
 			.SetFunctory(fn)
-			.AddArg(this._MetaNode.Args.ToArray())
+			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
 			.AddArg(promisedArgs)
 			.SetNodeEdge(e);
 
@@ -45,7 +45,7 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 
 		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
 
-		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = mn.NodeConfiguration.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context)
 			.SetFunctory(fn)

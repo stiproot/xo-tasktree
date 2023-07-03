@@ -2,16 +2,17 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface INodeConfigurationBuilder
 {
-    INodeConfigurationBuilder RequireResult();
-    INodeConfigurationBuilder NextParam(string nextParamName);
-    INodeConfigurationBuilder Key(string key);
+	INodeConfigurationBuilder RequireResult();
+	INodeConfigurationBuilder AddFunctoryType(Type functoryType);
+	INodeConfigurationBuilder NextParam(string nextParamName);
+	INodeConfigurationBuilder Key(string key);
 
-    INodeConfigurationBuilder AddArg<T>(
-        T data, 
-        string paramName
-    );
-    INodeConfigurationBuilder MatchArg<T>(T arg);
-    INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null);
+	INodeConfigurationBuilder AddArg<T>(
+			T data,
+			string paramName
+	);
+	INodeConfigurationBuilder MatchArg<T>(T arg);
+	INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null);
 
-    INodeConfiguration Build();
+	INodeConfiguration Build();
 }

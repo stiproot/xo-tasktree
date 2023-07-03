@@ -21,12 +21,12 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 	{
 		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode!.NodeConfiguration?.NextParamName);
 
-		INode[] promisedArgs = this._MetaNode.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode n = this._NodeFactory
 			.Create(this._Logger, this.Id, this._Context)
 			.SetFunctory(fn)
-			.AddArg(this._MetaNode.Args.ToArray())
+			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
 			.AddArg(promisedArgs);
 		
 		if(this._MetaNode.NodeConfiguration?.RequiresResult is true) n.RequireResult();

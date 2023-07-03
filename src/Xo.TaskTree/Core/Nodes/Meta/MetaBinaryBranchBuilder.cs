@@ -33,11 +33,11 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 		INodeEdge e = new BinariusNodeEdge { Edge1 = @true, Edge2 = @false };
 
 		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect, this._MetaNode.NodeConfiguration?.NextParamName);
-		INode[] promisedArgs = this._MetaNode!.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = _MetaNode.NodeConfiguration!.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 		INode n = this._NodeFactory
 			.Create(this._Logger, context: this._Context)
 			.SetFunctory(fn)
-			.AddArg(this._MetaNode.Args.ToArray())
+			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
 			.AddArg(promisedArgs)
 			.SetNodeEdge(e);
 		
@@ -55,12 +55,10 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 		bool binaryBranchType
 	) 
 	{
-		// mn is true metanode...
-		// if(mn is null) throw new InvalidOperationException();
 		if(mn is null) return null;
 
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration?.NextParamName);
-		INode[] promisedArgs = mn.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect, mn.NodeConfiguration.NextParamName);
+		INode[] promisedArgs = mn.NodeConfiguration!.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		INode n = this._NodeFactory
 			.Create(this._Logger, context: this._Context)
 			.SetFunctory(fn)

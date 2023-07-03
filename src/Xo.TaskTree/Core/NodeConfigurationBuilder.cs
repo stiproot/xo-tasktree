@@ -2,74 +2,85 @@ namespace Xo.TaskTree.Core;
 
 public class NodeConfigurationBuilder : INodeConfigurationBuilder
 {
-    private readonly INodeConfiguration _config = new NodeConfiguration();
-    private Type? _functoryType;
+	private readonly INodeConfiguration _config = new NodeConfiguration();
+	private Type? _functoryType;
 
-    public INodeConfigurationBuilder RequireResult()
-    {
-        this._config.RequiresResult = true;
-        return this;
-    }
+	public INodeConfigurationBuilder RequireResult()
+	{
+		this._config.RequiresResult = true;
+		return this;
+	}
 
-    public INodeConfigurationBuilder NextParam(string nextParamName)
-    {
-        this._config.NextParamName = nextParamName;
-        return this;
-    }
+	public INodeConfigurationBuilder AddFunctoryType(Type functoryType)
+	{
+		this._functoryType = functoryType;
+		return this;
+	}
 
-    public INodeConfigurationBuilder Key(string key)
-    {
-        this._config.Key = key;
-        return this;
-    }
+	public INodeConfigurationBuilder NextParam(string nextParamName)
+	{
+		this._config.NextParamName = nextParamName;
+		return this;
+	}
 
-    public INodeConfigurationBuilder AddArg<T>(
-        T data, 
-        string paramName
-    )
-    {
-        var msg = new Msg<T>(data, paramName);
+	public INodeConfigurationBuilder Key(string key)
+	{
+		this._config.Key = key;
+		return this;
+	}
 
-        this._config.Args.Add(msg);
+	public INodeConfigurationBuilder AddArg<T>(
+			T data,
+			string paramName
+	)
+	{
+		var msg = new Msg<T>(data, paramName);
 
-        return this;
-    }
+		this._config.Args.Add(msg);
 
-    public INodeConfigurationBuilder MatchArg<T>(T arg)
-    {
-        if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
+		return this;
+	}
 
-        var argType = typeof(T);
+	public INodeConfigurationBuilder MatchArg<T>(T arg)
+	{
+		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
 
-        var functoryParamName = TypeInspector.MatchTypeToParamType(argType, this._functoryType);
+		var argType = typeof(T);
 
-        var msg = new Msg<T>(arg, functoryParamName);
+		var functoryParamName = TypeInspector.MatchTypeToParamType(argType, this._functoryType);
 
-        this._config.Args.Add(msg);
+		var msg = new Msg<T>(arg, functoryParamName);
 
-        return this;
-    }
+		this._config.Args.Add(msg);
 
-    public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null) 
-    {
-        if(this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
+		return this;
+	}
 
-        var argType = typeof(T);
+	public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null)
+	{
+		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
 
-        var arg = argType.ToMetaNode(configure, safe:true);
+		var argType = typeof(T);
 
-        var functoryParamName = TypeInspector.MatchReturnTypeToParamType(argType, this._functoryType);
+		var arg = argType.ToMetaNode(configure);
 
-        arg.NodeConfiguration!.NextParamName = functoryParamName;
+		var functoryParamName = TypeInspector.MatchReturnTypeToParamType(argType, this._functoryType);
 
-        this._config.PromisedArgs.Add(arg);
+		arg.NodeConfiguration!.NextParamName = functoryParamName;
 
-        return this;
-    }
+		this._config.PromisedArgs.Add(arg);
 
-    // todo: delay build operation, or just reference config directly -> Build() is misleading.
-    public INodeConfiguration Build() => this._config;
+		return this;
+	}
 
-    public NodeConfigurationBuilder() { }
-    public NodeConfigurationBuilder(Type functoryType) => this._functoryType = functoryType;
+	// todo: delay build operation, or just reference config directly -> Build() is misleading.
+	public INodeConfiguration Build() => this._config;
+
+	public NodeConfigurationBuilder() { }
+	public NodeConfigurationBuilder(
+		INodeConfiguration nodeConfiguration,
+		Type functoryType
+	)
+		=> (this._config, this._functoryType) = (nodeConfiguration, functoryType);
+	public NodeConfigurationBuilder(Type functoryType) => this._functoryType = functoryType;
 }
