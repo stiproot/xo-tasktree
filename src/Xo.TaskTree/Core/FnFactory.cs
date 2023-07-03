@@ -163,7 +163,6 @@ public sealed class FnFactory : IFnFactory
 	)
 	{
 		// todo: multiple strategies for argument placement...
-		// use IArgs that is currently being developed...
 		if (staticArgs is null) 
 		{
 			if(parameters.Count() is 1)

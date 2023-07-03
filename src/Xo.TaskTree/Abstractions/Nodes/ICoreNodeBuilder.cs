@@ -4,7 +4,7 @@ public interface ICoreNodeBuilder
 {
 	bool HasParam(string paramName); 
 	IFnFactory FnFactory { get; }
-	Type? FnType { get; }
+	Type? ServiceType { get; }
 	ICoreNodeBuilder RequireResult(bool requiresResult = true);
 	ICoreNodeBuilder AddContext(IWorkflowContext? context);
 	ICoreNodeBuilder AddFn(IAsyncFn fn);

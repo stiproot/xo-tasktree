@@ -7,7 +7,7 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	public virtual IFnFactory FnFactory => this._FnFactory;
 
 	/// <inheritdoc />
-	public Type? FnType
+	public Type? ServiceType
 	{
 		get
 		{

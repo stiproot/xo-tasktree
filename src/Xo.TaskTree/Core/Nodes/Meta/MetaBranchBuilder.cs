@@ -19,7 +19,7 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFn fn = this._MetaNode!.FnType.ToFn(this._FnFactory, this._MetaNode!.NodeConfiguration?.NextParamName);
+		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode!.NodeConfiguration?.NextParamName);
 
 		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 

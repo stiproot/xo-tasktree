@@ -33,8 +33,8 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 		IMetaNode mn
 	) 
 	{
-		// IAsyncFn fn = this.TypeToFn(mn.FnType);
-		IAsyncFn fn = mn.FnType.ToFn(this._FnFactory);
+		// IAsyncFn fn = this.TypeToFn(mn.ServiceType);
+		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory);
 
 		INode[] promisedArgs = mn.NodeConfiguration.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 

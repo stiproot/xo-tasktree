@@ -2,14 +2,6 @@ namespace Xo.TaskTree.Core;
 
 internal static class TypeExtensions
 {
-	/* todo: this is sexy... but benchmarks need to be done... */
-	//public static IMetaNode ToMetaNode(this Type @this,
-			//Action<INodeConfigurationBuilder>? configure = null,
-			//MetaNodeTypes nodeType = MetaNodeTypes.Default,
-			//bool safe = false
-	//)
-		//=> new MetaNode(@this) { NodeType = nodeType }.Configure(safe ? configure.SafeBuild(@this) : configure.Build(@this));
-
 	public static IMetaNode ToMetaNode(this Type @this,
 			Action<INodeConfigurationBuilder>? configure = null,
 			MetaNodeTypes nodeType = MetaNodeTypes.Default
@@ -28,13 +20,13 @@ internal static class TypeExtensions
 	}
 
 	public static IAsyncFn ToFn(this Type @this,
-				IFnFactory fnFactory
+		IFnFactory fnFactory
 	)
 		=> fnFactory.Build(@this).SetServiceType(@this).AsAsync();
 
 	public static IAsyncFn ToFn(this Type @this,
-				IFnFactory fnFactory,
-				string? nextParamName
+		IFnFactory fnFactory,
+		string? nextParamName
 	)
 		=> fnFactory.Build(@this, nextParamName: nextParamName).SetServiceType(@this).AsAsync();
 

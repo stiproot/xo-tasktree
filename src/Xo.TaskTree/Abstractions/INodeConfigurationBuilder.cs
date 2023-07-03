@@ -3,7 +3,7 @@ namespace Xo.TaskTree.Abstractions;
 public interface INodeConfigurationBuilder
 {
 	INodeConfigurationBuilder RequireResult();
-	INodeConfigurationBuilder AddFnType(Type functoryType);
+	INodeConfigurationBuilder AddServiceType(Type serviceType);
 	INodeConfigurationBuilder NextParam(string nextParamName);
 	INodeConfigurationBuilder Key(string key);
 

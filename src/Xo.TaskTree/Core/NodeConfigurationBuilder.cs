@@ -3,7 +3,7 @@ namespace Xo.TaskTree.Core;
 public class NodeConfigurationBuilder : INodeConfigurationBuilder
 {
 	private readonly INodeConfiguration _config = new NodeConfiguration();
-	private Type? _functoryType;
+	private Type? _serviceType;
 
 	public INodeConfigurationBuilder RequireResult()
 	{
@@ -11,9 +11,9 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
-	public INodeConfigurationBuilder AddFnType(Type functoryType)
+	public INodeConfigurationBuilder AddServiceType(Type serviceType)
 	{
-		this._functoryType = functoryType;
+		this._serviceType = serviceType;
 		return this;
 	}
 
@@ -43,13 +43,13 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 	public INodeConfigurationBuilder MatchArg<T>(T arg)
 	{
-		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
+		if (this._serviceType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
 
 		var argType = typeof(T);
 
-		var functoryParamName = TypeInspector.MatchTypeToParamType(argType, this._functoryType);
+		var serviceParamName = TypeInspector.MatchTypeToParamType(argType, this._serviceType);
 
-		var msg = new Msg<T>(arg, functoryParamName);
+		var msg = new Msg<T>(arg, serviceParamName);
 
 		this._config.Args.Add(msg);
 
@@ -58,15 +58,15 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 	public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
+		if (this._serviceType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
 
 		var argType = typeof(T);
 
 		var arg = argType.ToMetaNode(configure);
 
-		var functoryParamName = TypeInspector.MatchReturnTypeToParamType(argType, this._functoryType);
+		var serviceParamName = TypeInspector.MatchReturnTypeToParamType(argType, this._serviceType);
 
-		arg.NodeConfiguration!.NextParamName = functoryParamName;
+		arg.NodeConfiguration!.NextParamName = serviceParamName;
 
 		this._config.PromisedArgs.Add(arg);
 
@@ -79,8 +79,8 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 	public NodeConfigurationBuilder() { }
 	public NodeConfigurationBuilder(
 		INodeConfiguration nodeConfiguration,
-		Type functoryType
+		Type serviceType
 	)
-		=> (this._config, this._functoryType) = (nodeConfiguration, functoryType);
-	public NodeConfigurationBuilder(Type functoryType) => this._functoryType = functoryType;
+		=> (this._config, this._serviceType) = (nodeConfiguration, serviceType);
+	public NodeConfigurationBuilder(Type serviceType) => this._serviceType = serviceType;
 }

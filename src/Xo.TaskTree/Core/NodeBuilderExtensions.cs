@@ -39,7 +39,7 @@ public static class NodeBuildeExtensions
 	{
 		// todo: what happens if @this.is not async?
 
-		if (@this.FnType is not null)
+		if (@this.ServiceType is not null)
 		{
 			@this.AddArg<TArg>(arg);
 
@@ -69,7 +69,7 @@ public static class NodeBuildeExtensions
 		TArg arg
 	)
 	{
-		var type = @this.FnType;
+		var type = @this.ServiceType;
 
 		if (type is null) throw new InvalidOperationException("Unable to find fn type...");
 
@@ -120,18 +120,18 @@ public static class NodeBuildeExtensions
 
 	/// <inheritdoc />
 	public static ICoreNodeBuilder AddArg(this ICoreNodeBuilder @this,
-		Type serviceType,
+		Type argServiceType,
 		IMsg[]? serviceArgs = null
 	)
 	{
 		// Get the name of the parameter that the result of @this.node will be used for.
 
-		var functoryServiceType = @this.FnType;
+		var serviceType = @this.ServiceType;
 
-		// in the case of anonymous functories, the functoryServiceType will be null...
-		if (functoryServiceType is null)
+		// in the case of anonymous functories, the serviceType will be null...
+		if (serviceType is null)
 		{
-			var n = serviceType.ToNode(@this.FnFactory);
+			var n = argServiceType.ToNode(@this.FnFactory);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -140,12 +140,12 @@ public static class NodeBuildeExtensions
 			return @this;
 		}
 
-		var methodInfo = functoryServiceType!.GetMethods().First();
+		var methodInfo = serviceType!.GetMethods().First();
 		var parameterInfo = methodInfo.GetParameters();
 
 		if (parameterInfo.Length == 0)
 		{
-			var n = serviceType.ToNode(@this.FnFactory);
+			var n = argServiceType.ToNode(@this.FnFactory);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -161,7 +161,7 @@ public static class NodeBuildeExtensions
 
 			var paramName = parameterInfo[0].Name;
 
-			var n = serviceType.ToNode(@this.FnFactory, nextParamName: paramName);
+			var n = argServiceType.ToNode(@this.FnFactory, nextParamName: paramName);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
@@ -178,7 +178,6 @@ public static class NodeBuildeExtensions
 
 			var paramName = parameterInfo
 				.Where(p =>
-					// !@this._Params.Any(_p => _p.ParamName == p.Name) &&
 					!@this.HasParam(p.Name!) &&
 					p.ParameterType.FullName == newServiceTypeReturnType.FullName
 				)
@@ -187,11 +186,10 @@ public static class NodeBuildeExtensions
 
 			if (paramName is null) return @this;
 
-			var n = serviceType.ToNode(@this.FnFactory, paramName);
+			var n = argServiceType.ToNode(@this.FnFactory, paramName);
 
 			if (serviceArgs is not null) n.AddArg(serviceArgs);
 
-			// @this._PromisedParams.Add(n);
 			@this.AddArg(n);
 
 			return @this;
@@ -199,20 +197,6 @@ public static class NodeBuildeExtensions
 
 		return @this;
 	}
-
-	// protected IAsyncFn TypeToFn(Type functoryType) 
-		// => @this._FnFactory.Build(functoryType).SetServiceType(functoryType).AsAsync();
-
-	// todo: there is a possibility that @this.will be null -> if a fn adapter is being used...
-	// protected Type? _FnType
-	// {
-		// get
-		// {
-			// if (@this._AsyncFn is not null) return (@this._AsyncFn as IFn)!.ServiceType!;
-			// if (@this._SyncFn is not null) return (@this._SyncFn as IFn)!.ServiceType!;
-			// return null;
-		// }
-	// }
 
 	public static void MatchArgToNodesFn<TArg>(
 		INode node, 
