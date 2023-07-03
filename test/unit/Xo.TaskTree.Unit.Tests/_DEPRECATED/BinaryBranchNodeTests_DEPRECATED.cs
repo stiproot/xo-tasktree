@@ -4,12 +4,12 @@
 //public class BinaryBranchNodeTests : BaseBranchTests
 //{
 	//public BinaryBranchNodeTests(
-		//IFnFactory functitect,
+		//IFnFactory fnFactory,
 		//INodeFactory nodeFactory,
 		//IMsgFactory msgFactory,
 		//IWorkflowContextFactory workflowContextFactory,
 		//INodeBuilderFactory nodeBuilderFactory
-	//) : base(functitect, nodeFactory, msgFactory, workflowContextFactory, nodeBuilderFactory) { }
+	//) : base(fnFactory, nodeFactory, msgFactory, workflowContextFactory, nodeBuilderFactory) { }
 
 	//[Fact]
 	//public async Task BinaryBranchTest()
@@ -56,7 +56,7 @@
 		//var cancellationToken = this.CancellationTokenFactory();
 		//var context = this._WorkflowContextFactory.Create();
 
-		//// The output of this Node will be used as a param for the Task produced by the functory contained in Node n2, "flag2" of type bool.
+		//// The output of this Node will be used as a param for the Task produced by the fn contained in Node n2, "flag2" of type bool.
 		//var n1 = this._NodeFactory.Create(context)
 										//.SetFn(this._FnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
 										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
@@ -86,7 +86,7 @@
 		//var cancellationToken = this.CancellationTokenFactory();
 		//var context = this._WorkflowContextFactory.Create();
 
-		//// The output of this Node will be used as a param for the Task produced by the functory contained in Node n2, "flag2" of type bool.
+		//// The output of this Node will be used as a param for the Task produced by the fn contained in Node n2, "flag2" of type bool.
 		//var p0 = this._NodeBuilderFactory.Create(context)
 			//.AddFn<Mocked.IY_InStr_OutBool_AsyncService>(nextParamName: "flag2")
 			//.AddArg("some string")

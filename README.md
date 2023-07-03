@@ -1,7 +1,7 @@
 # xo-task-workflow-builder
 
 ## Laws
-- A Node contains a single functory.
+- A Node contains a single fn.
 - Nodes do not directly reference other nodes, nodes reference edges. Edges reference nodes.
 - There should be a single core node type. ie. no different type for a decision making node.
 

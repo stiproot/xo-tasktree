@@ -32,7 +32,7 @@ public sealed class FnFactory : IFnFactory
 		object[]? staticArgs = null
 	)
 	{
-		Func<IArgs, Task<IMsg?>> functory = async (args) =>
+		Func<IArgs, Task<IMsg?>> fn = async (args) =>
 			{
 				var service = this.GetService(serviceType);
 
@@ -62,13 +62,13 @@ public sealed class FnFactory : IFnFactory
 				return result is null ? null : CreateMsg(result, nextParamName);
 			};
 
-		return new AsyncFnAdaptor(functory!).SetServiceType(serviceType);
+		return new AsyncFnAdaptor(fn!).SetServiceType(serviceType);
 	}
 
 
 	public IAsyncFn BuildAsyncFn<T>(string? methodName = null)
 	{
-		Func<IArgs, Task<IMsg?>> functory = async (args) =>
+		Func<IArgs, Task<IMsg?>> fn = async (args) =>
 			{
 				var serviceType = typeof(T);
 
@@ -96,12 +96,12 @@ public sealed class FnFactory : IFnFactory
 			};
 
 		// todo: clean this up...
-		return new AsyncFnAdaptor(functory!).SetServiceType(serviceType: typeof(T)).AsAsync();
+		return new AsyncFnAdaptor(fn!).SetServiceType(serviceType: typeof(T)).AsAsync();
 	}
 
 	public ISyncFn BuildSyncFn<T>(string? methodName = null)
 	{
-		Func<IArgs, IMsg?> functory = (args) =>
+		Func<IArgs, IMsg?> fn = (args) =>
 			{
 				var serviceType = typeof(T);
 
@@ -122,7 +122,7 @@ public sealed class FnFactory : IFnFactory
 				return result == null ? null : CreateMsg(result, null);
 			};
 
-		return new SyncFnAdapter(functory!);
+		return new SyncFnAdapter(fn!);
 	}
 
 	private object? GetService(Type serviceType)

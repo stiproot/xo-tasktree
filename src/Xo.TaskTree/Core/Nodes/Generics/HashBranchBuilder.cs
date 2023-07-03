@@ -33,13 +33,13 @@ public class HashBranchBuilder : CoreNodeBuilder, IHashBranchBuilder
 	///   Initializes a new instance of <see cref="HashBranchBuilder"/>. 
 	/// </summary>
 	public HashBranchBuilder(
-		IFnFactory functitect,
+		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
 	) : base(
-			functitect, 
+			fnFactory, 
 			nodeFactory,
 			logger, 
 			id, 

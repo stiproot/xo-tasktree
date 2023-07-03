@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Unit.Tests.Mocks;
 
 ///// <summary>
-/////   Test functory showing how a user/consumer might provide their own functory by extending BaseFn.
+/////   Test fn showing how a user/consumer might provide their own fn by extending BaseFn.
 ///// </summary>
 public class IY_InStr_OutBool_AsyncService_Fn : BaseAsyncFn
 {
@@ -30,7 +30,7 @@ public class IY_InStr_OutBool_AsyncService_Fn : BaseAsyncFn
 			throw new OperationCanceledException($"Invalid param provided for service {nameof(IY_InStr_OutBool_AsyncService)}");
 		}
 
-		// One of the strengths of user-defined functory is the ability to modify the result of a Task before it gets passed to the next Task.
+		// One of the strengths of user-defined fn is the ability to modify the result of a Task before it gets passed to the next Task.
 		serviceArgs += "some modification for the purpose of demoing an alteration.";
 
 		var result = await this._service.GetBoolAsync(serviceArgs);
@@ -40,7 +40,7 @@ public class IY_InStr_OutBool_AsyncService_Fn : BaseAsyncFn
 }
 
 ///// <summary>
-/////   Test functory showing how a user/consumer might provide their own functory by extending BaseFn.
+/////   Test fn showing how a user/consumer might provide their own fn by extending BaseFn.
 ///// </summary>
 public class TestStrategy2 : BaseAsyncFn
 {
@@ -68,7 +68,7 @@ public class TestStrategy2 : BaseAsyncFn
 			throw new OperationCanceledException($"Invalid param provided for service {nameof(IY_InStr_OutInt_AsyncService)}");
 		}
 
-		// One of the strengths of user-defined functory is the ability to modify the result of a Task before it gets passed to the next Task.
+		// One of the strengths of user-defined fn is the ability to modify the result of a Task before it gets passed to the next Task.
 		serviceArgs += "some modification for the purpose of demoing an alteration.";
 
 		var result = await this._service.GetIntAsync(serviceArgs);

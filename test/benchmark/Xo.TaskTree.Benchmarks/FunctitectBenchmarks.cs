@@ -17,7 +17,7 @@ namespace Xo.TaskTree.Benchmarks;
 [MemoryDiagnoser]
 public class FnFactoryBenchmarks
 {
-  private IFnFactory _functitect;
+  private IFnFactory _fnFactory;
   private readonly Type _serviceType = typeof(ITestService);
   private const string _methodName = "RunAsync";
   private const string _nextParamName = null;
@@ -31,19 +31,19 @@ public class FnFactoryBenchmarks
   [GlobalSetup]
   public void GlobalSetup()
   {
-    this._functitect = new FnFactory(ServiceCollectionFactory.CreateServiceProvider());
+    this._fnFactory = new FnFactory(ServiceCollectionFactory.CreateServiceProvider());
   }
 
   [Benchmark]
   public IFn Build()
   {
-    return this._functitect.Build(_serviceType, _methodName, _nextParamName);
+    return this._fnFactory.Build(_serviceType, _methodName, _nextParamName);
   }
 
   [Benchmark]
   public async Task Run()
   {
-    var builder = this._functitect.Build(_serviceType, _methodName, _nextParamName) as IAsyncFn;
+    var builder = this._fnFactory.Build(_serviceType, _methodName, _nextParamName) as IAsyncFn;
     await builder.Invoke(_params)();
   }
 }

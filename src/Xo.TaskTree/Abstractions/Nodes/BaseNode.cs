@@ -62,9 +62,9 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFn(IAsyncFn functory)
+	public INode SetFn(IAsyncFn fn)
 	{
-		this._AsyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._AsyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
@@ -76,9 +76,9 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFn(ISyncFn functory)
+	public INode SetFn(ISyncFn fn)
 	{
-		this._SyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 

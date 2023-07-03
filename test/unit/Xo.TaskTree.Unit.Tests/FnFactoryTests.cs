@@ -40,8 +40,8 @@ public class FnFactoryTests
 		var builder = new FnFactory(serviceProvider);
 
 		// Act
-		var functory = builder.Build(type, methodName).AsAsync();
-		var result = await functory.Invoke(@params);
+		var fn = builder.Build(type, methodName).AsAsync();
+		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert
@@ -62,8 +62,8 @@ public class FnFactoryTests
 		var builder = new FnFactory(serviceProvider);
 
 		// Act
-		var functory = builder.Build(type, methodName, nextParamName: null).AsAsync();
-		var result = await functory.Invoke(@params);
+		var fn = builder.Build(type, methodName, nextParamName: null).AsAsync();
+		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert
@@ -85,10 +85,10 @@ public class FnFactoryTests
 		var builder = new FnFactory(serviceProvider);
 
 		// Act
-		var functory = builder.Build(type, methodName, nextParamName: null).AsAsync();
+		var fn = builder.Build(type, methodName, nextParamName: null).AsAsync();
 
 		// Assert
-		var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await functory.Invoke(@params));
+		var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await fn.Invoke(@params));
 		Assert.Equal($"Invalid parameters for method {nameof(this._testService3WithTwoArgs.ProcessStrBool)}. Arguments provided: args3, Parameters expected: args3,flag3", exception.Message);
 	}
 
@@ -104,8 +104,8 @@ public class FnFactoryTests
 		var builder = new FnFactory(serviceProvider);
 
 		// Act
-		var functory = builder.Build(type).AsAsync();
-		var result = await functory.Invoke(@params);
+		var fn = builder.Build(type).AsAsync();
+		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert
@@ -124,8 +124,8 @@ public class FnFactoryTests
 		var builder = new FnFactory(serviceProvider);
 
 		// Act
-		var functory = builder.Build<IY_InStr_OutBool_AsyncService>().AsAsync();
-		var result = await functory.Invoke(@params);
+		var fn = builder.Build<IY_InStr_OutBool_AsyncService>().AsAsync();
+		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert

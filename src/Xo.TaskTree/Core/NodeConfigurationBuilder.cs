@@ -43,7 +43,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 	public INodeConfigurationBuilder MatchArg<T>(T arg)
 	{
-		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
+		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
 
 		var argType = typeof(T);
 
@@ -58,7 +58,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 	public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - functory-type is null.");
+		if (this._functoryType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
 
 		var argType = typeof(T);
 

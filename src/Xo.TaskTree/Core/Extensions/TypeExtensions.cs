@@ -28,25 +28,25 @@ internal static class TypeExtensions
 	}
 
 	public static IAsyncFn ToFn(this Type @this,
-				IFnFactory functitect
+				IFnFactory fnFactory
 	)
-		=> functitect.Build(@this).SetServiceType(@this).AsAsync();
+		=> fnFactory.Build(@this).SetServiceType(@this).AsAsync();
 
 	public static IAsyncFn ToFn(this Type @this,
-				IFnFactory functitect,
+				IFnFactory fnFactory,
 				string? nextParamName
 	)
-		=> functitect.Build(@this, nextParamName: nextParamName).SetServiceType(@this).AsAsync();
+		=> fnFactory.Build(@this, nextParamName: nextParamName).SetServiceType(@this).AsAsync();
 
 	public static INode ToNode(this Type @this,
-		IFnFactory functitect,
+		IFnFactory fnFactory,
 		string? methodName = null,
 		string? nextParamName = null
 	)
 	{
-		var functory = functitect.Build(@this, methodName, nextParamName).AsAsync();
+		var fn = fnFactory.Build(@this, methodName, nextParamName).AsAsync();
 
 		// todo: what about other dependencies?...
-		return new Node().SetFn(functory);
+		return new Node().SetFn(fn);
 	}
 }

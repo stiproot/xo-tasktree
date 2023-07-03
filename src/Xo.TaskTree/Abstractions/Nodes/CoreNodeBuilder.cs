@@ -32,16 +32,16 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFn(IAsyncFn functory)
+	public ICoreNodeBuilder AddFn(IAsyncFn fn)
 	{
-		this._AsyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._AsyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFn(ISyncFn functory)
+	public ICoreNodeBuilder AddFn(ISyncFn fn)
 	{
-		this._SyncFn = functory ?? throw new ArgumentNullException(nameof(functory));
+		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
@@ -133,13 +133,13 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
 	/// </summary>
 	public CoreNodeBuilder(
-		IFnFactory functitect,
+		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
 	) : base(
-			functitect, 
+			fnFactory, 
 			nodeFactory,
 			logger, 
 			id, 

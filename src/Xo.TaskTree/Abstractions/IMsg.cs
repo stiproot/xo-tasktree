@@ -42,7 +42,7 @@ public interface IMsg
 	///   Boxes the data contained in this msg as object as returns. 
 	/// </summary>
 	/// <remarks>
-	///   This is used by the <see cref="IFnFactory" />, where reflection is used to dynamically create a functory factory from a <see cref="System.Type" /> that is provided.
+	///   This is used by the <see cref="IFnFactory" />, where reflection is used to dynamically create a fn factory from a <see cref="System.Type" /> that is provided.
 	/// </remarks>
 	object ObjectData { get; }
 }

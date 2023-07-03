@@ -52,13 +52,13 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 	///   Initializes a new instance of <see cref="MetaPathBranchBuilder"/>. 
 	/// </summary>
 	public MetaPathBranchBuilder(
-		IFnFactory functitect,
+		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
 	) : base(
-			functitect, 
+			fnFactory, 
 			nodeFactory,
 			logger, 
 			id, 

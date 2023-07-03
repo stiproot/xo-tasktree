@@ -47,13 +47,13 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
 	/// </summary>
 	public MetaBranchBuilder(
-		IFnFactory functitect,
+		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
 	) : base(
-			functitect, 
+			fnFactory, 
 			nodeFactory,
 			logger, 
 			id, 

@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Unit.Tests.Mocks;
 
 /// <summary>
-///   Test functory extending the  
+///   Test fn extending the  
 /// </summary>
 public class TestSyncFn : BaseSyncFn
 {
@@ -23,7 +23,6 @@ public class TestSyncFn : BaseSyncFn
 		IWorkflowContext? context = null
 	)
 	{
-		// var arg = (param[paramName] as Msg<int>).GetData();
 		var arg = this.Cast<Msg<int>>(this.SafeGet(param, paramName)).GetData();
 
 		var result = this._synchronousService.GetBool(arg);

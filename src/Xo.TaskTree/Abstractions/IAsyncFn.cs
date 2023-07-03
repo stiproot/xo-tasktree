@@ -12,7 +12,7 @@ public interface IAsyncFn
 	///   Core func-creation method. Produces a factory that will return an asyncrhonous operation. 
 	/// </summary>
 	/// <param name="param">IDictionary, 
-	///   Keys: paramater names for some services' method that this functory makes use of. 
+	///   Keys: paramater names for some services' method that this fn makes use of. 
 	///   Values: <see cref="IMsg"/> - Data property containing argument - Cast method can be used to typecast Data.</param>
 	/// <param name="context">The workflow context.</param>
 	/// <returns>Factory that will produce Task of IIMsg.</returns>

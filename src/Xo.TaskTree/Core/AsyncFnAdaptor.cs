@@ -1,18 +1,18 @@
 namespace Xo.TaskTree.Core;
 
 /// <summary>
-///   The functory adapter that wraps a functory... this could be the output of the <see cref="IFnFactory"/>'s core `Build` method, or an anonymous func.
+///   The fn adapter that wraps a fn... this could be the output of the <see cref="IFnFactory"/>'s core `Build` method, or an anonymous func.
 /// </summary>
 public sealed class AsyncFnAdaptor : BaseAsyncFn
 {
-	private readonly Func<IArgs, Task<IMsg?>> _functory;
+	private readonly Func<IArgs, Task<IMsg?>> _func;
 
-	public AsyncFnAdaptor(Func<IArgs, Task<IMsg?>> functory)
-		=> this._functory = functory ?? throw new ArgumentNullException(nameof(functory));
+	public AsyncFnAdaptor(Func<IArgs, Task<IMsg?>> fn)
+		=> this._func = fn ?? throw new ArgumentNullException(nameof(fn));
 
 	public override Task<IMsg?> Invoke(
 		IArgs args,
 		IWorkflowContext? context = null
 	)
-		=> this._functory(args);
+		=> this._func(args);
 }

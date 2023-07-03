@@ -7,8 +7,8 @@ public interface ICoreNodeBuilder
 	Type? FnType { get; }
 	ICoreNodeBuilder RequireResult(bool requiresResult = true);
 	ICoreNodeBuilder AddContext(IWorkflowContext? context);
-	ICoreNodeBuilder AddFn(IAsyncFn functory);
-	ICoreNodeBuilder AddFn(ISyncFn functory);
+	ICoreNodeBuilder AddFn(IAsyncFn fn);
+	ICoreNodeBuilder AddFn(ISyncFn fn);
 	ICoreNodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn);
 	ICoreNodeBuilder AddFn(Func<IArgs, IMsg?> fn);
 	ICoreNodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn);

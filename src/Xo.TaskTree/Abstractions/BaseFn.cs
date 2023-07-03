@@ -18,10 +18,10 @@ public abstract class BaseFn : IFn
 
 	/// <summary>
 	///   Value that will become this strategies output <see cref="IMsg"/> `ParamName`.
-	///   ie. the next functory parameter name that this output needs to be used for.
+	///   ie. the next fn parameter name that this output needs to be used for.
 	/// </summary>
 	/// <remarks>
-	///   Required if the result of this functory is to be "fed" into a functory one step up the call chain.
+	///   Required if the result of this fn is to be "fed" into a fn one step up the call chain.
 	/// </remarks>
 	protected string? _NextParamName;
 

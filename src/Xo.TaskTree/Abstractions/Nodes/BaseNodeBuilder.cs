@@ -18,14 +18,14 @@ public abstract class BaseNodeBuilder
 	public bool RequiresResult { get; internal set; } = false;
 
 	public BaseNodeBuilder(
-		IFnFactory functitect,
+		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null
 	)
 	{
-		this._FnFactory = functitect ?? throw new ArgumentNullException(nameof(functitect));
+		this._FnFactory = fnFactory ?? throw new ArgumentNullException(nameof(fnFactory));
 		this._NodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
 		this._Logger = logger;
 		if (id is not null) this.Id = id;

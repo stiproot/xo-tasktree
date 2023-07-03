@@ -24,9 +24,9 @@ public interface INode
 	INode SetNodevaluator(INodevaluator nodevaluator);
 	INode RunNodesInLoop();
 
-	INode SetFn(IAsyncFn functory);
+	INode SetFn(IAsyncFn fn);
 	INode SetFn(Func<IArgs, Task<IMsg?>> fn);
-	INode SetFn(ISyncFn functory);
+	INode SetFn(ISyncFn fn);
 	INode SetFn(Func<IArgs, IMsg?> fn);
 	INode SetFn(Func<IWorkflowContext, IMsg?> fn);
 

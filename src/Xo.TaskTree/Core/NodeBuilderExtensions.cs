@@ -71,7 +71,7 @@ public static class NodeBuildeExtensions
 	{
 		var type = @this.FnType;
 
-		if (type is null) throw new InvalidOperationException("Unable to find functory type...");
+		if (type is null) throw new InvalidOperationException("Unable to find fn type...");
 
 		string paramName = MatchArgToTypeMethodParam<TArg>(type);
 
@@ -203,7 +203,7 @@ public static class NodeBuildeExtensions
 	// protected IAsyncFn TypeToFn(Type functoryType) 
 		// => @this._FnFactory.Build(functoryType).SetServiceType(functoryType).AsAsync();
 
-	// todo: there is a possibility that @this.will be null -> if a functory adapter is being used...
+	// todo: there is a possibility that @this.will be null -> if a fn adapter is being used...
 	// protected Type? _FnType
 	// {
 		// get
@@ -260,8 +260,8 @@ public static class NodeBuildeExtensions
 		// string? nextParamName = null
 	// )
 	// {
-		// var functory = @this._FnFactory.Build(serviceType, methodName, nextParamName).AsAsync();
-		// return @this._NodeFactory.Create().SetFn(functory);
+		// var fn = @this._FnFactory.Build(serviceType, methodName, nextParamName).AsAsync();
+		// return @this._NodeFactory.Create().SetFn(fn);
 	// }
 
 	public static void PropogateMsg(
@@ -320,7 +320,7 @@ public static class NodeBuildeExtensions
 	}
 
 	// public GenericNodeBuilder(
-		// IFnFactory functitect,
+		// IFnFactory fnFactory,
 		// INodeFactory nodeFactory,
 		// IMsgFactory msgFactory,
 		// ILogger? logger = null,
@@ -328,7 +328,7 @@ public static class NodeBuildeExtensions
 		// IWorkflowContext? context = null
 	// )
 	// {
-		// @this._FnFactory = functitect ?? throw new ArgumentNullException(nameof(functitect));
+		// @this._FnFactory = fnFactory ?? throw new ArgumentNullException(nameof(fnFactory));
 		// @this._NodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
 		// @this._MsgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 		// @this._Logger = logger;

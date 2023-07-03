@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
 /// <summary>
-///   A factory that produces a Task (functory) that is used by a <see cref="INode"/>.
+///   A factory that produces a Task (fn) that is used by a <see cref="INode"/>.
 /// </summary>
 /// <remarks>
 ///   Strategies are how the TaskWorkflowEngine encapsulates operations that are to be run within a <see cref="INode"/>.
@@ -9,14 +9,14 @@ namespace Xo.TaskTree.Abstractions;
 public interface IFn
 {
 	/// <summary>
-	///   The type of the service that a functory will be built around. 
+	///   The type of the service that a fn will be built around. 
 	/// </summary>
 	Type? ServiceType { get; }
 
 	IFn SetServiceType(Type serviceType);
 
 	/// <summary>
-	///   A factory that produces a Task (functory) that is used by a <see cref="INode"/>.
+	///   A factory that produces a Task (fn) that is used by a <see cref="INode"/>.
 	/// </summary>
 	IFn SetNextParamName(string? nextParamName = null);
 
