@@ -6,7 +6,7 @@ namespace Xo.TaskTree.Abstractions;
 /// <remarks>
 ///   Strategies are how the TaskWorkflowEngine encapsulates operations that are to be run within a <see cref="INode"/>.
 /// </remarks>
-public interface IAsyncFunctory
+public interface IAsyncFunctoryInvoker
 {
 	/// <summary>
 	///   Core func-creation method. Produces a factory that will return an asyncrhonous operation. 
@@ -16,7 +16,7 @@ public interface IAsyncFunctory
 	///   Values: <see cref="IMsg"/> - Data property containing argument - Cast method can be used to typecast Data.</param>
 	/// <param name="context">The workflow context.</param>
 	/// <returns>Factory that will produce Task of IIMsg.</returns>
-	Task<IMsg?> CreateFunc(
+	Task<IMsg?> InvokeFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	);

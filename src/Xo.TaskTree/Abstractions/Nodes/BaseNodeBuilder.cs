@@ -5,8 +5,8 @@ public abstract class BaseNodeBuilder
 	protected readonly IFunctitect _Functitect;
 	protected readonly INodeFactory _NodeFactory;
 	protected ILogger? _Logger;
-	protected IAsyncFunctory? _AsyncFunctory;
-	protected ISyncFunctory? _SyncFunctory;
+	protected IAsyncFunctoryInvoker? _AsyncFunctory;
+	protected ISyncFunctoryInvoker? _SyncFunctory;
 	protected IWorkflowContext? _Context;
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;

@@ -1,9 +1,9 @@
 namespace Xo.TaskTree.Unit.Tests.Mocks;
 
 ///// <summary>
-/////   Test functory showing how a user/consumer might provide their own functory by extending BaseFunctory.
+/////   Test functory showing how a user/consumer might provide their own functory by extending BaseFunctoryInvoker.
 ///// </summary>
-public class IY_InStr_OutBool_AsyncService_Functory : BaseAsyncFunctory
+public class IY_InStr_OutBool_AsyncService_Functory : BaseAsyncFunctoryInvoker
 {
 	const string serviceParamName = "args";
 	private readonly IY_InStr_OutBool_AsyncService _service;
@@ -18,7 +18,7 @@ public class IY_InStr_OutBool_AsyncService_Functory : BaseAsyncFunctory
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
-	public override async Task<IMsg?> CreateFunc(
+	public override async Task<IMsg?> InvokeFunc(
 		IArgs param,
 		IWorkflowContext? context = null
 	)
@@ -40,9 +40,9 @@ public class IY_InStr_OutBool_AsyncService_Functory : BaseAsyncFunctory
 }
 
 ///// <summary>
-/////   Test functory showing how a user/consumer might provide their own functory by extending BaseFunctory.
+/////   Test functory showing how a user/consumer might provide their own functory by extending BaseFunctoryInvoker.
 ///// </summary>
-public class TestStrategy2 : BaseAsyncFunctory
+public class TestStrategy2 : BaseAsyncFunctoryInvoker
 {
 	const string serviceParamName = "args";
 	private readonly IY_InStr_OutInt_AsyncService _service;
@@ -57,7 +57,7 @@ public class TestStrategy2 : BaseAsyncFunctory
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
-	public override async Task<IMsg?> CreateFunc(
+	public override async Task<IMsg?> InvokeFunc(
 		IArgs param,
 		IWorkflowContext? context = null
 	)

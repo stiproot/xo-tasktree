@@ -7,8 +7,8 @@ public interface ICoreNodeBuilder
 	Type? FunctoryType { get; }
 	ICoreNodeBuilder RequireResult(bool requiresResult = true);
 	ICoreNodeBuilder AddContext(IWorkflowContext? context);
-	ICoreNodeBuilder AddFunctory(IAsyncFunctory functory);
-	ICoreNodeBuilder AddFunctory(ISyncFunctory functory);
+	ICoreNodeBuilder AddFunctory(IAsyncFunctoryInvoker functory);
+	ICoreNodeBuilder AddFunctory(ISyncFunctoryInvoker functory);
 	ICoreNodeBuilder AddFunctory(Func<IArgs, Task<IMsg?>> fn);
 	ICoreNodeBuilder AddFunctory(Func<IArgs, IMsg?> fn);
 	ICoreNodeBuilder AddFunctory(Func<IWorkflowContext, IMsg?> fn);

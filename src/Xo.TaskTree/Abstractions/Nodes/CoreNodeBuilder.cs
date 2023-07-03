@@ -11,8 +11,8 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	{
 		get
 		{
-			if (this._AsyncFunctory is not null) return (this._AsyncFunctory as IFunctory)!.ServiceType!;
-			if (this._SyncFunctory is not null) return (this._SyncFunctory as IFunctory)!.ServiceType!;
+			if (this._AsyncFunctory is not null) return (this._AsyncFunctory as IFunctoryInvoker)!.ServiceType!;
+			if (this._SyncFunctory is not null) return (this._SyncFunctory as IFunctoryInvoker)!.ServiceType!;
 			return null;
 		}
 	}
@@ -32,14 +32,14 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(IAsyncFunctory functory)
+	public ICoreNodeBuilder AddFunctory(IAsyncFunctoryInvoker functory)
 	{
 		this._AsyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(ISyncFunctory functory)
+	public ICoreNodeBuilder AddFunctory(ISyncFunctoryInvoker functory)
 	{
 		this._SyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;

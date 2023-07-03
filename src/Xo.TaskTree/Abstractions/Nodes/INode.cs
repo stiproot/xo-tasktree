@@ -3,7 +3,7 @@ namespace Xo.TaskTree.Abstractions;
 public interface INode
 {
 	string Id { get; }
-	IFunctory Functory { get; }
+	IFunctoryInvoker Functory { get; }
 	bool RequiresResult { get; }
 	bool IgnoresPromisedResults { get; }
 	bool IsSync { get; }
@@ -24,9 +24,9 @@ public interface INode
 	INode SetNodevaluator(INodevaluator nodevaluator);
 	INode RunNodesInLoop();
 
-	INode SetFunctory(IAsyncFunctory functory);
+	INode SetFunctory(IAsyncFunctoryInvoker functory);
 	INode SetFunctory(Func<IArgs, Task<IMsg?>> fn);
-	INode SetFunctory(ISyncFunctory functory);
+	INode SetFunctory(ISyncFunctoryInvoker functory);
 	INode SetFunctory(Func<IArgs, IMsg?> fn);
 	INode SetFunctory(Func<IWorkflowContext, IMsg?> fn);
 

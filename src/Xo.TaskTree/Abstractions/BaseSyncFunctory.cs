@@ -1,11 +1,11 @@
 namespace Xo.TaskTree.Abstractions;
 
-/// <inheritdoc cref="ISyncFunctory"/>
+/// <inheritdoc cref="ISyncFunctoryInvoker"/>
 [ExcludeFromCodeCoverage]
-public abstract class BaseSyncFunctory : BaseFunctory, ISyncFunctory
+public abstract class BaseSyncFunctoryInvoker : BaseFunctoryInvoker, ISyncFunctoryInvoker
 {
 	/// <inheritdoc />
-	public abstract IMsg? CreateFunc(
+	public abstract IMsg? InvokeFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	);

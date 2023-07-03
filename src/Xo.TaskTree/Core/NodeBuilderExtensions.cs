@@ -10,7 +10,7 @@ public static class NodeBuildeExtensions
 		string? nextParamName = null
 	)
 	{
-		IAsyncFunctory fn = @this.Functitect.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync(); 
+		IAsyncFunctoryInvoker fn = @this.Functitect.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync(); 
 
 		@this.AddFunctory(fn);
 
@@ -24,7 +24,7 @@ public static class NodeBuildeExtensions
 		string? nextParamName = null
 	)
 	{
-		IAsyncFunctory fn = @this.Functitect.Build(serviceType, nextParamName).AsAsync();
+		IAsyncFunctoryInvoker fn = @this.Functitect.Build(serviceType, nextParamName).AsAsync();
 
 		@this.AddFunctory(fn);
 
@@ -200,7 +200,7 @@ public static class NodeBuildeExtensions
 		return @this;
 	}
 
-	// protected IAsyncFunctory TypeToFunctory(Type functoryType) 
+	// protected IAsyncFunctoryInvoker TypeToFunctory(Type functoryType) 
 		// => @this._Functitect.Build(functoryType).SetServiceType(functoryType).AsAsync();
 
 	// todo: there is a possibility that @this.will be null -> if a functory adapter is being used...
@@ -208,8 +208,8 @@ public static class NodeBuildeExtensions
 	// {
 		// get
 		// {
-			// if (@this._AsyncFunctory is not null) return (@this._AsyncFunctory as IFunctory)!.ServiceType!;
-			// if (@this._SyncFunctory is not null) return (@this._SyncFunctory as IFunctory)!.ServiceType!;
+			// if (@this._AsyncFunctory is not null) return (@this._AsyncFunctory as IFunctoryInvoker)!.ServiceType!;
+			// if (@this._SyncFunctory is not null) return (@this._SyncFunctory as IFunctoryInvoker)!.ServiceType!;
 			// return null;
 		// }
 	// }

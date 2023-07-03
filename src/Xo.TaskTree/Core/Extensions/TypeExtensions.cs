@@ -27,12 +27,12 @@ internal static class TypeExtensions
 		return metaNode;
 	}
 
-	public static IAsyncFunctory ToFunctory(this Type @this,
+	public static IAsyncFunctoryInvoker ToFunctory(this Type @this,
 				IFunctitect functitect
 	)
 		=> functitect.Build(@this).SetServiceType(@this).AsAsync();
 
-	public static IAsyncFunctory ToFunctory(this Type @this,
+	public static IAsyncFunctoryInvoker ToFunctory(this Type @this,
 				IFunctitect functitect,
 				string? nextParamName
 	)

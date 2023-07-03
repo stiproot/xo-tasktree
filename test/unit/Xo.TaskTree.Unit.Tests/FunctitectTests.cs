@@ -41,7 +41,7 @@ public class FunctitectTests
 
 		// Act
 		var functory = builder.Build(type, methodName).AsAsync();
-		var result = await functory.CreateFunc(@params);
+		var result = await functory.InvokeFunc(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert
@@ -63,7 +63,7 @@ public class FunctitectTests
 
 		// Act
 		var functory = builder.Build(type, methodName, nextParamName: null).AsAsync();
-		var result = await functory.CreateFunc(@params);
+		var result = await functory.InvokeFunc(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert
@@ -88,7 +88,7 @@ public class FunctitectTests
 		var functory = builder.Build(type, methodName, nextParamName: null).AsAsync();
 
 		// Assert
-		var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await functory.CreateFunc(@params));
+		var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await functory.InvokeFunc(@params));
 		Assert.Equal($"Invalid parameters for method {nameof(this._testService3WithTwoArgs.ProcessStrBool)}. Arguments provided: args3, Parameters expected: args3,flag3", exception.Message);
 	}
 
@@ -105,7 +105,7 @@ public class FunctitectTests
 
 		// Act
 		var functory = builder.Build(type).AsAsync();
-		var result = await functory.CreateFunc(@params);
+		var result = await functory.InvokeFunc(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert
@@ -125,7 +125,7 @@ public class FunctitectTests
 
 		// Act
 		var functory = builder.Build<IY_InStr_OutBool_AsyncService>().AsAsync();
-		var result = await functory.CreateFunc(@params);
+		var result = await functory.InvokeFunc(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
 		// Assert

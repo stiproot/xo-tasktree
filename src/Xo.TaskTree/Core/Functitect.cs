@@ -16,16 +16,16 @@ public sealed class Functitect : IFunctitect
 		=> this._serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
 	/// <inheritdoc />
-	public IFunctory Build<TService, TArg>(
+	public IFunctoryInvoker Build<TService, TArg>(
 		TArg arg,
 		string? nextParamName = null
 	)
 		=> this.Build(typeof(TService), nextParamName: nextParamName, staticArgs: new object[] { arg! });
 
-	public IFunctory Build<T>(string? nextParamName = null) => this.Build(typeof(T), nextParamName: nextParamName);
+	public IFunctoryInvoker Build<T>(string? nextParamName = null) => this.Build(typeof(T), nextParamName: nextParamName);
 
 	/// <inheritdoc />
-	public IFunctory Build(
+	public IFunctoryInvoker Build(
 		Type serviceType,
 		string? methodName = null,
 		string? nextParamName = null,
@@ -66,7 +66,7 @@ public sealed class Functitect : IFunctitect
 	}
 
 
-	public IAsyncFunctory BuildAsyncFunctory<T>(string? methodName = null)
+	public IAsyncFunctoryInvoker BuildAsyncFunctory<T>(string? methodName = null)
 	{
 		Func<IArgs, Task<IMsg?>> functory = async (args) =>
 			{
@@ -99,7 +99,7 @@ public sealed class Functitect : IFunctitect
 		return new AsyncFunctoryAdaptor(functory!).SetServiceType(serviceType: typeof(T)).AsAsync();
 	}
 
-	public ISyncFunctory BuildSyncFunctory<T>(string? methodName = null)
+	public ISyncFunctoryInvoker BuildSyncFunctory<T>(string? methodName = null)
 	{
 		Func<IArgs, IMsg?> functory = (args) =>
 			{

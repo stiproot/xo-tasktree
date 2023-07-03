@@ -19,7 +19,7 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
-		IAsyncFunctory fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
+		IAsyncFunctoryInvoker fn = this._MetaNode!.FunctoryType.ToFunctory(this._Functitect);
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
 		INode[] promisedArgs = this._MetaNode.NodeConfiguration.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
@@ -43,7 +43,7 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 	{
 		if(mn is null) throw new InvalidOperationException();
 
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
+		IAsyncFunctoryInvoker fn = mn.FunctoryType.ToFunctory(this._Functitect);
 
 		INode[] promisedArgs = mn.NodeConfiguration.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 

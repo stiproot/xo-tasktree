@@ -13,8 +13,8 @@ public interface IFunctitect
 	/// </summary>
 	/// <typeparam name="T">The type of the service that a functory will be built around.</param>
 	/// <param name="nextParamName">The name of the parameter of the next functory that the result of this functory should be fed into as an argument.</param>
-	/// <returns><see cref="IFunctory"/></returns>
-	IFunctory Build<T>(string? nextParamName = null);
+	/// <returns><see cref="IFunctoryInvoker"/></returns>
+	IFunctoryInvoker Build<T>(string? nextParamName = null);
 
 	/// <summary>
 	///   Builds a functory around a service provided as a generic type param.
@@ -23,8 +23,8 @@ public interface IFunctitect
 	/// <typeparam name="TArg">The type of the argument that will be passed to the service.</param>
 	/// <param name="arg">The argument that will be passed to the service.</param>
 	/// <param name="nextParamName">The name of the parameter of the next functory that the result of this functory should be fed into as an argument.</param>
-	/// <returns><see cref="IFunctory"/></returns>
-	IFunctory Build<TService, TArg>(
+	/// <returns><see cref="IFunctoryInvoker"/></returns>
+	IFunctoryInvoker Build<TService, TArg>(
 		TArg arg,
 		string? nextParamName = null
 	);
@@ -37,8 +37,8 @@ public interface IFunctitect
 	/// <param name="methodName">The name of the method to be invoked.</param>
 	/// <param name="nextParamName">The name of the parameter of the next functory that the result of this functory should be fed into as an argument.</param>
 	/// <param name="staticArgs">Static arguments that will be passed to the method to be invoked.</param>
-	/// <returns><see cref="IFunctory"/></returns>
-	IFunctory Build(
+	/// <returns><see cref="IFunctoryInvoker"/></returns>
+	IFunctoryInvoker Build(
 		Type serviceType,
 		string? methodName = null,
 		string? nextParamName = null,
@@ -51,8 +51,8 @@ public interface IFunctitect
 	/// </summary>
 	/// <typeparam name="T">The type of the service that a functory will be built around.</param>
 	/// <param name="methodName">The name of the method to be invoked.</param>
-	/// <returns><see cref="IFunctory"/></returns>
-	IAsyncFunctory BuildAsyncFunctory<T>(
+	/// <returns><see cref="IFunctoryInvoker"/></returns>
+	IAsyncFunctoryInvoker BuildAsyncFunctory<T>(
 		string? methodName = null
 	);
 
@@ -62,8 +62,8 @@ public interface IFunctitect
 	/// </summary>
 	/// <typeparam name="T">The type of the service that a functory will be built around.</param>
 	/// <param name="methodName">The name of the method to be invoked.</param>
-	/// <returns><see cref="IFunctory"/></returns>
-	ISyncFunctory BuildSyncFunctory<T>(
+	/// <returns><see cref="IFunctoryInvoker"/></returns>
+	ISyncFunctoryInvoker BuildSyncFunctory<T>(
 		string? methodName = null
 	);
 }

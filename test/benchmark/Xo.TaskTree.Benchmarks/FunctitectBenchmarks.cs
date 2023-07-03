@@ -35,7 +35,7 @@ public class FunctitectBenchmarks
   }
 
   [Benchmark]
-  public IFunctory Build()
+  public IFunctoryInvoker Build()
   {
     return this._functitect.Build(_serviceType, _methodName, _nextParamName);
   }
@@ -43,7 +43,7 @@ public class FunctitectBenchmarks
   [Benchmark]
   public async Task Run()
   {
-    var builder = this._functitect.Build(_serviceType, _methodName, _nextParamName) as IAsyncFunctory;
-    await builder.CreateFunc(_params)();
+    var builder = this._functitect.Build(_serviceType, _methodName, _nextParamName) as IAsyncFunctoryInvoker;
+    await builder.InvokeFunc(_params)();
   }
 }

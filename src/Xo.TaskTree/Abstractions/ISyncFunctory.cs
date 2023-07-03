@@ -6,7 +6,7 @@ namespace Xo.TaskTree.Abstractions;
 /// <remarks>
 ///   Strategies are how the TaskWorkflowEngine encapsulates operations that are to be run within a <see cref="INode"/>.
 /// </remarks>
-public interface ISyncFunctory
+public interface ISyncFunctoryInvoker
 {
 	/// <summary>
 	///   Core func-creation method. Produces a factory that will return a syncrhonous operation. 
@@ -16,7 +16,7 @@ public interface ISyncFunctory
 	///   Values: <see cref="IMsg"/> - Data property containing argument - Cast method can be used to typecast Data.</param>
 	/// <param name="context">The workflow context.</param>
 	/// <returns>Factory that will produce IMsg.</returns>
-	IMsg? CreateFunc(
+	IMsg? InvokeFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	);

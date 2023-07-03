@@ -6,19 +6,19 @@ namespace Xo.TaskTree.Abstractions;
 /// <remarks>
 ///   Strategies are how the TaskWorkflowEngine encapsulates operations that are to be run within a <see cref="INode"/>.
 /// </remarks>
-public interface IFunctory
+public interface IFunctoryInvoker
 {
 	/// <summary>
 	///   The type of the service that a functory will be built around. 
 	/// </summary>
 	Type? ServiceType { get; }
 
-	IFunctory SetServiceType(Type serviceType);
+	IFunctoryInvoker SetServiceType(Type serviceType);
 
 	/// <summary>
 	///   A factory that produces a Task (functory) that is used by a <see cref="INode"/>.
 	/// </summary>
-	IFunctory SetNextParamName(string? nextParamName = null);
+	IFunctoryInvoker SetNextParamName(string? nextParamName = null);
 
 	/// <summary>
 	///  ... 
@@ -39,12 +39,12 @@ public interface IFunctory
 	/// <summary>
 	///  ... 
 	/// </summary>
-	/// <returns><see cref="ISyncFunctory"/></returns>
-	ISyncFunctory AsSync();
+	/// <returns><see cref="ISyncFunctoryInvoker"/></returns>
+	ISyncFunctoryInvoker AsSync();
 
 	/// <summary>
 	///  ... 
 	/// </summary>
-	/// <returns><see cref="IAsyncFunctory"/></returns>
-	IAsyncFunctory AsAsync();
+	/// <returns><see cref="IAsyncFunctoryInvoker"/></returns>
+	IAsyncFunctoryInvoker AsAsync();
 }

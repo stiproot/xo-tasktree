@@ -33,8 +33,8 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 		IMetaNode mn
 	) 
 	{
-		// IAsyncFunctory fn = this.TypeToFunctory(mn.FunctoryType);
-		IAsyncFunctory fn = mn.FunctoryType.ToFunctory(this._Functitect);
+		// IAsyncFunctoryInvoker fn = this.TypeToFunctory(mn.FunctoryType);
+		IAsyncFunctoryInvoker fn = mn.FunctoryType.ToFunctory(this._Functitect);
 
 		INode[] promisedArgs = mn.NodeConfiguration.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 

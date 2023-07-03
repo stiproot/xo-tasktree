@@ -4,8 +4,8 @@ namespace Xo.TaskTree.Abstractions;
 public abstract class BaseNode : INode
 {
 	protected ILogger? _Logger;
-	protected IAsyncFunctory? _AsyncFunctory;
-	protected ISyncFunctory? _SyncFunctory;
+	protected IAsyncFunctoryInvoker? _AsyncFunctory;
+	protected ISyncFunctoryInvoker? _SyncFunctory;
 	protected IWorkflowContext? _Context;
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
@@ -35,7 +35,7 @@ public abstract class BaseNode : INode
 	public bool IgnoresPromisedResults { get; internal set; } = false;
 
 	/// <inheritdoc />
-	public IFunctory Functory => this._AsyncFunctory is not null ? (IFunctory)this._AsyncFunctory! : (IFunctory)this._SyncFunctory!;
+	public IFunctoryInvoker Functory => this._AsyncFunctory is not null ? (IFunctoryInvoker)this._AsyncFunctory! : (IFunctoryInvoker)this._SyncFunctory!;
 
 	/// <inheritdoc />
 	public bool IsSync => this._SyncFunctory != null;
@@ -62,7 +62,7 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(IAsyncFunctory functory)
+	public INode SetFunctory(IAsyncFunctoryInvoker functory)
 	{
 		this._AsyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;
@@ -76,7 +76,7 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(ISyncFunctory functory)
+	public INode SetFunctory(ISyncFunctoryInvoker functory)
 	{
 		this._SyncFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
 		return this;
@@ -269,8 +269,8 @@ public abstract class BaseNode : INode
 		this._Logger?.LogTrace($"BaseNode.ResolveFunctory - starting...");
 
 		var result = this.IsSync
-				? this._SyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context)
-				: await this._AsyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context);
+				? this._SyncFunctory!.InvokeFunc(this._Params.AsArgs(), this._Context)
+				: await this._AsyncFunctory!.InvokeFunc(this._Params.AsArgs(), this._Context);
 
 		if (result is not null && this._Context is not null)
 		{
