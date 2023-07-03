@@ -69,7 +69,7 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IArgs, Func<Task<IMsg?>>> fn)
+	public INode SetFunctory(Func<IArgs, Task<IMsg?>> fn)
 	{
 		this._AsyncFunctory = new AsyncFunctoryAdaptor(fn);
 		return this;
@@ -83,14 +83,14 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IArgs, Func<IMsg?>> fn)
+	public INode SetFunctory(Func<IArgs, IMsg?> fn)
 	{
 		this._SyncFunctory = new SyncFunctoryAdapter(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public INode SetFunctory(Func<IWorkflowContext, Func<IMsg>> fn)
+	public INode SetFunctory(Func<IWorkflowContext, IMsg?> fn)
 	{
 		this._SyncFunctory = new SyncFunctoryAdapter(fn);
 		return this;
@@ -269,8 +269,8 @@ public abstract class BaseNode : INode
 		this._Logger?.LogTrace($"BaseNode.ResolveFunctory - starting...");
 
 		var result = this.IsSync
-				? this._SyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context)()
-				: await this._AsyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context)();
+				? this._SyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context)
+				: await this._AsyncFunctory!.CreateFunc(this._Params.AsArgs(), this._Context);
 
 		if (result is not null && this._Context is not null)
 		{

@@ -25,10 +25,10 @@ public interface INode
 	INode RunNodesInLoop();
 
 	INode SetFunctory(IAsyncFunctory functory);
-	INode SetFunctory(Func<IArgs, Func<Task<IMsg?>>> fn);
+	INode SetFunctory(Func<IArgs, Task<IMsg?>> fn);
 	INode SetFunctory(ISyncFunctory functory);
-	INode SetFunctory(Func<IArgs, Func<IMsg?>> fn);
-	INode SetFunctory(Func<IWorkflowContext, Func<IMsg>> fn);
+	INode SetFunctory(Func<IArgs, IMsg?> fn);
+	INode SetFunctory(Func<IWorkflowContext, IMsg?> fn);
 
 	INode AddArg(params INode[] args);
 	INode AddArg(params IMsg?[] args);

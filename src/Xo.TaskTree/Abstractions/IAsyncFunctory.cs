@@ -16,7 +16,7 @@ public interface IAsyncFunctory
 	///   Values: <see cref="IMsg"/> - Data property containing argument - Cast method can be used to typecast Data.</param>
 	/// <param name="context">The workflow context.</param>
 	/// <returns>Factory that will produce Task of IIMsg.</returns>
-	Func<Task<IMsg?>> CreateFunc(
+	Task<IMsg?> CreateFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	);

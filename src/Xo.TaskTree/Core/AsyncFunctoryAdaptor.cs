@@ -5,12 +5,12 @@ namespace Xo.TaskTree.Core;
 /// </summary>
 public sealed class AsyncFunctoryAdaptor : BaseAsyncFunctory
 {
-	private readonly Func<IArgs, Func<Task<IMsg?>>> _functory;
+	private readonly Func<IArgs, Task<IMsg?>> _functory;
 
-	public AsyncFunctoryAdaptor(Func<IArgs, Func<Task<IMsg?>>> functory)
+	public AsyncFunctoryAdaptor(Func<IArgs, Task<IMsg?>> functory)
 		=> this._functory = functory ?? throw new ArgumentNullException(nameof(functory));
 
-	public override Func<Task<IMsg?>> CreateFunc(
+	public override Task<IMsg?> CreateFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	)

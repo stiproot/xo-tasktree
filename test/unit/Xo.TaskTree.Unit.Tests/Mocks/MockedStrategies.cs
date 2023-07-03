@@ -18,10 +18,10 @@ public class IY_InStr_OutBool_AsyncService_Functory : BaseAsyncFunctory
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
-	public override Func<Task<IMsg?>> CreateFunc(
+	public override async Task<IMsg?> CreateFunc(
 		IArgs param,
 		IWorkflowContext? context = null
-	) => async () =>
+	)
 	{
 		var serviceArgs = (param[serviceParamName] as Msg<string>)!.GetData();
 
@@ -36,7 +36,7 @@ public class IY_InStr_OutBool_AsyncService_Functory : BaseAsyncFunctory
 		var result = await this._service.GetBoolAsync(serviceArgs);
 
 		return this._msgFactory.Create<bool>(result, this._NextParamName);
-	};
+	}
 }
 
 ///// <summary>
@@ -57,10 +57,10 @@ public class TestStrategy2 : BaseAsyncFunctory
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
-	public override Func<Task<IMsg?>> CreateFunc(
+	public override async Task<IMsg?> CreateFunc(
 		IArgs param,
 		IWorkflowContext? context = null
-	) => async () =>
+	)
 	{
 		var serviceArgs = this.Cast<Msg<string>>(this.SafeGet(param, serviceParamName)).GetData();
 		if (string.IsNullOrEmpty(serviceArgs))
@@ -74,5 +74,5 @@ public class TestStrategy2 : BaseAsyncFunctory
 		var result = await this._service.GetIntAsync(serviceArgs);
 
 		return this._msgFactory.Create<int>(result, this._NextParamName);
-	};
+	}
 }

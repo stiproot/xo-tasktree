@@ -46,21 +46,21 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(Func<IArgs, Func<Task<IMsg?>>> fn)
+	public ICoreNodeBuilder AddFunctory(Func<IArgs, Task<IMsg?>> fn)
 	{
 		this._AsyncFunctory = new AsyncFunctoryAdaptor(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(Func<IArgs, Func<IMsg?>> fn)
+	public ICoreNodeBuilder AddFunctory(Func<IArgs, IMsg?> fn)
 	{
 		this._SyncFunctory = new SyncFunctoryAdapter(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFunctory(Func<IWorkflowContext, Func<IMsg?>> fn)
+	public ICoreNodeBuilder AddFunctory(Func<IWorkflowContext, IMsg?> fn)
 	{
 		this._SyncFunctory = new SyncFunctoryAdapter(fn);
 		return this;

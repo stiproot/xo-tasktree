@@ -5,7 +5,7 @@ namespace Xo.TaskTree.Abstractions;
 public abstract class BaseSyncFunctory : BaseFunctory, ISyncFunctory
 {
 	/// <inheritdoc />
-	public abstract Func<IMsg?> CreateFunc(
+	public abstract IMsg? CreateFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	);

@@ -5,7 +5,7 @@ namespace Xo.TaskTree.Abstractions;
 public abstract class BaseAsyncFunctory : BaseFunctory, IAsyncFunctory
 {
 	/// <inheritdoc />
-	public abstract Func<Task<IMsg?>> CreateFunc(
+	public abstract Task<IMsg?> CreateFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	);

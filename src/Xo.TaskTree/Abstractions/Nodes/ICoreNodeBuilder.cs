@@ -9,9 +9,9 @@ public interface ICoreNodeBuilder
 	ICoreNodeBuilder AddContext(IWorkflowContext? context);
 	ICoreNodeBuilder AddFunctory(IAsyncFunctory functory);
 	ICoreNodeBuilder AddFunctory(ISyncFunctory functory);
-	ICoreNodeBuilder AddFunctory(Func<IArgs, Func<Task<IMsg?>>> fn);
-	ICoreNodeBuilder AddFunctory(Func<IArgs, Func<IMsg?>> fn);
-	ICoreNodeBuilder AddFunctory(Func<IWorkflowContext, Func<IMsg?>> fn);
+	ICoreNodeBuilder AddFunctory(Func<IArgs, Task<IMsg?>> fn);
+	ICoreNodeBuilder AddFunctory(Func<IArgs, IMsg?> fn);
+	ICoreNodeBuilder AddFunctory(Func<IWorkflowContext, IMsg?> fn);
 	ICoreNodeBuilder AddArg(params IMsg[] msgs);
 	ICoreNodeBuilder AddArg(params INode[] nodes);
 	ICoreNodeBuilder AddArg(params Func<IWorkflowContext, IMsg>[] contextArgs);

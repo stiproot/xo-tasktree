@@ -83,9 +83,9 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 			n.SetNodeEdge(thenEdge);
 		}
 
-		Func<IArgs, Func<IMsg>> decisionFn = binaryBranchType
-			? (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is true)
-			: (p) => () => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is false);
+		Func<IArgs, IMsg?> decisionFn = binaryBranchType
+			? (p) => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is true)
+			: (p) => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is false);
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 

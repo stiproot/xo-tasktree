@@ -458,7 +458,7 @@ public class CoreFrameworkTests
 		var cancellationToken = this.CancellationTokenFactory();
 
 		var n1 = this._nodeFactory.Create()
-										.SetFunctory((p) => () =>
+										.SetFunctory((p) =>
 										{
 											var msg = p["sleep"] as BaseMsg<int>;
 											var data = msg!.GetData();
@@ -469,7 +469,7 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
 
 		var n2 = this._nodeFactory.Create()
-										.SetFunctory(p => async () =>
+										.SetFunctory(async p =>
 										{
 											await Task.Delay(150);
 											var msg = p["next_param_name"] as BaseMsg<int>;
@@ -509,7 +509,7 @@ public class CoreFrameworkTests
 		var root =
 			this._nodeBuilderFactory.Create(context)
 				.AddArg(n1)
-				.AddFunctory(c => () =>
+				.AddFunctory(c =>
 				{
 					var d = c.GetMsgData<int>(n1.Id);
 					return this._msgFactory.Create<int>(d == 1 ? 1 : 0);

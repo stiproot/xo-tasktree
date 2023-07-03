@@ -32,7 +32,7 @@ public sealed class Functitect : IFunctitect
 		object[]? staticArgs = null
 	)
 	{
-		Func<IArgs, Func<Task<IMsg?>>> functory = (args) => async () =>
+		Func<IArgs, Task<IMsg?>> functory = async (args) =>
 			{
 				var service = this.GetService(serviceType);
 
@@ -68,7 +68,7 @@ public sealed class Functitect : IFunctitect
 
 	public IAsyncFunctory BuildAsyncFunctory<T>(string? methodName = null)
 	{
-		Func<IArgs, Func<Task<IMsg?>>> functory = (args) => async () =>
+		Func<IArgs, Task<IMsg?>> functory = async (args) =>
 			{
 				var serviceType = typeof(T);
 
@@ -101,7 +101,7 @@ public sealed class Functitect : IFunctitect
 
 	public ISyncFunctory BuildSyncFunctory<T>(string? methodName = null)
 	{
-		Func<IArgs, Func<IMsg?>> functory = (args) => () =>
+		Func<IArgs, IMsg?> functory = (args) =>
 			{
 				var serviceType = typeof(T);
 

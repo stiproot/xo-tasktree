@@ -5,16 +5,16 @@ namespace Xo.TaskTree.Core;
 /// </summary>
 public sealed class SyncFunctoryAdapter : BaseSyncFunctory
 {
-	private readonly Func<IArgs, Func<IMsg?>>? _functory;
-	private readonly Func<IWorkflowContext, Func<IMsg?>>? _contextFunctory;
+	private readonly Func<IArgs, IMsg?>? _functory;
+	private readonly Func<IWorkflowContext, IMsg?>? _contextFunctory;
 
-	public SyncFunctoryAdapter(Func<IArgs, Func<IMsg?>> functory)
+	public SyncFunctoryAdapter(Func<IArgs, IMsg?> functory)
 		=> this._functory = functory ?? throw new ArgumentNullException(nameof(functory));
 
-	public SyncFunctoryAdapter(Func<IWorkflowContext, Func<IMsg?>> functory)
+	public SyncFunctoryAdapter(Func<IWorkflowContext, IMsg?> functory)
 		=> this._contextFunctory = functory ?? throw new ArgumentNullException(nameof(functory));
 
-	public override Func<IMsg?> CreateFunc(
+	public override IMsg? CreateFunc(
 		IArgs args,
 		IWorkflowContext? context = null
 	)
