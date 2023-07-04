@@ -6,7 +6,6 @@ public abstract class BaseNode : INode
 	protected ILogger? _Logger;
 	protected IAsyncFn? _AsyncFn;
 	protected ISyncFn? _SyncFn;
-	// protected IWorkflowContext? _Context;
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
 	protected INodeEdge? _NodeEdge;
@@ -14,13 +13,6 @@ public abstract class BaseNode : INode
 	protected IController? _Controller;
 	protected IInvoker _Invoker = new Invoker(new NodeEdgeResolver());
 	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
-
-	// protected readonly IList<IMsg> _Params = new List<IMsg>();
-	// protected readonly List<INode> _PromisedParams = new List<INode>();
-	// protected readonly IList<Func<IWorkflowContext, IMsg>> _ContextParams = new List<Func<IWorkflowContext, IMsg>>();
-
-	/// <inheritdoc />
-	// public string Id { get; internal set; } = $"{Guid.NewGuid()}";
 
 	/// <inheritdoc />
 	public INodeConfiguration NodeConfiguration => this._NodeConfiguration;
@@ -31,16 +23,7 @@ public abstract class BaseNode : INode
 	public IFn Fn => this._AsyncFn is not null ? (IFn)this._AsyncFn! : (IFn)this._SyncFn!;
 
 	/// <inheritdoc />
-	// public bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
-
-	/// <inheritdoc />
 	public int ArgCount() => throw new NotImplementedException(); // this._Params.Count() + this._PromisedParams.Count() + this._ContextParams.Count();
-
-	/// <inheritdoc />
-	// public bool RequiresResult { get; internal set; } = false;
-
-	// public bool IgnoresPromisedResults { get; internal set; } = false;
-
 
 	/// <inheritdoc />
 	protected bool _IsSync => this._SyncFn != null;
@@ -93,103 +76,12 @@ public abstract class BaseNode : INode
 		return this;
 	}
 
-	// /// <inheritdoc />
-	// public INode SetFn(Func<IArgs, Task<IMsg?>> fn)
-	// {
-		// this._AsyncFn = new AsyncFnAdaptor(fn);
-		// return this;
-	// }
-
 	/// <inheritdoc />
 	public INode SetFn(ISyncFn fn)
 	{
 		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
-
-	// /// <inheritdoc />
-	// public INode SetFn(Func<IArgs, IMsg?> fn)
-	// {
-		// this._SyncFn = new SyncFnAdapter(fn);
-		// return this;
-	// }
-
-	// /// <inheritdoc />
-	// public INode SetFn(Func<IWorkflowContext, IMsg?> fn)
-	// {
-		// this._SyncFn = new SyncFnAdapter(fn);
-		// return this;
-	// }
-
-	// /// <inheritdoc />
-	// public INode SetContext(IWorkflowContext? context)
-	// {
-		// this._Context = context;
-		// return this;
-	// }
-
-	// /// <inheritdoc />
-	// public INode SetId(string id)
-	// {
-		// this.Id = id;
-		// return this;
-	// }
-
-	// /// <inheritdoc />
-	// public INode SetLogger(ILogger logger)
-	// {
-		// this._Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		// return this;
-	// }
-
-	///// <inheritdoc />
-	//public INode AddArg(params INode[] nodes)
-	//{
-		//foreach (var h in nodes)
-		//{
-			//this._PromisedParams.Add(h);
-		//}
-		//return this;
-	//}
-
-	///// <inheritdoc />
-	//public INode AddArg(params IMsg?[] msgs)
-	//{
-		//foreach (var m in msgs)
-		//{
-			//if(m is null)
-			//{
-				//continue;
-			//}
-			//this._Params.Add(m);
-		//}
-		//return this;
-	//}
-
-	///// <inheritdoc />
-	//public INode AddArg<T>(
-			//T data,
-			//string paramName
-	//)
-	//{
-		//if (data is null || paramName is null) throw new InvalidOperationException("Null values cannot be passed into AddArg<T>...");
-
-		//// this._Params.Add(this._MsgFactory.Create<T>(data, paramName));
-		//this._Params.Add(SMsgFactory.Create<T>(data, paramName));
-
-		//return this;
-	//}
-
-	///// <inheritdoc />
-	//public INode AddArg(params Func<IWorkflowContext, IMsg>[] contextArgs)
-	//{
-		//foreach (var p in contextArgs)
-		//{
-			//this._ContextParams.Add(p);
-		//}
-
-		//return this;
-	//}
 
 	/// <inheritdoc />
 	public INode SetExceptionHandler(Func<Exception, Task> handler)
@@ -330,19 +222,6 @@ public abstract class BaseNode : INode
 			this._ExceptionHandler(ex);
 		}
 	}
-
-	///// <inheritdoc />
-	//public virtual INode RequireResult(bool requiresResult = true)
-	//{
-		//this.RequiresResult = requiresResult;
-		//return this;
-	//}
-
-	//public INode IgnorePromisedResults(bool ignorePromisedResults = true)
-	//{
-		//this.IgnoresPromisedResults = ignorePromisedResults;
-		//return this;
-	//}
 
 	/// <summary>
 	///   Initializes a new instance of <see cref="Node"/>. 

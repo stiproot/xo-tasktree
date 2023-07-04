@@ -7,9 +7,9 @@ public interface INode
 	IFn Fn { get; }
 	int ArgCount();
 	INode SetNodeConfiguration(INodeConfiguration nodeConfiguration);
-	INode SetNodeEdge(INodeEdge nodeEdge);
+	INode SetNodeEdge(INodeEdge? nodeEdge);
 	INode SetInvoker(IInvoker invoker);
-	INode SetController(IController controller);
+	INode SetController(IController? controller);
 	INode SetNodevaluator(INodevaluator nodevaluator);
 	INode RunNodesInLoop();
 	INode SetFn(IAsyncFn fn);

@@ -34,7 +34,7 @@ public interface INodeFactory
 	/// </summary>
 	/// <param name="logger"><see cref="ILogger"/></param>
 	/// <returns><see cref="INode"/></returns>
-	INode Create(ILogger logger);
+	INode Create(ILogger? logger);
 
 	/// <summary>
 	///   Creates an implementation of <see cref="INode"/>.

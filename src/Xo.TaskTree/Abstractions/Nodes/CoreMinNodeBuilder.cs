@@ -19,7 +19,8 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public virtual bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
+	public virtual bool HasParam(string paramName) => this._NodeConfiguration.Args.Any(p => p.ParamName == paramName);
+
 	public virtual IFnFactory FnFactory => this._FnFactory;
 
 	/// <inheritdoc />
@@ -34,18 +35,18 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	// /// <inheritdoc />
-	// public ICoreNodeBuilder RequireResult(bool requiresResult = true)
-	// {
-		// this.RequiresResult = requiresResult;
-		// return this;
-	// }
-
-	//// /// <inheritdoc />
-	//public ICoreNodeBuilder AddContext(IWorkflowContext? context)
+	//public ICoreNodeBuilder RequireResult(bool requiresResult = true)
 	//{
-		//this._Context = context;
+		//this.RequiresResult = requiresResult;
 		//return this;
 	//}
+
+	// // /// <inheritdoc />
+	// public ICoreNodeBuilder AddContext(IWorkflowContext? context)
+	// {
+		// this._Context = context;
+		// return this;
+	// }
 
 	/// <inheritdoc />
 	public ICoreNodeBuilder AddFn(IAsyncFn fn)
@@ -95,22 +96,6 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		return this;
 	}
 
-	/// <inheritdoc />
-	public virtual ICoreNodeBuilder RequireResult(bool requiresResult = true)
-	{
-		this.RequiresResult = requiresResult;
-		return this;
-	}
-
-	 /// <inheritdoc />
-	 public ICoreNodeBuilder AddArg(params IMsg[] msgs)
-	 {
-		 foreach (var m in msgs)
-		 {
-			 this._Params.Add(m);
-		 }
-		 return this;
-	 }
 
 	/// <inheritdoc />
 	public ICoreNodeBuilder SetExceptionHandler(Func<Exception, Task> handler)
@@ -128,23 +113,24 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 
 	public virtual INode Build()
 	{
-		throw new NotImplementedException();
+		INode n = this._NodeFactory.Create(this._Logger)
+			.SetNodeConfiguration(this._NodeConfiguration)
+			.SetController(this._Controller)
+			.SetInvoker(this._Invoker)
+			.SetNodeEdge(this._NodeEdge)
+			.SetNodevaluator(this._Nodevaluator);
 
-		// INode n = new Node(this._Logger, this.Id, this._Context);
-
-		// if (this._AsyncFn is not null) n.SetFn(this._AsyncFn);
-		// if (this._SyncFn is not null) n.SetFn(this._SyncFn);
+		if (this._AsyncFn is not null) n.SetFn(this._AsyncFn);
+		if (this._SyncFn is not null) n.SetFn(this._SyncFn);
+		if (this._ExceptionHandlerAsync is not null) n.SetExceptionHandler(this._ExceptionHandlerAsync);
+		if (this._ExceptionHandler is not null) n.SetExceptionHandler(this._ExceptionHandler);
 
 		// if (this._Params.Any()) n.AddArg(this._Params.ToArray());
 		// if (this._PromisedParams.Any()) n.AddArg(this._PromisedParams.ToArray());
 		// if (this._ContextParams.Any()) n.AddArg(this._ContextParams.ToArray());
-
 		// n.RequireResult(this.RequiresResult);
 
-		// if (this._ExceptionHandlerAsync is not null) n.SetExceptionHandler(this._ExceptionHandlerAsync);
-		// if (this._ExceptionHandler is not null) n.SetExceptionHandler(this._ExceptionHandler);
-
-		// return n;
+		return n;
 	}
 
 	/// <summary>
@@ -153,15 +139,11 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	public CoreNodeBuilder(
 		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
-		ILogger? logger = null,
-		string? id = null,
-		IWorkflowContext? context = null
+		ILogger? logger = null
 	) : base(
 			fnFactory, 
 			nodeFactory,
-			logger, 
-			id, 
-			context
+			logger
 	)
 	{
 	}

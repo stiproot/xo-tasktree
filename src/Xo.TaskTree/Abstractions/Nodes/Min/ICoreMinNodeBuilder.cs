@@ -17,7 +17,7 @@ public interface ICoreNodeBuilder
 	ICoreNodeBuilder SetExceptionHandler(Action<Exception> handler);
 	ICoreNodeBuilder AddInvoker(IInvoker invoker);
 	ICoreNodeBuilder AddController(IController controller);
-	ICoreNodeBuilder RequireResult(bool requiresResult = true);
+	// ICoreNodeBuilder RequireResult(bool requiresResult = true);
 	INode Build();
 
 	// string Id { get; }
