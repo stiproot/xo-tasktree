@@ -10,7 +10,7 @@ public abstract class BaseMinNode : IMinNode
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
 	protected INodeEdge? _NodeEdge;
-	protected INodeConfiguration _NodeConfiguration;
+	protected IMinNodeConfiguration _NodeConfiguration;
 	protected IController? _Controller;
 	protected IInvoker _Invoker = new Invoker(new NodeEdgeResolver());
 	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
@@ -23,7 +23,7 @@ public abstract class BaseMinNode : IMinNode
 	// public string Id { get; internal set; } = $"{Guid.NewGuid()}";
 
 	/// <inheritdoc />
-	public INodeConfiguration NodeConfiguration => this._NodeConfiguration;
+	public IMinNodeConfiguration NodeConfiguration => this._NodeConfiguration;
 
 	/// <inheritdoc />
 	public INodeEdge? NodeEdge => this._NodeEdge;
@@ -43,10 +43,10 @@ public abstract class BaseMinNode : IMinNode
 
 
 	/// <inheritdoc />
-	// public bool IsSync => this._SyncFn != null;
+	protected bool _IsSync => this._SyncFn != null;
 
 	/// <inheritdoc />
-	public IMinNode SetNodeConfiguration(INodeConfiguration nodeConfiguration)
+	public IMinNode SetNodeConfiguration(IMinNodeConfiguration nodeConfiguration)
 	{
 		this._NodeConfiguration = nodeConfiguration ?? throw new ArgumentNullException(nameof(nodeConfiguration));
 		return this;
@@ -250,17 +250,17 @@ public abstract class BaseMinNode : IMinNode
 	{
 		this._Logger?.LogTrace($"Node.ResolvePromisedParams - running param nodes.");
 
-		if (!this._PromisedParams.Any()) return;
+		if (!this.NodeConfiguration.PromisedArgs.Any()) return;
 
-		var results = await this._Nodevaluator.RunAsync(this._PromisedParams, cancellationToken);
+		var results = await this._Nodevaluator.RunAsync(this.NodeConfiguration.PromisedArgs, cancellationToken);
 
 		IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null).ToList()!;
 
-		if(this.IgnoresPromisedResults) return;
+		if(this.NodeConfiguration.IgnoresPromisedResults) return;
 
 		foreach (var r in nonNullResults)
 		{
-			this._Params.Add(r);
+			this.NodeConfiguration.Args.Add(r);
 		}
 	}
 
@@ -270,19 +270,19 @@ public abstract class BaseMinNode : IMinNode
 		this._Logger?.LogTrace($"Node.AddContextParamResultsToParams - start.");
 
 		// Are there any params that need to be extracted from the shared context?
-		if (!this._ContextParams.Any())
+		if (!this.NodeConfiguration.ContextArgs.Any())
 		{
 			return;
 		}
 
-		if (this._Context == null)
+		if (this.NodeConfiguration.WorkflowContext == null)
 		{
 			throw new InvalidOperationException("Context has not been provided");
 		}
 
-		foreach (var f in this._ContextParams)
+		foreach (var f in this.NodeConfiguration.ContextArgs)
 		{
-			this._Params.Add(f(this._Context));
+			this.NodeConfiguration.Args.Add(f(this.NodeConfiguration.WorkflowContext));
 		}
 
 		this._Logger?.LogTrace($"Node.AddContextParamResultsToParams - end.");
@@ -293,13 +293,13 @@ public abstract class BaseMinNode : IMinNode
 	{
 		this._Logger?.LogTrace($"BaseNode.ResolveFn - starting...");
 
-		var result = this.IsSync
-				? this._SyncFn!.Invoke(this._Params.AsArgs(), this._Context)
-				: await this._AsyncFn!.Invoke(this._Params.AsArgs(), this._Context);
+		var result = this._IsSync
+				? this._SyncFn!.Invoke(this.NodeConfiguration.Args.AsArgs(), this.NodeConfiguration.WorkflowContext)
+				: await this._AsyncFn!.Invoke(this.NodeConfiguration.Args.AsArgs(), this.NodeConfiguration.WorkflowContext);
 
-		if (result is not null && this._Context is not null)
+		if (result is not null && this.NodeConfiguration.WorkflowContext is not null)
 		{
-			this._Context.AddMsg(this.Id, result);
+			this.NodeConfiguration.WorkflowContext.AddMsg(this.NodeConfiguration.Id, result);
 		}
 
 		if(this._Controller is not null)

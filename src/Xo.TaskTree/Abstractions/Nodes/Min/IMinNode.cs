@@ -2,11 +2,11 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface IMinNode
 {
-	INodeConfiguration NodeConfiguration { get; }
+	IMinNodeConfiguration NodeConfiguration { get; }
 	INodeEdge? NodeEdge { get; }
 	IFn Fn { get; }
 	int ArgCount();
-	IMinNode SetNodeConfiguration(INodeConfiguration nodeConfiguration);
+	IMinNode SetNodeConfiguration(IMinNodeConfiguration nodeConfiguration);
 	IMinNode SetNodeEdge(INodeEdge nodeEdge);
 	IMinNode SetInvoker(IInvoker invoker);
 	IMinNode SetController(IController controller);

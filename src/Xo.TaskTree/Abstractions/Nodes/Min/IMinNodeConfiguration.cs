@@ -5,6 +5,7 @@ public interface IMinNodeConfiguration
 	bool RequiresResult { get; set; }
 	string? NextParamName { get; set; }
 	string? Key { get; set; }
+	IWorkflowContext? WorkflowContext { get; set; }
 
 	List<IMsg> Args { get; init; }
 	List<IMetaNode> PromisedArgs { get; init; }
