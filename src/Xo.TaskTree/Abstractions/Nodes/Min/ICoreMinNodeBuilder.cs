@@ -3,9 +3,11 @@ namespace Xo.TaskTree.Abstractions;
 public interface ICoreNodeBuilder
 {
 	ICoreNodeBuilder Configure(Action<INodeConfigurationBuilder> configure);
+	ICoreNodeBuilder Configure(INodeConfiguration nodeConfiguration);
 	bool HasParam(string paramName); 
 	IFnFactory FnFactory { get; }
 	Type? ServiceType { get; }
+	ICoreNodeBuilder AddNodeEdge(INodeEdge nodeEdge);
 	ICoreNodeBuilder AddFn(IAsyncFn fn);
 	ICoreNodeBuilder AddFn(ISyncFn fn);
 	ICoreNodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn);
@@ -13,6 +15,9 @@ public interface ICoreNodeBuilder
 	ICoreNodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn);
 	ICoreNodeBuilder SetExceptionHandler(Func<Exception, Task> handler);
 	ICoreNodeBuilder SetExceptionHandler(Action<Exception> handler);
+	ICoreNodeBuilder AddInvoker(IInvoker invoker);
+	ICoreNodeBuilder AddController(IController controller);
+	ICoreNodeBuilder RequireResult(bool requiresResult = true);
 	INode Build();
 
 	// string Id { get; }

@@ -7,6 +7,17 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		throw new NotImplementedException();
 	}
 
+	public ICoreNodeBuilder Configure(INodeConfiguration nodeConfiguration)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ICoreNodeBuilder AddNodeEdge(INodeEdge nodeEdge)
+	{
+		this._NodeEdge = nodeEdge;
+		return this;
+	}
+
 	/// <inheritdoc />
 	public virtual bool HasParam(string paramName) => this._Params.Any(p => p.ParamName == paramName);
 	public virtual IFnFactory FnFactory => this._FnFactory;
@@ -71,35 +82,35 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		return this;
 	}
 
-	// /// <inheritdoc />
-	// public ICoreNodeBuilder AddArg(params IMsg[] msgs)
-	// {
-		// foreach (var m in msgs)
-		// {
-			// this._Params.Add(m);
-		// }
-		// return this;
-	// }
+	public ICoreNodeBuilder AddInvoker(IInvoker invoker)
+	{
+		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
+		return this;
+	}
+
+	public ICoreNodeBuilder AddController(IController controller)
+	{
+		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
+
+		return this;
+	}
 
 	/// <inheritdoc />
-	// public ICoreNodeBuilder AddArg(params INode[] nodes)
-	// {
-		// foreach (var h in nodes)
-		// {
-			// this._PromisedParams.Add(h);
-		// }
-		// return this;
-	// }
+	public virtual ICoreNodeBuilder RequireResult(bool requiresResult = true)
+	{
+		this.RequiresResult = requiresResult;
+		return this;
+	}
 
-	/// <inheritdoc />
-	//public ICoreNodeBuilder AddArg(params Func<IWorkflowContext, IMsg>[] contextArgs)
-	//{
-		//foreach (var p in contextArgs)
-		//{
-			//this._ContextParams.Add(p);
-		//}
-		//return this;
-	//}
+	 /// <inheritdoc />
+	 public ICoreNodeBuilder AddArg(params IMsg[] msgs)
+	 {
+		 foreach (var m in msgs)
+		 {
+			 this._Params.Add(m);
+		 }
+		 return this;
+	 }
 
 	/// <inheritdoc />
 	public ICoreNodeBuilder SetExceptionHandler(Func<Exception, Task> handler)

@@ -27,7 +27,7 @@ public class NodeEdgeResolver : INodeEdgeResolver
 
 		if(edge is null) throw new InvalidOperationException();
 
-		if(edge.NodeConfiguration.RequiresResult) edge.NodeConfiguration.Args.AddRange(msgs);
+		if(edge.NodeConfiguration.RequiresResult) edge.AddArg(msgs);
 
 		return await edge.Run(cancellationToken);
 	}
@@ -43,8 +43,8 @@ public class NodeEdgeResolver : INodeEdgeResolver
 
 		if(edge1 is null && edge2 is null) throw new InvalidOperationException();
 
-		if(edge1 is not null && edge1.NodeConfiguration.RequiresResult) edge1.NodeConfiguration.Args.AddRange(msgs);
-		if(edge2 is not null && edge2.NodeConfiguration.RequiresResult) edge2.NodeConfiguration.Args.AddRange(msgs);
+		if(edge1 is not null && edge1.NodeConfiguration.RequiresResult) edge1.AddArg(msgs);
+		if(edge2 is not null && edge2.NodeConfiguration.RequiresResult) edge2.AddArg(msgs);
 
 		// todo: in the case of a binary node, we actually do not want the "false" response, just the "true-path" result.
 		if(edge1 is not null && edge2 is not null)
@@ -77,15 +77,10 @@ public class NodeEdgeResolver : INodeEdgeResolver
 
 		foreach(var e in edges)
 		{
-			if(e is not null && e.NodeConfiguration.RequiresResult) e.NodeConfiguration.Args.AddRange(msgs);
+			if(e is not null && e.NodeConfiguration.RequiresResult) e.AddArg(msgs);
 		}
 
-		var c = Task.WhenAll(edges.Select(e => 
-		{
-			e!.NodeConfiguration.Args.AddRange(msgs);
-
-			return e.Run(cancellationToken);
-		}));
+		var c = Task.WhenAll(edges.Select(e => e!.AddArg(msgs).Run(cancellationToken)));
 
 		var r = await c;
 

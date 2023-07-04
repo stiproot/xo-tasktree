@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
+public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
 	protected IMetaNode? _MetaNode;
 
@@ -33,35 +33,29 @@ public class MetaPathBranchBuilder : CoreNodeBuilder, IMetaPathBranchBuilder
 		IMetaNode mn
 	) 
 	{
-		// IAsyncFn fn = this.TypeToFn(mn.ServiceType);
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory);
 
 		INode[] promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
-		INode n = this._NodeFactory.Create(this._Logger, context: this._Context)
-			.SetFn(fn)
-			.AddArg(promisedArgs)
-			.AddArg(mn.NodeConfiguration!.Args.ToArray());
+		ICoreNodeBuilder n = this._NodeBuilderFactory
+			.Create(this._Logger, this._WorkflowContext)
+			.Configure(mn.NodeConfiguration)
+			.AddFn(fn);
 
-		if(mn.NodeEdge is not null) n.SetNodeEdge(new MonariusNodeEdge { Edge = this.Build(metaNodeMapper, mn.NodeEdge.Next!)});
+		if(mn.NodeEdge is not null) n.AddNodeEdge(new MonariusNodeEdge { Edge = this.Build(metaNodeMapper, mn.NodeEdge.Next!)});
 	
-		return n;
+		return n.Build();
 	}
 
-	/// <summary>
-	///   Initializes a new instance of <see cref="MetaPathBranchBuilder"/>. 
-	/// </summary>
 	public MetaPathBranchBuilder(
+		INodeBuilderFactory nodeBuilderFactory,
 		IFnFactory fnFactory,
-		INodeFactory nodeFactory,
 		ILogger? logger = null,
-		string? id = null,
 		IWorkflowContext? context = null
 	) : base(
+			nodeBuilderFactory,
 			fnFactory, 
-			nodeFactory,
 			logger, 
-			id, 
 			context
 	)
 	{

@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
+public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
 	protected IMetaNode? _MetaNode;
 
@@ -22,15 +22,14 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode!.NodeConfiguration?.NextParamName);
 
 		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
-		INode n = this._NodeFactory
-			.Create(this._Logger, this.Id, this._Context)
-			.SetFn(fn)
-			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
-			.AddArg(promisedArgs);
+		INode n = this._NodeBuilderFactory
+			.Create(this._Logger, this._WorkflowContext)
+			.Configure(this._MetaNode.NodeConfiguration)
+			.AddFn(fn)
+			.Build();
 		
-		if(this._MetaNode.NodeConfiguration?.RequiresResult is true) n.RequireResult();
-
 		if(this._MetaNode.NodeEdge is not null)
 		{
 			INode thenNode = metaNodeMapper.Map(this._MetaNode.NodeEdge.Next!);
@@ -43,20 +42,15 @@ public class MetaBranchBuilder : CoreNodeBuilder, IMetaBranchBuilder
 		return n;
 	}
 
-	/// <summary>
-	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
-	/// </summary>
 	public MetaBranchBuilder(
+		INodeBuilderFactory nodeBuilderFactory,
 		IFnFactory fnFactory,
-		INodeFactory nodeFactory,
 		ILogger? logger = null,
-		string? id = null,
 		IWorkflowContext? context = null
 	) : base(
+			nodeBuilderFactory,
 			fnFactory, 
-			nodeFactory,
 			logger, 
-			id, 
 			context
 	)
 	{

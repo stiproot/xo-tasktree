@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
+public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
 	protected IMetaNode? _MetaNode;
 
@@ -33,18 +33,24 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 		INodeEdge e = new BinariusNodeEdge { Edge1 = @true, Edge2 = @false };
 
 		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode.NodeConfiguration?.NextParamName);
+
 		INode[] promisedArgs = _MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
-		INode n = this._NodeFactory
-			.Create(this._Logger, context: this._Context)
-			.SetFn(fn)
-			.AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
-			.AddArg(promisedArgs)
-			.SetNodeEdge(e);
+		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
+
+		INode n = this._NodeBuilderFactory
+			// .Create(this._Logger, context: this._Context)
+			.Create()
+			.Configure(this._MetaNode.NodeConfiguration)
+			.AddFn(fn)
+			// .AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
+			// .AddArg(promisedArgs)
+			.AddNodeEdge(e)
+			.Build();
 		
-		if(this._MetaNode.NodeConfiguration?.RequiresResult is true)
-		{
-			n.RequireResult();
-		}
+		// if(this._MetaNode.NodeConfiguration?.RequiresResult is true)
+		// {
+			// n.RequireResult();
+		// }
 
 		return n;
 	}
@@ -58,21 +64,26 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 		if(mn is null) return null;
 
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration.NextParamName);
-		INode[] promisedArgs = mn.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
-		INode n = this._NodeFactory
-			.Create(this._Logger, context: this._Context)
-			.SetFn(fn)
-			.AddArg(promisedArgs);
-		
-		if(mn.NodeConfiguration is not null)
-		{
-			n.AddArg(mn.NodeConfiguration.Args.ToArray());
-		}
 
-		if(mn.NodeConfiguration?.RequiresResult is true)
-		{
-			n.RequireResult();
-		}
+		IList<INode> promisedArgs = mn.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToList();
+		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
+
+		INode n = this._NodeBuilderFactory
+			// .Create(this._Logger, context: this._Context)
+			.Create()
+			.Configure(mn.NodeConfiguration)
+			.AddFn(fn)
+			.Build();
+		
+		// if(mn.NodeConfiguration is not null)
+		// {
+			// n.AddArg(mn.NodeConfiguration.Args.ToArray());
+		// }
+
+		// if(mn.NodeConfiguration?.RequiresResult is true)
+		// {
+			// n.RequireResult();
+		// }
 
 		if(mn.NodeEdge is not null)
 		{
@@ -89,30 +100,26 @@ public class MetaBinaryBranchBuilder : CoreNodeBuilder, IMetaBinaryBranchBuilder
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 
-		var decisionNode  = this._NodeFactory
-			.Create() 
-			.SetFn(decisionFn)
-			.SetController(new TrueController())
-			.SetNodeEdge(decisionEdge)
-			.RequireResult();
+		var decisionNode  = this._NodeBuilderFactory
+			.Create()
+			.Configure(c => c.RequireResult())
+			.AddFn(decisionFn)
+			.AddController(new TrueController())
+			.AddNodeEdge(decisionEdge)
+			.Build();
 	
 		return decisionNode;
 	}
 
-	/// <summary>
-	///   Initializes a new instance of <see cref="BinaryBranchBuilder"/>. 
-	/// </summary>
 	public MetaBinaryBranchBuilder(
+		INodeBuilderFactory nodeBuilderFactory,
 		IFnFactory fnFactory,
-		INodeFactory nodeFactory,
 		ILogger? logger = null,
-		string? id = null,
 		IWorkflowContext? context = null
 	) : base(
+			nodeBuilderFactory,
 			fnFactory, 
-			nodeFactory,
 			logger, 
-			id, 
 			context
 	)
 	{

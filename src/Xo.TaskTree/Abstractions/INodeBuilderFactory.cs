@@ -12,4 +12,8 @@ public interface INodeBuilderFactory
 		ILogger logger,
 		string id
 	);
+	ICoreNodeBuilder Create(
+		ILogger? logger,
+		IWorkflowContext? workflowContext
+	);
 }
