@@ -58,11 +58,13 @@ public class NodeBuilderFactory : INodeBuilderFactory
     {
         return nodeType switch
         {
-            NodeBuilderTypes.Default => new NodeBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.Linked => new LinkedBranchBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.Binary => new BinaryBranchBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.Pool => new PoolBranchBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.Hash => new HashBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.Default => new NodeBuilder(fnFactory, nodeFactory, logger, id, context),
+            NodeBuilderTypes.Default => new NodeBuilder(fnFactory, nodeFactory, logger),
+
+            // NodeBuilderTypes.Linked => new LinkedBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.Binary => new BinaryBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.Pool => new PoolBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.Hash => new HashBranchBuilder(fnFactory, nodeFactory, logger, id, context),
 
             // NodeBuilderTypes.DefaultMetaBranch => new MetaBranchBuilder(fnFactory, nodeFactory, logger, id, context),
             // NodeBuilderTypes.BinaryMetaBranch => new MetaBinaryBranchBuilder(fnFactory, nodeFactory, logger, id, context),

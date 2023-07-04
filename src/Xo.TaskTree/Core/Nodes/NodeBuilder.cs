@@ -8,15 +8,15 @@ public sealed class NodeBuilder : CoreNodeBuilder
 	public NodeBuilder(
 		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
-		ILogger? logger = null,
-		string? id = null,
-		IWorkflowContext? context = null
+		ILogger? logger = null
+		// string? id = null,
+		// IWorkflowContext? context = null
 	) : base(
 			fnFactory, 
 			nodeFactory,
-			logger, 
-			id, 
-			context
+			logger
+			// id, 
+			// context
 	)
 	{ 
 	}

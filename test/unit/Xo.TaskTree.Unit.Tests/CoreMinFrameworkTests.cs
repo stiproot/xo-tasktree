@@ -4,14 +4,14 @@ namespace Xo.TaskTree.Unit.Tests;
 public class CoreMinFrameworkTests
 {
 	private readonly IFnFactory _fnFactory;
-	private readonly IMinNodeBuilderFactory _nodeBuilderFactory;
+	private readonly INodeBuilderFactory _nodeBuilderFactory;
 	private readonly IMsgFactory _msgFactory;
 	private readonly IWorkflowContextFactory _workflowContextFactory;
 	private CancellationToken CancellationTokenFactory() => new CancellationToken();
 
 	public CoreMinFrameworkTests(
 		IFnFactory fnFactory,
-		IMinNodeBuilderFactory nodeBuilderFactory,
+		INodeBuilderFactory nodeBuilderFactory,
 		IMsgFactory msgFactory,
 		IWorkflowContextFactory workflowContextFactory
 	)
