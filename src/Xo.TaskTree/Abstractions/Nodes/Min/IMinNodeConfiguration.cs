@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IMinNodeConfiguration
+public interface INodeConfiguration
 {
 	bool RequiresResult { get; set; }
 	string? NextParamName { get; set; }
@@ -8,10 +8,10 @@ public interface IMinNodeConfiguration
 	IWorkflowContext? WorkflowContext { get; set; }
 
 	List<IMsg> Args { get; init; }
-	List<IMetaNode> PromisedArgs { get; init; }
+	List<INode> PromisedArgs { get; init; }
+	List<IMetaNode> MetaPromisedArgs { get; init; }
 	List<Func<IWorkflowContext, IMsg>> ContextArgs { get; init; }
 
-	string Id { get; }
-	bool IgnoresPromisedResults { get; }
-	bool IsSync { get; }
+	string Id { get; set; }
+	bool IgnoresPromisedResults { get; set; }
 }

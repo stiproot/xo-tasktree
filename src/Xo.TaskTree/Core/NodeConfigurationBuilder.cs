@@ -41,6 +41,51 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
+	public INodeConfigurationBuilder AddArg(params INode[] args)
+	{
+		foreach (var a in args)
+		{
+			this._config.PromisedArgs.Add(a);
+		}
+
+		return this;
+	}
+
+	public INodeConfigurationBuilder AddArg(params IMetaNode[] args)
+	{
+		foreach (var a in args)
+		{
+			this._config.MetaPromisedArgs.Add(a);
+		}
+
+		return this;
+	}
+
+	public INodeConfigurationBuilder AddArg(params IMsg?[] args)
+	{
+		foreach (var a in args)
+		{
+			if(a is null)
+			{
+				continue;
+			}
+
+			this._config.Args.Add(a);
+		}
+
+		return this;
+	}
+
+	public INodeConfigurationBuilder AddArg(params Func<IWorkflowContext, IMsg>[] args)
+	{
+		foreach (var a in args)
+		{
+			this._config.ContextArgs.Add(a);
+		}
+
+		return this;
+	}
+
 	public INodeConfigurationBuilder MatchArg<T>(T arg)
 	{
 		if (this._serviceType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
@@ -68,8 +113,20 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 		arg.NodeConfiguration!.NextParamName = serviceParamName;
 
-		this._config.PromisedArgs.Add(arg);
+		this._config.MetaPromisedArgs.Add(arg);
 
+		return this;
+	}
+
+	public INodeConfigurationBuilder SetId(string id)
+	{
+		this._config.Id = id;
+		return this;
+	}
+
+	public INodeConfigurationBuilder SetContext(IWorkflowContext? workflowContext)
+	{
+		this._config.WorkflowContext = workflowContext;
 		return this;
 	}
 

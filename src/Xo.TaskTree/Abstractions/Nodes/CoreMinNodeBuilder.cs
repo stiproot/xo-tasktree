@@ -1,8 +1,8 @@
 namespace Xo.TaskTree.Abstractions;
 
-public abstract class CoreMinNodeBuilder : BaseNodeBuilder, ICoreMinNodeBuilder
+public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 {
-	public ICoreMinNodeBuilder Configure(Action<IMinNodeConfigurationBuilder> configure)
+	public ICoreNodeBuilder Configure(Action<INodeConfigurationBuilder> configure)
 	{
 		throw new NotImplementedException();
 	}
@@ -23,56 +23,56 @@ public abstract class CoreMinNodeBuilder : BaseNodeBuilder, ICoreMinNodeBuilder
 	}
 
 	// /// <inheritdoc />
-	// public ICoreMinNodeBuilder RequireResult(bool requiresResult = true)
+	// public ICoreNodeBuilder RequireResult(bool requiresResult = true)
 	// {
 		// this.RequiresResult = requiresResult;
 		// return this;
 	// }
 
 	//// /// <inheritdoc />
-	//public ICoreMinNodeBuilder AddContext(IWorkflowContext? context)
+	//public ICoreNodeBuilder AddContext(IWorkflowContext? context)
 	//{
 		//this._Context = context;
 		//return this;
 	//}
 
 	/// <inheritdoc />
-	public ICoreMinNodeBuilder AddFn(IAsyncFn fn)
+	public ICoreNodeBuilder AddFn(IAsyncFn fn)
 	{
 		this._AsyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreMinNodeBuilder AddFn(ISyncFn fn)
+	public ICoreNodeBuilder AddFn(ISyncFn fn)
 	{
 		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreMinNodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn)
+	public ICoreNodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn)
 	{
 		this._AsyncFn = new AsyncFnAdaptor(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreMinNodeBuilder AddFn(Func<IArgs, IMsg?> fn)
+	public ICoreNodeBuilder AddFn(Func<IArgs, IMsg?> fn)
 	{
 		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreMinNodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn)
+	public ICoreNodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn)
 	{
 		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
 	// /// <inheritdoc />
-	// public ICoreMinNodeBuilder AddArg(params IMsg[] msgs)
+	// public ICoreNodeBuilder AddArg(params IMsg[] msgs)
 	// {
 		// foreach (var m in msgs)
 		// {
@@ -82,7 +82,7 @@ public abstract class CoreMinNodeBuilder : BaseNodeBuilder, ICoreMinNodeBuilder
 	// }
 
 	/// <inheritdoc />
-	// public ICoreMinNodeBuilder AddArg(params INode[] nodes)
+	// public ICoreNodeBuilder AddArg(params INode[] nodes)
 	// {
 		// foreach (var h in nodes)
 		// {
@@ -92,7 +92,7 @@ public abstract class CoreMinNodeBuilder : BaseNodeBuilder, ICoreMinNodeBuilder
 	// }
 
 	/// <inheritdoc />
-	//public ICoreMinNodeBuilder AddArg(params Func<IWorkflowContext, IMsg>[] contextArgs)
+	//public ICoreNodeBuilder AddArg(params Func<IWorkflowContext, IMsg>[] contextArgs)
 	//{
 		//foreach (var p in contextArgs)
 		//{
@@ -102,20 +102,20 @@ public abstract class CoreMinNodeBuilder : BaseNodeBuilder, ICoreMinNodeBuilder
 	//}
 
 	/// <inheritdoc />
-	public ICoreMinNodeBuilder SetExceptionHandler(Func<Exception, Task> handler)
+	public ICoreNodeBuilder SetExceptionHandler(Func<Exception, Task> handler)
 	{
 		this._ExceptionHandlerAsync = handler;
 		return this;
 	}
 
 	// /// <inheritdoc />
-	public ICoreMinNodeBuilder SetExceptionHandler(Action<Exception> handler)
+	public ICoreNodeBuilder SetExceptionHandler(Action<Exception> handler)
 	{
 		this._ExceptionHandler = handler;
 		return this;
 	}
 
-	public virtual IMinNode Build()
+	public virtual INode Build()
 	{
 		throw new NotImplementedException();
 
@@ -139,7 +139,7 @@ public abstract class CoreMinNodeBuilder : BaseNodeBuilder, ICoreMinNodeBuilder
 	/// <summary>
 	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
 	/// </summary>
-	public CoreMinNodeBuilder(
+	public CoreNodeBuilder(
 		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
 		ILogger? logger = null,

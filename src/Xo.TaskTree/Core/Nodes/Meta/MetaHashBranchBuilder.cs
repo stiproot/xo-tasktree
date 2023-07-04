@@ -23,7 +23,7 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 
 		INode n = this._NodeFactory.Create(this._Logger, this.Id, this._Context);
 
-		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildDecision(metaNodeMapper, v)).ToArray();
 
@@ -51,7 +51,7 @@ public class MetaHashBranchBuilder : CoreNodeBuilder, IMetaHashBranchBuilder
 		if(mn is null) throw new InvalidOperationException();
 
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration?.NextParamName);
-		INode[] promisedArgs = mn.NodeConfiguration!.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = mn.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		INode n = this._NodeFactory
 			.Create(this._Logger, context: this._Context)
 			.SetFn(fn)

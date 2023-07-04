@@ -14,7 +14,7 @@ public class LinkedBranchBuilder : CoreNodeBuilder, ILinkedBranchBuilder
 	{
 		this._Next = typeof(T).ToNode(this._FnFactory);
 
-		if (requiresResult) this._Next.RequireResult();
+		// if (requiresResult) this._Next.RequireResult();
 
 		return this;
 	}

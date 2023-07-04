@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
 /// <inheritdoc cref="INode"/>
-public abstract class BaseMinNode : IMinNode
+public abstract class BaseNode : INode
 {
 	protected ILogger? _Logger;
 	protected IAsyncFn? _AsyncFn;
@@ -10,7 +10,7 @@ public abstract class BaseMinNode : IMinNode
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
 	protected INodeEdge? _NodeEdge;
-	protected IMinNodeConfiguration _NodeConfiguration;
+	protected INodeConfiguration _NodeConfiguration;
 	protected IController? _Controller;
 	protected IInvoker _Invoker = new Invoker(new NodeEdgeResolver());
 	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
@@ -23,7 +23,7 @@ public abstract class BaseMinNode : IMinNode
 	// public string Id { get; internal set; } = $"{Guid.NewGuid()}";
 
 	/// <inheritdoc />
-	public IMinNodeConfiguration NodeConfiguration => this._NodeConfiguration;
+	public INodeConfiguration NodeConfiguration => this._NodeConfiguration;
 
 	/// <inheritdoc />
 	public INodeEdge? NodeEdge => this._NodeEdge;
@@ -46,26 +46,26 @@ public abstract class BaseMinNode : IMinNode
 	protected bool _IsSync => this._SyncFn != null;
 
 	/// <inheritdoc />
-	public IMinNode SetNodeConfiguration(IMinNodeConfiguration nodeConfiguration)
+	public INode SetNodeConfiguration(INodeConfiguration nodeConfiguration)
 	{
 		this._NodeConfiguration = nodeConfiguration ?? throw new ArgumentNullException(nameof(nodeConfiguration));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public IMinNode SetNodeEdge(INodeEdge nodeEdge)
+	public INode SetNodeEdge(INodeEdge nodeEdge)
 	{
 		this._NodeEdge = nodeEdge ?? throw new ArgumentNullException(nameof(nodeEdge));
 		return this;
 	}
 
-	public IMinNode SetInvoker(IInvoker invoker)
+	public INode SetInvoker(IInvoker invoker)
 	{
 		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
 		return this;
 	}
 
-	public IMinNode SetController(IController controller)
+	public INode SetController(IController controller)
 	{
 		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
 
@@ -73,21 +73,21 @@ public abstract class BaseMinNode : IMinNode
 	}
 
 	/// <inheritdoc />
-	public IMinNode SetNodevaluator(INodevaluator nodevaluator)
+	public INode SetNodevaluator(INodevaluator nodevaluator)
 	{
 		this._Nodevaluator = nodevaluator ?? throw new ArgumentNullException(nameof(nodevaluator));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public IMinNode RunNodesInLoop()
+	public INode RunNodesInLoop()
 	{
 		this.SetNodevaluator(new LoopNodeEvaluator());
 		return this;
 	}
 
 	/// <inheritdoc />
-	public IMinNode SetFn(IAsyncFn fn)
+	public INode SetFn(IAsyncFn fn)
 	{
 		this._AsyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
@@ -101,7 +101,7 @@ public abstract class BaseMinNode : IMinNode
 	// }
 
 	/// <inheritdoc />
-	public IMinNode SetFn(ISyncFn fn)
+	public INode SetFn(ISyncFn fn)
 	{
 		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
@@ -192,7 +192,7 @@ public abstract class BaseMinNode : IMinNode
 	//}
 
 	/// <inheritdoc />
-	public IMinNode SetExceptionHandler(Func<Exception, Task> handler)
+	public INode SetExceptionHandler(Func<Exception, Task> handler)
 	{
 		this._ExceptionHandlerAsync = handler;
 
@@ -200,7 +200,7 @@ public abstract class BaseMinNode : IMinNode
 	}
 
 	/// <inheritdoc />
-	public IMinNode SetExceptionHandler(Action<Exception> handler)
+	public INode SetExceptionHandler(Action<Exception> handler)
 	{
 		this._ExceptionHandler = handler;
 
@@ -347,7 +347,7 @@ public abstract class BaseMinNode : IMinNode
 	/// <summary>
 	///   Initializes a new instance of <see cref="Node"/>. 
 	/// </summary>
-	public BaseMinNode(
+	public BaseNode(
 		ILogger? logger = null,
 		string? id = null,
 		IWorkflowContext? context = null

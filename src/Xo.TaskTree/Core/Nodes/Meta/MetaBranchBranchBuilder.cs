@@ -21,7 +21,7 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 	{
 		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory);
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context);
-		INode[] promisedArgs = this._MetaNode.NodeConfiguration.PromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = this._MetaNode.NodeConfiguration.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 
 		INode[] ns = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.Build(metaNodeMapper, v)).ToArray();
 
@@ -45,7 +45,7 @@ public class MetaBranchBranchBuilder : CoreNodeBuilder, IMetaBranchBranchBuilder
 
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory);
 
-		INode[] promisedArgs = mn.NodeConfiguration.PromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		INode n = this._NodeFactory.Create(this._Logger, context: this._Context)
 			.SetFn(fn)

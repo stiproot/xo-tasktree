@@ -1,21 +1,22 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IMinNodeConfigurationBuilder
+public interface INodeConfigurationBuilder
 {
-	IMinNodeConfigurationBuilder SetId(string id);
-	IMinNodeConfigurationBuilder SetContext(IWorkflowContext? context);
-	IMinNodeConfigurationBuilder AddArg(params IMinNode[] args);
-	IMinNodeConfigurationBuilder AddArg(params IMsg?[] args);
-	IMinNodeConfigurationBuilder AddArg(params Func<IWorkflowContext, IMsg>[] args);
-	IMinNodeConfigurationBuilder AddArg<T>(
+	INodeConfigurationBuilder SetId(string id);
+	INodeConfigurationBuilder SetContext(IWorkflowContext? workflowContext);
+	INodeConfigurationBuilder AddArg(params INode[] args);
+	INodeConfigurationBuilder AddArg(params IMetaNode[] args);
+	INodeConfigurationBuilder AddArg(params IMsg?[] args);
+	INodeConfigurationBuilder AddArg(params Func<IWorkflowContext, IMsg>[] args);
+	INodeConfigurationBuilder AddArg<T>(
 			T data,
 			string paramName
 	);
-	IMinNodeConfigurationBuilder MatchArg<T>(T arg);
-	IMinNodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null);
-	IMinNodeConfigurationBuilder RequireResult();
-	IMinNodeConfigurationBuilder AddServiceType(Type serviceType);
-	IMinNodeConfigurationBuilder NextParam(string nextParamName);
-	IMinNodeConfigurationBuilder Key(string key);
-	IMinNodeConfiguration Build();
+	INodeConfigurationBuilder MatchArg<T>(T arg);
+	INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null);
+	INodeConfigurationBuilder RequireResult();
+	INodeConfigurationBuilder AddServiceType(Type serviceType);
+	INodeConfigurationBuilder NextParam(string nextParamName);
+	INodeConfigurationBuilder Key(string key);
+	INodeConfiguration Build();
 }
