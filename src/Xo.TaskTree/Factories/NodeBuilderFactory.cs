@@ -43,6 +43,10 @@ public class NodeBuilderFactory : INodeBuilderFactory
     public ICoreNodeBuilder Create(IWorkflowContext context)
         => this.Create(NodeBuilderTypes.Default, this._fnFactory, this._nodeFactory, context: context);
 
+    /// <inheritdoc />
+    public ICoreNodeBuilder Create(ILogger? logger, IWorkflowContext? workflowContext)
+        => this.Create(NodeBuilderTypes.Default, this._fnFactory, this._nodeFactory, logger, context:workflowContext);
+
     private ICoreNodeBuilder Create(
         NodeBuilderTypes nodeType,
         IFnFactory fnFactory,
@@ -59,10 +63,13 @@ public class NodeBuilderFactory : INodeBuilderFactory
             NodeBuilderTypes.Binary => new BinaryBranchBuilder(fnFactory, nodeFactory, logger, id, context),
             NodeBuilderTypes.Pool => new PoolBranchBuilder(fnFactory, nodeFactory, logger, id, context),
             NodeBuilderTypes.Hash => new HashBranchBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.DefaultMetaBranch => new MetaBranchBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.BinaryMetaBranch => new MetaBinaryBranchBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.BranchMetaBranch => new MetaBranchBranchBuilder(fnFactory, nodeFactory, logger, id, context),
-            NodeBuilderTypes.HashMetaBranch => new MetaHashBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+
+            // NodeBuilderTypes.DefaultMetaBranch => new MetaBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.BinaryMetaBranch => new MetaBinaryBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.BranchMetaBranch => new MetaBranchBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.HashMetaBranch => new MetaHashBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+            // NodeBuilderTypes.PathMetaBranch => new MetaPathBranchBuilder(fnFactory, nodeFactory, logger, id, context),
+
             _ => throw new NotSupportedException()
         };
     }
