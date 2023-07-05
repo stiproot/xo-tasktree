@@ -1,4 +1,4 @@
-namespace Xo.TaskTree.Abstractions;
+namespace Xo.TaskTree.Core;
 
 public class TrueController : IController
 {
