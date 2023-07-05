@@ -11,6 +11,9 @@ public static class EnumerableExtensions
 		return @this[1];
 	}
 
-	public static IList<T> NonNull<T>(this IList<T?> @this) 
+	//public static IList<T> NonNull<T>(this IList<T?> @this) 
+		//=> @this.Where(t => t is not null).ToList()!;
+
+	public static IEnumerable<T> NonNull<T>(this IEnumerable<T?> @this) 
 		=> @this.Where(t => t is not null).ToList()!;
 }

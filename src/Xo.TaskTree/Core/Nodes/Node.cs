@@ -100,7 +100,7 @@ public class Node : INode
 	}
 
 	/// <inheritdoc />
-	public virtual async Task<IMsg?[]> Run(CancellationToken cancellationToken)
+	public virtual async Task<IMsg[]> Run(CancellationToken cancellationToken)
 	{
 		this._Logger?.LogTrace($"Node.Run - start.");
 
@@ -179,7 +179,7 @@ public class Node : INode
 	}
 
 	/// <inheritdoc />
-	protected virtual async Task<IMsg?[]> ResolveFn(CancellationToken cancellationToken)
+	protected virtual async Task<IMsg[]> ResolveFn(CancellationToken cancellationToken)
 	{
 		this._Logger?.LogTrace($"BaseNode.ResolveFn - starting...");
 
@@ -196,7 +196,7 @@ public class Node : INode
 		{
 			var bit = this._Controller.Control(result);
 
-			if(bit is false) return result.ToArray();
+			if(bit is false) return Array.Empty<IMsg>();
 		}
 
 		if(this._NodeEdge is not null)

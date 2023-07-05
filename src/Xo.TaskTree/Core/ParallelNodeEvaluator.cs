@@ -9,11 +9,11 @@ public class ParallelNodeEvaluator : INodevaluator
 		CancellationToken cancellationToken
 	)
 	{
-		IEnumerable<Task<IMsg?[]>> promisedArgs = nodes.Select(p => p.Run(cancellationToken));
+		IEnumerable<Task<IMsg[]>> promisedArgs = nodes.Select(p => p.Run(cancellationToken));
 
 		var continuation = await Task.WhenAll(promisedArgs);
 
-		var results = continuation.SelectMany(r => r).ToList().NonNull();
+		var results = continuation.SelectMany(r => r).NonNull().ToList();
 
 		return results;
 	}

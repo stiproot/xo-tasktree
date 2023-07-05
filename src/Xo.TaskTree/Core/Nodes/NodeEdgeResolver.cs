@@ -2,9 +2,9 @@ namespace Xo.TaskTree.Core;
 
 public class NodeEdgeResolver : INodeEdgeResolver
 {
-	public Task<IMsg?[]> Resolve(
+	public Task<IMsg[]> Resolve(
 		INodeEdge nodeEdge,
-		IMsg?[] msgs,
+		IMsg[] msgs,
 		CancellationToken cancellationToken
 	)
 	{
@@ -17,9 +17,9 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		};
 	}
 
-	private static async Task<IMsg?[]> ResolveMonariusNodeEdge(
+	private static async Task<IMsg[]> ResolveMonariusNodeEdge(
 		INodeEdge nodeEdge,
-		IMsg?[] msgs,
+		IMsg[] msgs,
 		CancellationToken cancellationToken
 	)
 	{
@@ -32,9 +32,9 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		return await edge.Run(cancellationToken);
 	}
 
-	private static async Task<IMsg?[]> ResolveBinariusNodeEdge(
+	private static async Task<IMsg[]> ResolveBinariusNodeEdge(
 		INodeEdge nodeEdge,
-		IMsg?[] msgs,
+		IMsg[] msgs,
 		CancellationToken cancellationToken
 	)
 	{
@@ -46,7 +46,6 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		if(edge1 is not null && edge1.NodeConfiguration.RequiresResult) edge1.AddArg(msgs);
 		if(edge2 is not null && edge2.NodeConfiguration.RequiresResult) edge2.AddArg(msgs);
 
-		// todo: in the case of a binary node, we actually do not want the "false" response, just the "true-path" result.
 		if(edge1 is not null && edge2 is not null)
 		{
 			var c = Task.WhenAll(
@@ -65,9 +64,9 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		return await edge2!.Run(cancellationToken);
 	}
 
-	private static async Task<IMsg?[]> ResolveMultusNodeEdge(
+	private static async Task<IMsg[]> ResolveMultusNodeEdge(
 		INodeEdge nodeEdge,
-		IMsg?[] msgs,
+		IMsg[] msgs,
 		CancellationToken cancellationToken
 	)
 	{

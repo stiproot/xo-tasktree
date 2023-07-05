@@ -42,7 +42,7 @@ public class StateManagerTests
 		var n = mn.Build();
 
 		var msgs = await n.Run(cancellationToken);
-		var msg = msgs.Second(); 
+		var msg = msgs.First(); 
 		var d = (msg as Msg<int>)!.GetData();
 
 		Assert.Equal(1, d);
@@ -147,7 +147,7 @@ public class StateManagerTests
 		var n = mn.Build();
 
 		var msgs = await n.Run(cancellationToken);
-		var msg = msgs.Second(); 
+		var msg = msgs.First(); 
 		var d = (msg as Msg<int>)!.GetData();
 
 		Assert.Equal(1, d);

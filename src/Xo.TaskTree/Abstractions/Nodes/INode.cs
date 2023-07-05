@@ -16,6 +16,6 @@ public interface INode
 	INode SetFn(ISyncFn fn);
 	INode SetExceptionHandler(Func<Exception, Task> handler);
 	INode SetExceptionHandler(Action<Exception> handler);
-	Task<IMsg?[]> Run(CancellationToken cancellationToken);
+	Task<IMsg[]> Run(CancellationToken cancellationToken);
 	void Validate();
 }

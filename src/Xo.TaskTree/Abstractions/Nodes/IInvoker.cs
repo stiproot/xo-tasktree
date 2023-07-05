@@ -2,9 +2,9 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface IInvoker
 {
-	Task<IMsg?[]> Invoke(
+	Task<IMsg[]> Invoke(
 		INodeEdge nodeEdge, 
-		IMsg?[] msgs,
+		IMsg[] msgs,
 		CancellationToken cancellationToken
 	);
 }

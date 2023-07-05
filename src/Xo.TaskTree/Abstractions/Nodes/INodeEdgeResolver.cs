@@ -2,9 +2,9 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface INodeEdgeResolver
 {
-	Task<IMsg?[]> Resolve(
+	Task<IMsg[]> Resolve(
 		INodeEdge nodeEdge, 
-		IMsg?[] msgs,
+		IMsg[] msgs,
 		CancellationToken cancellationToken
 	);
 }
