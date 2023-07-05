@@ -37,13 +37,13 @@ public class NSubsistuteTests
 		var provider = services.BuildServiceProvider();
 		var fnFactory = new FnFactory(provider);
 		var cancellationToken = this.CancellationTokenFactory();
-		//var context = this._workflowContextFactory.Create();
-		var context = _workflowContextFactory.Create();
+		//var workflowContext = this._workflowContextFactory.Create();
+		var workflowContext = _workflowContextFactory.Create();
 
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c => 
 				c
-					.AddContext(context)
+					.AddContext(workflowContext)
 					.AddArg(this._msgFactory.Create<string>(string.Empty, "args"))
 			)
 			.AddFn(this._fnFactory.Build(typeof(IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
@@ -53,7 +53,7 @@ public class NSubsistuteTests
 		var n2 = this._nodeBuilderFactory.Create()
 			.Configure(c => 
 				c
-					.AddContext(context)
+					.AddContext(workflowContext)
 					.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
 					.AddArg(n1)
 			)

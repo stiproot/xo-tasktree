@@ -5,47 +5,8 @@ namespace Xo.TaskTree.Abstractions;
 /// </summary>
 public interface INodeFactory
 {
-	/// <summary>
-	///   Creates an instance of an <see cref="INode"/> implementation.
-	/// </summary>
-	/// <returns><see cref="INode"/></returns>
-	INode Create();
-
-	/// <summary>
-	///   Creates an implementation of <see cref="INode"/>.
-	/// </summary>
-	/// <param name="id"></param>
-	/// <returns><see cref="INode"/></returns>
-	INode Create(string id);
-
-	/// <summary>
-	///   Creates an implementation of <see cref="INode"/>.
-	/// </summary>
-	/// <param name="logger"><see cref="ILogger"/></param>
-	/// <param name="id"></param>
-	/// <returns><see cref="INode"/></returns>
-	INode Create(
-		ILogger logger,
-		string id
-	);
-
-	/// <summary>
-	///   Creates an implementation of <see cref="INode"/>.
-	/// </summary>
-	/// <param name="logger"><see cref="ILogger"/></param>
-	/// <returns><see cref="INode"/></returns>
-	INode Create(ILogger? logger);
-
-	/// <summary>
-	///   Creates an implementation of <see cref="INode"/>.
-	/// </summary>
-	/// <param name="context"><see cref="ILogger"/></param>
-	/// <returns><see cref="INode"/></returns>
-	INode Create(IWorkflowContext context);
-
 	INode Create(
 		ILogger? logger = null,
-		string? id = null,
-		IWorkflowContext? context = null
+		INodeConfiguration? nodeConfiguration = null
 	);
 }

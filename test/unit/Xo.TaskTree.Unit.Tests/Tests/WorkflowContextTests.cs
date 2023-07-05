@@ -13,10 +13,10 @@ public class WorkflowContextTests
 	{
 		var key = GuidGenerator.NewGuidAsString();
 		var value = DateTime.UtcNow;
-		var context = this._workflowContextFactory.Create();
-		context.AddData<DateTime>(key, value);
+		var workflowContext = this._workflowContextFactory.Create();
+		workflowContext.AddData<DateTime>(key, value);
 
-		var result = context.GetMsgData<DateTime>(key);
+		var result = workflowContext.GetMsgData<DateTime>(key);
 
 		Assert.IsType<DateTime>(result);
 		Assert.Equal(value, result);
@@ -27,10 +27,10 @@ public class WorkflowContextTests
 	{
 		// Arrange
 		var key = GuidGenerator.NewGuidAsString();
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 
 		// Act / Assert
-		Assert.Throws<InvalidOperationException>(() => context.GetMsg(key));
+		Assert.Throws<InvalidOperationException>(() => workflowContext.GetMsg(key));
 	}
 
 	[Fact]
@@ -38,20 +38,20 @@ public class WorkflowContextTests
 	{
 		// Arrange
 		var key = GuidGenerator.NewGuidAsString();
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 
 		// Act / Assert
-		Assert.Throws<InvalidOperationException>(() => context.GetMsgData<object>(key));
+		Assert.Throws<InvalidOperationException>(() => workflowContext.GetMsgData<object>(key));
 	}
 
 	[Fact]
 	public void WorkflowContext_ProvidedNullKey_ThrowsInvalidOperationException()
 	{
 		// Arrange
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 
 		// Act / Assert
-		Assert.Throws<ArgumentNullException>(() => context.GetMsgs(null!));
+		Assert.Throws<ArgumentNullException>(() => workflowContext.GetMsgs(null!));
 	}
 
 	[Fact]
@@ -63,12 +63,12 @@ public class WorkflowContextTests
 		var key2 = GuidGenerator.NewGuidAsString();
 		var value2 = DateTime.UtcNow;
 
-		var context = this._workflowContextFactory.Create();
-		context.AddData<DateTime>(key, value);
-		context.AddData<DateTime>(key2, value2);
+		var workflowContext = this._workflowContextFactory.Create();
+		workflowContext.AddData<DateTime>(key, value);
+		workflowContext.AddData<DateTime>(key2, value2);
 
 		// Act
-		var results = context.GetMsgs(key, key2);
+		var results = workflowContext.GetMsgs(key, key2);
 
 		// Assert
 		Assert.Equal(2, results.Count());
@@ -82,11 +82,11 @@ public class WorkflowContextTests
 		var key2 = GuidGenerator.NewGuidAsString();
 		var value2 = DateTime.UtcNow;
 
-		var context = this._workflowContextFactory.Create();
-		context.AddData<DateTime>(key, value);
-		context.AddData<DateTime>(key2, value2);
+		var workflowContext = this._workflowContextFactory.Create();
+		workflowContext.AddData<DateTime>(key, value);
+		workflowContext.AddData<DateTime>(key2, value2);
 
-		var results = context.GetKeyMsgPairs(key, key2);
+		var results = workflowContext.GetKeyMsgPairs(key, key2);
 
 		Assert.Equal(2, results.Count());
 		Assert.Equal(key, results.First().Item1);
@@ -105,12 +105,12 @@ public class WorkflowContextTests
 		var key3 = GuidGenerator.NewGuidAsString();
 		var value3 = DateTime.UtcNow;
 
-		var context = this._workflowContextFactory.Create();
-		context.AddData(key1, value1);
-		context.AddData(key2, value2);
-		context.AddData(key3, value3);
+		var workflowContext = this._workflowContextFactory.Create();
+		workflowContext.AddData(key1, value1);
+		workflowContext.AddData(key2, value2);
+		workflowContext.AddData(key3, value3);
 
-		var results = context.GetAllKeyMsgPairs();
+		var results = workflowContext.GetAllKeyMsgPairs();
 		Assert.Equal(3, results.Count());
 		var firstPair = results.FirstOrDefault(r => r.Item1.Equals(key1));
 		Assert.Equal(key1, firstPair.Item1);

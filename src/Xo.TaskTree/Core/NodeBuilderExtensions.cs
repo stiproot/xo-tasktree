@@ -3,8 +3,8 @@ namespace Xo.TaskTree.Core;
 public static class NodeBuildeExtensions
 {
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddFn<T>(
-		this ICoreNodeBuilder @this,
+	public static INodeBuilder AddFn<T>(
+		this INodeBuilder @this,
 		string? nextParamName = null
 	)
 	{
@@ -16,8 +16,8 @@ public static class NodeBuildeExtensions
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddFn(
-		this ICoreNodeBuilder @this,
+	public static INodeBuilder AddFn(
+		this INodeBuilder @this,
 		Type serviceType, 
 		string? nextParamName = null
 	)
@@ -30,7 +30,7 @@ public static class NodeBuildeExtensions
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddFn<TService, TArg>(this ICoreNodeBuilder @this,
+	public static INodeBuilder AddFn<TService, TArg>(this INodeBuilder @this,
 		TArg arg,
 		string? nextParamName = null
 	)
@@ -63,7 +63,7 @@ public static class NodeBuildeExtensions
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddArg<TArg>(this ICoreNodeBuilder @this,
+	public static INodeBuilder AddArg<TArg>(this INodeBuilder @this,
 		TArg arg
 	)
 	{
@@ -81,7 +81,7 @@ public static class NodeBuildeExtensions
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddArg<TArgData>(this ICoreNodeBuilder @this,
+	public static INodeBuilder AddArg<TArgData>(this INodeBuilder @this,
 		TArgData data,
 		string paramName
 	)
@@ -96,7 +96,7 @@ public static class NodeBuildeExtensions
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddArg<TService, TServiceArg>(this ICoreNodeBuilder @this,
+	public static INodeBuilder AddArg<TService, TServiceArg>(this INodeBuilder @this,
 		TServiceArg arg
 	)
 	{
@@ -114,10 +114,10 @@ public static class NodeBuildeExtensions
 	}
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddArg<TService>(this ICoreNodeBuilder @this) => @this.AddArg(typeof(TService));
+	public static INodeBuilder AddArg<TService>(this INodeBuilder @this) => @this.AddArg(typeof(TService));
 
 	/// <inheritdoc />
-	public static ICoreNodeBuilder AddArg(this ICoreNodeBuilder @this,
+	public static INodeBuilder AddArg(this INodeBuilder @this,
 		Type argServiceType,
 		IMsg[]? serviceArgs = null
 	)
@@ -309,7 +309,7 @@ public static class NodeBuildeExtensions
 		// IMsgFactory msgFactory,
 		// ILogger? logger = null,
 		// string? id = null,
-		// IWorkflowContext? context = null
+		// IWorkflowContext? workflowContext = null
 	// )
 	// {
 		// @this._FnFactory = fnFactory ?? throw new ArgumentNullException(nameof(fnFactory));
@@ -317,6 +317,6 @@ public static class NodeBuildeExtensions
 		// @this._MsgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 		// @this._Logger = logger;
 		// if (id is not null) @this.Id = id;
-		// @this._Context = context;
+		// @this._Context = workflowContext;
 	// }
 }

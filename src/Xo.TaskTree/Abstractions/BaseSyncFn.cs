@@ -7,6 +7,6 @@ public abstract class BaseSyncFn : BaseFn, ISyncFn
 	/// <inheritdoc />
 	public abstract IMsg? Invoke(
 		IArgs args,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	);
 }

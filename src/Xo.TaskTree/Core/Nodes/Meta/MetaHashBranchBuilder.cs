@@ -84,12 +84,12 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INodeBuilderFactory nodeBuilderFactory,
 		IFnFactory fnFactory,
 		ILogger? logger = null,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	) : base(
 			nodeBuilderFactory,
 			fnFactory, 
 			logger, 
-			context
+			workflowContext
 	)
 	{
 	}

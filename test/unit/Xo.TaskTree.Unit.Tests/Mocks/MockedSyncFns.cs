@@ -20,7 +20,7 @@ public class TestSyncFn : BaseSyncFn
 
 	public override IMsg? Invoke(
 		IArgs param,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	)
 	{
 		var arg = this.Cast<Msg<int>>(this.SafeGet(param, paramName)).GetData();

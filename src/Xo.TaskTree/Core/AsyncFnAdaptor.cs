@@ -12,7 +12,7 @@ public sealed class AsyncFnAdaptor : BaseAsyncFn
 
 	public override Task<IMsg?> Invoke(
 		IArgs args,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	)
 		=> this._func(args);
 }

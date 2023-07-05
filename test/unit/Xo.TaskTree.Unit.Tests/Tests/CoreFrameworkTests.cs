@@ -181,21 +181,21 @@ public class CoreFrameworkTests
 		// Behavior: Ability to access previous tasks' results further down the workflow chain
 		// i.e the result of n1 should be accessible by n3... 
 		var cancellationToken = this.CancellationTokenFactory();
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
-										.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(context))
+										.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(workflowContext))
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
 		var n2 = this._nodeBuilderFactory.Create()
-										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1).AddContext(context))
+										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1).AddContext(workflowContext))
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3").AsAsync())
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										.Build();
 
 		var n3 = this._nodeBuilderFactory.Create()
-										.Configure(c => c.AddArg(n2).AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag3")).AddContext(context))
+										.Configure(c => c.AddArg(n2).AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag3")).AddContext(workflowContext))
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
@@ -213,12 +213,12 @@ public class CoreFrameworkTests
 	public async Task WorkflowUsingOnlyTheSharedContextForParams()
 	{
 		// Arrange
-		// Behavior: Define a workflow using only the shared context to pass params between strategies.
+		// Behavior: Define a workflow using only the shared workflowContext to pass params between strategies.
 		// i.e no next param specified when creating a fn factory
 		var cancellationToken = this.CancellationTokenFactory();
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
-			.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(context).IgnorePromisedResults())
+			.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(workflowContext).IgnorePromisedResults())
 			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync)).AsAsync())
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
@@ -229,7 +229,7 @@ public class CoreFrameworkTests
 				.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
 				.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag2"))
 				.AddArg(n1)
-				.AddContext(context)
+				.AddContext(workflowContext)
 				.IgnorePromisedResults()
 		)
 		.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
@@ -239,7 +239,7 @@ public class CoreFrameworkTests
 		var n3 = this._nodeBuilderFactory.Create()
 			.Configure(c =>
 				c
-					.AddContext(context)
+					.AddContext(workflowContext)
 					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag3"))
 					.AddArg(c => c.GetMsg(n2.NodeConfiguration.Id).SetParam("args3"))
 					.AddArg(n2)
@@ -288,11 +288,11 @@ public class CoreFrameworkTests
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c =>
 				c
-					.AddContext(context)
+					.AddContext(workflowContext)
 					.AddArg(this._msgFactory.Create<int>(300, "sleep"))
 			)
 			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
@@ -302,7 +302,7 @@ public class CoreFrameworkTests
 		var n2 = this._nodeBuilderFactory.Create()
 			.Configure(c =>
 				c
-					.AddContext(context)
+					.AddContext(workflowContext)
 					.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
 					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag2"))
 					.AddArg(n1)
@@ -350,13 +350,13 @@ public class CoreFrameworkTests
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c =>
 				c
 					.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
-					.AddContext(context)
+					.AddContext(workflowContext)
 			)
 			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync)).AsAsync())
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
@@ -367,7 +367,7 @@ public class CoreFrameworkTests
 				c
 					.AddArg(n1)
 					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("sleep"))
-					.AddContext(context)
+					.AddContext(workflowContext)
 			)
 			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
@@ -414,12 +414,12 @@ public class CoreFrameworkTests
 	{
 		// Arrange
 		var cancellationToken = this.CancellationTokenFactory();
-		var context = this._workflowContextFactory.Create();
+		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c =>
 				c
 					.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
-					.AddContext(context)
+					.AddContext(workflowContext)
 			)
 			.AddFn(new Mocked.TestStrategy2(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
@@ -428,7 +428,7 @@ public class CoreFrameworkTests
 		var n2 = this._nodeBuilderFactory.Create()
 			.Configure(c =>
 				c
-					.AddContext(context)
+					.AddContext(workflowContext)
 					.AddArg(n1)
 					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("sleep"))
 			)
@@ -582,17 +582,17 @@ public class CoreFrameworkTests
 	//{
 		//// Arrange
 		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = new WorkflowContext();
+		//var workflowContext = new WorkflowContext();
 
 		//var n1 =
-			//this._nodeBuilderFactory.Create(context)
-				//.Configure(c => c.AddArg("arg1").AddContext(context))
+			//this._nodeBuilderFactory.Create(workflowContext)
+				//.Configure(c => c.AddArg("arg1").AddContext(workflowContext))
 				//.AddFn<Mocked.IY_InBoolStr_OutConstInt_AsyncService, bool>(true)
 				//.Build();
 
 		//var root =
-			//this._nodeBuilderFactory.Create(context)
-				//.Configure(c => c.AddArg(n1).AddContext(context))
+			//this._nodeBuilderFactory.Create(workflowContext)
+				//.Configure(c => c.AddArg(n1).AddContext(workflowContext))
 				//.AddFn(c =>
 				//{
 					//var d = c.GetMsgData<int>(n1.NodeConfiguration.Id);

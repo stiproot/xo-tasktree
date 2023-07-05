@@ -38,7 +38,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
-			// .Create(this._Logger, context: this._Context)
+			// .Create(this._Logger, workflowContext: this._Context)
 			.Create()
 			.Configure(this._MetaNode.NodeConfiguration)
 			.AddFn(fn)
@@ -69,7 +69,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
-			// .Create(this._Logger, context: this._Context)
+			// .Create(this._Logger, workflowContext: this._Context)
 			.Create()
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn)
@@ -115,12 +115,12 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INodeBuilderFactory nodeBuilderFactory,
 		IFnFactory fnFactory,
 		ILogger? logger = null,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	) : base(
 			nodeBuilderFactory,
 			fnFactory, 
 			logger, 
-			context
+			workflowContext
 	)
 	{
 	}

@@ -2,5 +2,5 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface INodeBuilderFactory
 {
-    ICoreNodeBuilder Create(ILogger? logger = null);
+    INodeBuilder Create(ILogger? logger = null);
 }

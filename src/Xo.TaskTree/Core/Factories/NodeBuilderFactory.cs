@@ -16,13 +16,13 @@ public class NodeBuilderFactory : INodeBuilderFactory
     }
 
     /// <inheritdoc />
-    public ICoreNodeBuilder Create(ILogger? logger = null)
+    public INodeBuilder Create(ILogger? logger = null)
         => this.Create(this._fnFactory, this._nodeFactory, logger);
 
-    private ICoreNodeBuilder Create(
+    private INodeBuilder Create(
         IFnFactory fnFactory,
         INodeFactory nodeFactory,
         ILogger? logger = null
     )
-        => new CoreNodeBuilder(fnFactory, nodeFactory, logger);
+        => new NodeBuilder(fnFactory, nodeFactory, logger);
 }

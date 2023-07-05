@@ -16,9 +16,9 @@ public sealed class SyncFnAdapter : BaseSyncFn
 
 	public override IMsg? Invoke(
 		IArgs args,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	)
 		=> this._func is not null
 		? this._func(args)
-		: this._contextFn!(context!);
+		: this._contextFn!(workflowContext!);
 }

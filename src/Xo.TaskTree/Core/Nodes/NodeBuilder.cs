@@ -1,9 +1,9 @@
 namespace Xo.TaskTree.Core;
 
-public class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
+public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 {
 	/// <inheritdoc />
-	public ICoreNodeBuilder Configure(Action<INodeConfigurationBuilder> configure)
+	public INodeBuilder Configure(Action<INodeConfigurationBuilder> configure)
 	{
 		INodeConfigurationBuilder builder;
 
@@ -18,14 +18,14 @@ public class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder Configure(INodeConfiguration nodeConfiguration)
+	public INodeBuilder Configure(INodeConfiguration nodeConfiguration)
 	{
 		this._NodeConfiguration = nodeConfiguration;
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddNodeEdge(INodeEdge nodeEdge)
+	public INodeBuilder AddNodeEdge(INodeEdge nodeEdge)
 	{
 		this._NodeEdge = nodeEdge;
 		return this;
@@ -50,63 +50,63 @@ public class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFn(IAsyncFn fn)
+	public INodeBuilder AddFn(IAsyncFn fn)
 	{
 		this._AsyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFn(ISyncFn fn)
+	public INodeBuilder AddFn(ISyncFn fn)
 	{
 		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn)
+	public INodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn)
 	{
 		this._AsyncFn = new AsyncFnAdaptor(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFn(Func<IArgs, IMsg?> fn)
+	public INodeBuilder AddFn(Func<IArgs, IMsg?> fn)
 	{
 		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn)
+	public INodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn)
 	{
 		this._SyncFn = new SyncFnAdapter(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddInvoker(IInvoker invoker)
+	public INodeBuilder AddInvoker(IInvoker invoker)
 	{
 		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder AddController(IController controller)
+	public INodeBuilder AddController(IController controller)
 	{
 		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
 		return this;
 	}
 
 	/// <inheritdoc />
-	public ICoreNodeBuilder SetExceptionHandler(Func<Exception, Task> handler)
+	public INodeBuilder SetExceptionHandler(Func<Exception, Task> handler)
 	{
 		this._ExceptionHandlerAsync = handler;
 		return this;
 	}
 
 	// <inheritdoc />
-	public ICoreNodeBuilder SetExceptionHandler(Action<Exception> handler)
+	public INodeBuilder SetExceptionHandler(Action<Exception> handler)
 	{
 		this._ExceptionHandler = handler;
 		return this;
@@ -131,9 +131,9 @@ public class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="ICoreNodeBuilder"/>. 
+	///   Initializes a new instance of <see cref="INodeBuilder"/>. 
 	/// </summary>
-	public CoreNodeBuilder(
+	public NodeBuilder(
 		IFnFactory fnFactory,
 		INodeFactory nodeFactory,
 		ILogger? logger = null

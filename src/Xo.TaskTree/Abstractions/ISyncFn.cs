@@ -14,10 +14,10 @@ public interface ISyncFn
 	/// <param name="param">IDictionary, 
 	///   Keys: paramater names for some services' method that this fn makes use of. 
 	///   Values: <see cref="IMsg"/> - Data property containing argument - Cast method can be used to typecast Data.</param>
-	/// <param name="context">The workflow context.</param>
+	/// <param name="workflowContext">The workflow workflowContext.</param>
 	/// <returns>Factory that will produce IMsg.</returns>
 	IMsg? Invoke(
 		IArgs args,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	);
 }

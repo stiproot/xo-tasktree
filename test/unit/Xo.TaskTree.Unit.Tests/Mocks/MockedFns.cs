@@ -20,7 +20,7 @@ public class IY_InStr_OutBool_AsyncService_Fn : BaseAsyncFn
 
 	public override async Task<IMsg?> Invoke(
 		IArgs param,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	)
 	{
 		var serviceArgs = (param[serviceParamName] as Msg<string>)!.GetData();
@@ -59,7 +59,7 @@ public class TestStrategy2 : BaseAsyncFn
 
 	public override async Task<IMsg?> Invoke(
 		IArgs param,
-		IWorkflowContext? context = null
+		IWorkflowContext? workflowContext = null
 	)
 	{
 		var serviceArgs = this.Cast<Msg<string>>(this.SafeGet(param, serviceParamName)).GetData();
