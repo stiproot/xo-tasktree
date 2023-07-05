@@ -27,7 +27,5 @@ public static class ServiceCollectionFactory
   }
 
   public static IServiceProvider CreateServiceProvider()
-  {
-    return CreateServiceCollection().BuildServiceProvider();
-  }
+    => CreateServiceCollection().BuildServiceProvider();
 }
