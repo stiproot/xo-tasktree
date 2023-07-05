@@ -53,7 +53,7 @@ public class WorkflowContextTests
 		var context = this._workflowContextFactory.Create();
 
 		// Act / Assert
-		Assert.Throws<ArgumentNullException>(() => context.GetMsgs(null));
+		Assert.Throws<ArgumentNullException>(() => context.GetMsgs(null!));
 	}
 
 	[Fact]

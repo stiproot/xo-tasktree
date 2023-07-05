@@ -5,6 +5,8 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 	private readonly INodeConfiguration _config = new NodeConfiguration();
 	private Type? _serviceType;
 
+	public Type ServiceType => this._serviceType!;
+
 	public INodeConfigurationBuilder RequireResult()
 	{
 		this._config.RequiresResult = true;

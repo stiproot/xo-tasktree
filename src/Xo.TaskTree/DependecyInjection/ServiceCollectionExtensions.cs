@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
 	///   Add all Xo.TaskTree services to <see cref="IServiceCollection"/>.
 	/// </summary>
 	/// <returns><see cref="IServiceCollection"/></returns>
-	public static IServiceCollection AddTaskFlowServices(this IServiceCollection services)
+	public static IServiceCollection AddTaskTreeServices(this IServiceCollection services)
 	{
 		services.TryAddSingleton<IFnFactory, FnFactory>();
 		services.TryAddSingleton<IMetaNodeMapper, MetaNodeMapper>();

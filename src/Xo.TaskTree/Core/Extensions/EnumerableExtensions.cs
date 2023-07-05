@@ -9,4 +9,7 @@ public static class EnumerableExtensions
 
 		return @this[1];
 	}
+
+	public static IList<T> NonNull<T>(this IList<T?> @this) 
+		=> @this.Where(t => t is not null).ToList()!;
 }

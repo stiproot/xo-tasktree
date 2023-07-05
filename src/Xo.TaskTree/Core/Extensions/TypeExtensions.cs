@@ -3,17 +3,15 @@ namespace Xo.TaskTree.Core;
 internal static class TypeExtensions
 {
 	public static IMetaNode ToMetaNode(this Type @this,
-			Action<INodeConfigurationBuilder>? configure = null,
-			MetaNodeTypes nodeType = MetaNodeTypes.Default
+		Action<INodeConfigurationBuilder>? configure = null,
+		MetaNodeTypes nodeType = MetaNodeTypes.Default
 	)
 	{
 		var metaNode = new MetaNode(@this) { NodeType = nodeType };
 
 		if (configure is not null)
 		{
-			var builder = new NodeConfigurationBuilder(metaNode.NodeConfiguration, @this);
-
-			configure(builder);
+			configure(new NodeConfigurationBuilder(metaNode.NodeConfiguration, @this));
 		}
 
 		return metaNode;
@@ -37,8 +35,6 @@ internal static class TypeExtensions
 	)
 	{
 		var fn = fnFactory.Build(@this, methodName, nextParamName).AsAsync();
-
-		// todo: what about other dependencies?...
 		return new Node().SetFn(fn);
 	}
 }

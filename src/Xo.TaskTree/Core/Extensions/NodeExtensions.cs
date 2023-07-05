@@ -2,15 +2,15 @@ namespace Xo.TaskTree.Core;
 
 internal static class NodeExtensions
 {
-	public static INode AddArg(this INode? @this,
-		IList<IMsg> args
+	public static INode AddArg(this INode @this,
+		IList<IMsg?> args
 	)
 	{
-		@this.NodeConfiguration.Args.AddRange(args);
+		@this.NodeConfiguration.Args.AddRange(args.NonNull());
 		return @this;
 	}
 
-	public static INode AddArg(this INode? @this,
+	public static INode AddArg(this INode @this,
 		IMsg arg
 	)
 	{
@@ -18,10 +18,8 @@ internal static class NodeExtensions
 		return @this;
 	}
 
-	public static bool HasParam(this INode? @this,
+	public static bool HasParam(this INode @this,
 		string paramName
 	)
-	{
-		return @this.NodeConfiguration.Args.Any(p => p.ParamName == paramName);
-	}
+		=> @this.NodeConfiguration.Args.Any(p => p.ParamName == paramName);
 }

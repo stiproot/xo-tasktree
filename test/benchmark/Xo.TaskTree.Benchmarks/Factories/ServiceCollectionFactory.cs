@@ -19,7 +19,7 @@ public static class ServiceCollectionFactory
   public static IServiceCollection CreateServiceCollection()
   {
     var services = new ServiceCollection()
-      .AddTaskFlowServices();
+      .AddTaskTreeServices();
 
     services.TryAddSingleton<ITestService, TestService>();
 

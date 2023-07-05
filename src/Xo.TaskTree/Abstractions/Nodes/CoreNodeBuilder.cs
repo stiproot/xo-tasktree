@@ -32,7 +32,8 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	}
 
 	/// <inheritdoc />
-	public virtual bool HasParam(string paramName) => this._NodeConfiguration.Args.Any(p => p.ParamName == paramName);
+	public virtual bool HasParam(string paramName) 
+		=> this._NodeConfiguration?.Args.Any(p => p.ParamName == paramName) is true;
 
 	/// <inheritdoc />
 	public virtual IFnFactory FnFactory => this._FnFactory;
@@ -115,7 +116,7 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	public virtual INode Build()
 	{
 		INode n = this._NodeFactory.Create(this._Logger)
-			.SetNodeConfiguration(this._NodeConfiguration)
+			.SetNodeConfiguration(this._NodeConfiguration ?? throw new InvalidOperationException("Node configuration is required."))
 			.SetController(this._Controller)
 			.SetInvoker(this._Invoker)
 			.SetNodeEdge(this._NodeEdge)

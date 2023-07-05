@@ -9,13 +9,13 @@ public abstract class BaseNode : INode
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
 	protected INodeEdge? _NodeEdge;
-	protected INodeConfiguration _NodeConfiguration;
+	protected INodeConfiguration? _NodeConfiguration;
 	protected IController? _Controller;
 	protected IInvoker _Invoker = new Invoker(new NodeEdgeResolver());
 	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
 
 	/// <inheritdoc />
-	public INodeConfiguration NodeConfiguration => this._NodeConfiguration;
+	public INodeConfiguration NodeConfiguration => this._NodeConfiguration!;
 
 	/// <inheritdoc />
 	public INodeEdge? NodeEdge => this._NodeEdge;

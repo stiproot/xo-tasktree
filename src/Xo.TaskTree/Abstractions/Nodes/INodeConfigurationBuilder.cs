@@ -2,6 +2,7 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface INodeConfigurationBuilder
 {
+	Type ServiceType { get; }
 	INodeConfigurationBuilder SetId(string id);
 	INodeConfigurationBuilder AddContext(IWorkflowContext? workflowContext);
 	INodeConfigurationBuilder AddArg(params INode[] args);

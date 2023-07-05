@@ -8,7 +8,7 @@ public abstract class BaseNodeBuilder
 	protected IAsyncFn? _AsyncFn;
 	protected ISyncFn? _SyncFn;
 	protected INodeEdge? _NodeEdge;
-	protected INodeConfiguration _NodeConfiguration;
+	protected INodeConfiguration? _NodeConfiguration;
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
 	protected IController? _Controller;
