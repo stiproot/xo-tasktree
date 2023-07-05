@@ -113,58 +113,61 @@ public class CoreMinFrameworkTests
 		Assert.NotNull(n3);
 	}
 
-	//[Fact]
-	//public async Task ServiceThatAcceptsNoArgumentsFrameworkTest()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var n3 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.Configure(c => c.AddArg(this._msgFactory.Create(string.Empty, "args3"));
-		//// This is the focus of this test. A Node that wraps an async service that takes no arguments.
-		//var n4 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_AsyncService), nameof(Mocked.IY_AsyncService.ProcessAsync)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.AddArg(n3);
+	[Fact]
+	public async Task ServiceThatAcceptsNoArgumentsFrameworkTest()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		var n3 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(this._msgFactory.Create(string.Empty, "args3")))
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
+										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+										.Build();
+		// This is the focus of this test. A Node that wraps an async service that takes no arguments.
+		var n4 = this._nodeBuilderFactory.Create()
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_AsyncService), nameof(Mocked.IY_AsyncService.ProcessAsync)).AsAsync())
+										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+										.AddArg(n3)
+										.Build();
 
-		//// Act
-		//await n4.Run(cancellationToken);
+		// Act
+		await n4.Run(cancellationToken);
 
-		//// Assert
-		//Assert.NotNull(n3);
-		//Assert.NotNull(n4);
-	//}
+		// Assert
+		Assert.NotNull(n3);
+		Assert.NotNull(n4);
+	}
 
-	//[Fact]
-	//public async Task SingletonServiceUsedByTwoParamHandlesTest()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//// The point of this test will be to use a service that is registered as a singleton (IY_InObj_OutObj_SingletonAsyncService) in two task nodes.
-		//// These task nodes will be used as params for a third task node.
-		//// A random number generator will provide a process emulation time for "SomeOperationAsync" to make sure the service resource is held onto for some time by each task node.
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg1").AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1"));
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg2").AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1"));
-		//var n3 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService), nameof(Mocked.IY_InObjObj_OutObj_AsyncService.GetObjAsync)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.AddArg(n1, n2);
+	[Fact]
+	public async Task SingletonServiceUsedByTwoParamHandlesTest()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		// The point of this test will be to use a service that is registered as a singleton (IY_InObj_OutObj_SingletonAsyncService) in two task nodes.
+		// These task nodes will be used as params for a third task node.
+		// A random number generator will provide a process emulation time for "SomeOperationAsync" to make sure the service resource is held onto for some time by each task node.
+		var n1 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1")))
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg1").AsAsync())
+										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+										.Build();
+		var n2 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1"));
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg2").AsAsync())
+										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+		var n3 = this._nodeBuilderFactory.Create()
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService), nameof(Mocked.IY_InObjObj_OutObj_AsyncService.GetObjAsync)).AsAsync())
+										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+										.AddArg(n1, n2);
 
-		//// Act
-		//await n3.Run(cancellationToken);
+		// Act
+		await n3.Run(cancellationToken);
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-		//Assert.NotNull(n3);
-	//}
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+		Assert.NotNull(n3);
+	}
 
 	//[Fact]
 	//public async Task ResultChainAccessibleThroughSharedContext()
