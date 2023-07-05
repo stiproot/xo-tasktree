@@ -30,6 +30,7 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		INode n = this._NodeBuilderFactory
 			.Create(this._Logger, this._WorkflowContext)
+			.Configure(this._MetaNode.NodeConfiguration)
 			.AddFn(fn)
 			.AddNodeEdge(e)
 			.Build();

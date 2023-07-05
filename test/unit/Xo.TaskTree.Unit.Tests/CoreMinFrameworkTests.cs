@@ -31,14 +31,14 @@ public class CoreMinFrameworkTests
 	// [Fact]
 	// public void NodeFactoryCanBeSuppliedId()
 	// {
-		// // Arrange
-		// var guid = GuidGenerator.NewGuidAsString();
+	// // Arrange
+	// var guid = GuidGenerator.NewGuidAsString();
 
-		// // Act
-		// var th = this._nodeBuilderFactory.Create(guid);
+	// // Act
+	// var th = this._nodeBuilderFactory.Create(guid);
 
-		// // Assert
-		// Assert.Equal(guid, th.Id);
+	// // Assert
+	// Assert.Equal(guid, th.Id);
 	// }
 
 	[Fact]
@@ -62,7 +62,7 @@ public class CoreMinFrameworkTests
 										.Build();
 
 		var n3 = this._nodeBuilderFactory.Create()
-										.Configure(c => c.AddArg(n1))
+										.Configure(c => c.AddArg(n2))
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
@@ -123,11 +123,12 @@ public class CoreMinFrameworkTests
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
+
 		// This is the focus of this test. A Node that wraps an async service that takes no arguments.
 		var n4 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(n3))
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_AsyncService), nameof(Mocked.IY_AsyncService.ProcessAsync)).AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										.AddArg(n3)
 										.Build();
 
 		// Act
@@ -151,14 +152,18 @@ public class CoreMinFrameworkTests
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg1").AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
+
 		var n2 = this._nodeBuilderFactory.Create()
-										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1"));
+										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1")))
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg2").AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+										.Build();
+
 		var n3 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(n1).AddArg(n2))
 										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService), nameof(Mocked.IY_InObjObj_OutObj_AsyncService.GetObjAsync)).AsAsync())
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										.AddArg(n1, n2);
+										.Build();
 
 		// Act
 		await n3.Run(cancellationToken);
@@ -169,367 +174,438 @@ public class CoreMinFrameworkTests
 		Assert.NotNull(n3);
 	}
 
-	//[Fact]
-	//public async Task ResultChainAccessibleThroughSharedContext()
-	//{
-		//// Arrange
-		//// Behavior: Ability to access previous tasks' results further down the workflow chain
-		//// i.e the result of n1 should be accessible by n3... 
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = this._workflowContextFactory.Create();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args"));
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3").AsAsync())
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
-										//.AddArg(n1);
-		//var n3 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.AddArg(c => c.GetMsg(n1.Id).SetParam("flag3"))
-										//.AddArg(n2);
+	[Fact]
+	public async Task ResultChainAccessibleThroughSharedContext()
+	{
+		// Arrange
+		// Behavior: Ability to access previous tasks' results further down the workflow chain
+		// i.e the result of n1 should be accessible by n3... 
+		var cancellationToken = this.CancellationTokenFactory();
+		var context = this._workflowContextFactory.Create();
+		var n1 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(context))
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
+										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+										.Build();
 
-		//// Act
-		//await n3.Run(cancellationToken);
+		var n2 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1).AddContext(context))
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3").AsAsync())
+										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+										.Build();
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-		//Assert.NotNull(n3);
-	//}
+		var n3 = this._nodeBuilderFactory.Create()
+										.Configure(c => c.AddArg(n2).AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag3")).AddContext(context))
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
+										.SetExceptionHandler(Substitute.For<Action<Exception>>())
+										.Build();
 
-	//[Fact]
-	//public async Task WorkflowUsingOnlyTheSharedContextForParams()
-	//{
-		//// Arrange
-		//// Behavior: Define a workflow using only the shared context to pass params between strategies.
-		//// i.e no next param specified when creating a fn factory
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = this._workflowContextFactory.Create();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args"))
-										//.IgnorePromisedResults();
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
-										//.AddArg(c => c.GetMsg(n1.Id).SetParam("flag2"))
-										//.AddArg(n1)
-										//.IgnorePromisedResults();
-		//var n3 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.AddArg(
-												//c => c.GetMsg(n1.Id).SetParam("flag3"),
-												//c => c.GetMsg(n2.Id).SetParam("args3")
-										//)
-										//.AddArg(n2)
-										//.IgnorePromisedResults();
+		// Act
+		await n3.Run(cancellationToken);
 
-		//// Act
-		//await n3.Run(cancellationToken);
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+		Assert.NotNull(n3);
+	}
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-		//Assert.NotNull(n3);
-	//}
+	[Fact]
+	public async Task WorkflowUsingOnlyTheSharedContextForParams()
+	{
+		// Arrange
+		// Behavior: Define a workflow using only the shared context to pass params between strategies.
+		// i.e no next param specified when creating a fn factory
+		var cancellationToken = this.CancellationTokenFactory();
+		var context = this._workflowContextFactory.Create();
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(context).IgnorePromisedResults())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync)).AsAsync())
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
 
-	//[Fact]
-	//public async Task WorkflowWithSyncStrategyResultFeedingIntoAsyncFnWithoutWorkflowContext()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory).SetNextParamName("flag2").AsSync())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<int>(300, "sleep"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		var n2 = this._nodeBuilderFactory.Create()
+		.Configure(c => 
+			c
+				.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
+				.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag2"))
+				.AddArg(n1)
+				.AddContext(context)
+				.IgnorePromisedResults()
+		)
+		.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
+		.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+		.Build();
 
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
-										//.AddArg(n1)
-										//.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		var n3 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddContext(context)
+					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag3"))
+					.AddArg(c => c.GetMsg(n2.NodeConfiguration.Id).SetParam("args3"))
+					.AddArg(n2)
+					.IgnorePromisedResults()
+			)
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
 
-		//// Act
-		//await n2.Run(cancellationToken);
+		// Act
+		await n3.Run(cancellationToken);
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+		Assert.NotNull(n3);
+	}
 
-	//[Fact]
-	//public async Task WorkflowWithSyncStrategyResultFeedingIntoAsyncFnUsingWorkflowContext()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = this._workflowContextFactory.Create();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
-										//.Configure(c => c.AddArg(this._msgFactory.Create<int>(300, "sleep"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
-										//.AddArg(n1)
-										//.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
-										//.AddArg(c => c.GetMsg(n1.Id).SetParam("flag2"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
-										//.IgnorePromisedResults();
+	[Fact]
+	public async Task WorkflowWithSyncStrategyResultFeedingIntoAsyncFnWithoutWorkflowContext()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => c.AddArg(this._msgFactory.Create<int>(300, "sleep")))
+			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory).SetNextParamName("flag2").AsSync())
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-		//// Act
-		//await n2.Run(cancellationToken);
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1))
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+		// Act
+		await n2.Run(cancellationToken);
 
-	//[Fact]
-	//public async Task WorkflowWithAsyncStrategyResultFeedingIntoSyncFnWithoutWorkflowContext()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync), "sleep").AsAsync())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.AddArg(n1)
-										//.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
 
-		//// Act
-		//await n2.Run(cancellationToken);
+	[Fact]
+	public async Task WorkflowWithSyncStrategyResultFeedingIntoAsyncFnUsingWorkflowContext()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		var context = this._workflowContextFactory.Create();
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddContext(context)
+					.AddArg(this._msgFactory.Create<int>(300, "sleep"))
+			)
+			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddContext(context)
+					.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
+					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag2"))
+					.AddArg(n1)
+					.IgnorePromisedResults()
+			)
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-	//[Fact]
-	//public async Task WorkflowWithAsyncStrategyResultFeedingIntoSyncFnUsingWorkflowContext()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = this._workflowContextFactory.Create();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync)).AsAsync())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddArg(n1)
-										//.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
-										//.AddArg(c => c.GetMsg(n1.Id).SetParam("sleep"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		// Act
+		await n2.Run(cancellationToken);
 
-		//// Act
-		//await n2.Run(cancellationToken);
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+	[Fact]
+	public async Task WorkflowWithAsyncStrategyResultFeedingIntoSyncFnWithoutWorkflowContext()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args")))
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync), "sleep").AsAsync())
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-	//[Fact]
-	//public async Task WorkflowWithBaseAsyncStrategyResultFeedingIntoSyncBaseFn()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.AddFn(new Mocked.TestStrategy2(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory).SetNextParamName("sleep").AsAsync())
-										//.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.AddArg(n1)
-										//.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => c.AddArg(n1))
+			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-		//// Act
-		//await n2.Run(cancellationToken);
+		// Act
+		await n2.Run(cancellationToken);
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
 
-	//[Fact]
-	//public async Task WorkflowWithBaseAsyncStrategyResultFeedingIntoSyncBaseFnUsingWorkflowContext()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = this._workflowContextFactory.Create();
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddFn(new Mocked.TestStrategy2(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory))
-										//.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.SetContext(context)
-										//.AddArg(n1)
-										//.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
-										//.AddArg(c => c.GetMsg(n1.Id).SetParam("sleep"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+	[Fact]
+	public async Task WorkflowWithAsyncStrategyResultFeedingIntoSyncFnUsingWorkflowContext()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		var context = this._workflowContextFactory.Create();
 
-		//// Act
-		//await n2.Run(cancellationToken);
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
+					.AddContext(context)
+			)
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync)).AsAsync())
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddArg(n1)
+					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("sleep"))
+					.AddContext(context)
+			)
+			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-	//[Fact]
-	//public async Task NodesProvidedRawDataConstructMsgsAndUseThem()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
+		// Act
+		await n2.Run(cancellationToken);
 
-		//// Service types are irrelevant in this scenario... so let's just use the singleton...
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg1").AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.AddArg<object>(new object(), "arg1");
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg2").AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.AddArg<object>(new object(), "arg1");
-		//var n3 = this._nodeBuilderFactory.Create()
-										//.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService)).AsAsync())
-										//.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										//.AddArg(n1, n2);
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
 
-		//// Act
-		//var msgs = await n3.Run(cancellationToken);
-		//var msg = msgs.First();
+	[Fact]
+	public async Task WorkflowWithBaseAsyncStrategyResultFeedingIntoSyncBaseFn()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
 
-		//// Assert
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-		//Assert.NotNull(n3);
-		//Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
-	//}
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(
+					c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
+			)
+			.AddFn(new Mocked.TestStrategy2(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory).SetNextParamName("sleep").AsAsync())
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-	 //[Fact]
-	 //public async Task NodesProvidedTypesForConstructingFn()
-	 //{
-		 //// Arrange
-		 //var cancellationToken = this.CancellationTokenFactory();
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => c.AddArg(n1))
+			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-		 //// Service types are irrelevant in this scenario... so let's just use the singleton...
-		 //var n1 = this._nodeBuilderFactory.Create()
-										 //.AddFn<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg1")
-										 //.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										 //.AddArg<object>(new object(), "arg1")
-										 //.Build();
-		 //var n2 = this._nodeBuilderFactory.Create()
-										 //.AddFn<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg2")
-										 //.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										 //.AddArg<object>(new object(), "arg1")
-										 //.Build();
-		 //var n3 = this._nodeBuilderFactory.Create()
-										 //.AddFn<Mocked.IY_InObjObj_OutObj_AsyncService>()
-										 //.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										 //.AddArg(n1, n2)
-										 //.Build();
+		// Act
+		await n2.Run(cancellationToken);
 
-		 //// Act
-		 //var msgs = await n3.Run(cancellationToken);
-		 //var msg = msgs.First();
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
 
-		 //// Assert
-		 //Assert.NotNull(n1);
-		 //Assert.NotNull(n2);
-		 //Assert.NotNull(n3);
-		 //Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
-	 //}
+	[Fact]
+	public async Task WorkflowWithBaseAsyncStrategyResultFeedingIntoSyncBaseFnUsingWorkflowContext()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+		var context = this._workflowContextFactory.Create();
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
+					.AddContext(context)
+			)
+			.AddFn(new Mocked.TestStrategy2(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory))
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-	//[Fact]
-	//public async Task WorkflowComposedOfAsyncAndSyncNodesThatAreBuiltFromFunctionPointers()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddContext(context)
+					.AddArg(n1)
+					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("sleep"))
+			)
+			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
-		//var n1 = this._nodeBuilderFactory.Create()
-										//.AddFn((p) =>
-										//{
-											//var msg = p["sleep"] as BaseMsg<int>;
-											//var data = msg!.GetData();
-											//Assert.Equal(300, data);
-											//return this._msgFactory.Create<int>(data).SetParam("next_param_name");
-										//})
-										//.Configure(c => c.AddArg(this._msgFactory.Create<int>(300, "sleep"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		// Act
+		await n2.Run(cancellationToken);
 
-		//var n2 = this._nodeBuilderFactory.Create()
-										//.AddFn(async p =>
-										//{
-											//await Task.Delay(150);
-											//var msg = p["next_param_name"] as BaseMsg<int>;
-											//var msg2 = p["args2"] as BaseMsg<object>;
-											//Assert.NotNull(msg2!.GetData());
-											//var data = msg!.GetData();
-											//return this._msgFactory.Create<int>(data);
-										//})
-										//.AddArg(n1)
-										//.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
-										//.SetExceptionHandler(Substitute.For<Func<Exception, Task>>());
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
 
-		//// Act
-		//var msgs = await n2.Run(cancellationToken);
-		//var msg = msgs.First(); 
-		//var data = (msg as BaseMsg<int>)!.GetData();
+	[Fact]
+	public async Task NodesProvidedRawDataConstructMsgsAndUseThem()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
 
-		//// Assert
-		//Assert.Equal(300, data);
-		//Assert.NotNull(n1);
-		//Assert.NotNull(n2);
-	//}
+		// Service types are irrelevant in this scenario... so let's just use the singleton...
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c.AddArg<object>(new object(), "arg1")
+			)
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg1").AsAsync())
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
 
-	//[Fact]
-	//public async Task GIVEN_AMultiNodeWorkflow_WHEN_SyncFnAdapterUsingWorkflowContext_THEN_BuildsOffContext()
-	//{
-		//// Arrange
-		//var cancellationToken = this.CancellationTokenFactory();
-		//var context = new WorkflowContext();
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c.AddArg<object>(new object(), "arg1")
+			)
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg2").AsAsync())
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
 
-		//var n1 =
-			//this._nodeBuilderFactory.Create(context)
-				//.AddFn<Mocked.IY_InBoolStr_OutConstInt_AsyncService, bool>(true)
-				//.AddArg("arg1")
-				//.Build();
+		var n3 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddArg(n1)
+					.AddArg(n2)
+			)
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService)).AsAsync())
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
 
-		//var root =
-			//this._nodeBuilderFactory.Create(context)
-				//.AddArg(n1)
-				//.AddFn(c =>
-				//{
-					//var d = c.GetMsgData<int>(n1.Id);
-					//return this._msgFactory.Create<int>(d == 1 ? 1 : 0);
-				//})
-				//.Build();
+		// Act
+		var msgs = await n3.Run(cancellationToken);
+		var msg = msgs.First();
 
-		//// Act
-		//var msgs = await root.Run(cancellationToken);
-		//var msg = msgs.First(); 
-		//var data = (msg as BaseMsg<int>)!.GetData();
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+		Assert.NotNull(n3);
+		Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
+	}
 
-		//// Assert
-		//Assert.Equal(1, data);
-	//}
+	[Fact]
+	public async Task NodesProvidedTypesForConstructingFn()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+
+		// Service types are irrelevant in this scenario... so let's just use the singleton...
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c.AddArg<object>(new object(), "arg1")
+			)
+			.AddFn<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg1")
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
+
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c.AddArg<object>(new object(), "arg1")
+			)
+			.AddFn<Mocked.IY_InObj_OutObj_SingletonAsyncService>(nextParamName: "arg2")
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
+
+		var n3 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c.AddArg(n1, n2)
+			)
+			.AddFn<Mocked.IY_InObjObj_OutObj_AsyncService>()
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
+
+		// Act
+		var msgs = await n3.Run(cancellationToken);
+		var msg = msgs.First();
+
+		// Assert
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+		Assert.NotNull(n3);
+		Assert.IsType<object>((msg as BaseMsg<object>)!.GetData());
+	}
+
+	[Fact]
+	public async Task WorkflowComposedOfAsyncAndSyncNodesThatAreBuiltFromFunctionPointers()
+	{
+		// Arrange
+		var cancellationToken = this.CancellationTokenFactory();
+
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => c.AddArg(this._msgFactory.Create<int>(300, "sleep")))
+			.AddFn((p) =>
+			{
+				var msg = p["sleep"] as BaseMsg<int>;
+				var data = msg!.GetData();
+				Assert.Equal(300, data);
+				return this._msgFactory.Create<int>(data).SetParam("next_param_name");
+			})
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
+
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
+					.AddArg(n1)
+			)
+			.AddFn(async p =>
+			{
+				await Task.Delay(150);
+				var msg = p["next_param_name"] as BaseMsg<int>;
+				var msg2 = p["args2"] as BaseMsg<object>;
+				Assert.NotNull(msg2!.GetData());
+				var data = msg!.GetData();
+				return this._msgFactory.Create<int>(data);
+			})
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
+
+		// Act
+		var msgs = await n2.Run(cancellationToken);
+		var msg = msgs.First();
+		var data = (msg as BaseMsg<int>)!.GetData();
+
+		// Assert
+		Assert.Equal(300, data);
+		Assert.NotNull(n1);
+		Assert.NotNull(n2);
+	}
+
+	// [Fact]
+	// public async Task GIVEN_AMultiNodeWorkflow_WHEN_SyncFnAdapterUsingWorkflowContext_THEN_BuildsOffContext()
+	// {
+		// // Arrange
+		// var cancellationToken = this.CancellationTokenFactory();
+		// var context = new WorkflowContext();
+
+		// var n1 =
+			// this._nodeBuilderFactory.Create(context)
+				// .Configure(c => c.AddArg("arg1"))
+				// .AddFn<Mocked.IY_InBoolStr_OutConstInt_AsyncService, bool>(true)
+				// .Build();
+
+		// var root =
+		// this._nodeBuilderFactory.Create(context)
+		// .AddArg(n1)
+		// .AddFn(c =>
+		// {
+			// var d = c.GetMsgData<int>(n1.Id);
+			// return this._msgFactory.Create<int>(d == 1 ? 1 : 0);
+		// })
+		// .Build();
+
+		// // Act
+		// var msgs = await root.Run(cancellationToken);
+		// var msg = msgs.First();
+		// var data = (msg as BaseMsg<int>)!.GetData();
+
+		// // Assert
+		// Assert.Equal(1, data);
+	// }
 }

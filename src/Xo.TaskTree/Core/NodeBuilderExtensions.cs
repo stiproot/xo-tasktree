@@ -227,13 +227,15 @@ public static class NodeBuildeExtensions
 		// todo: assumes first method...
 		var method = type.GetMethods().First()!;
 		var parameters = method.GetParameters();
+
 		string? paramName = null;
 
 		if (parameters.Length == 1) return parameters[0].Name!;
 
 		var argType = typeof(TArg);
 		paramName = parameters.Where(p => p.ParameterType == argType).Select(p => p.Name).FirstOrDefault();
-		if (paramName is null) throw new InvalidOperationException("Unable to find parameter name for type TArg...");
+
+		if (paramName is null) throw new InvalidOperationException($"Unable to find parameter name for type TArg:{argType.Name}...");
 
 		return paramName;
 	}

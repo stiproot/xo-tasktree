@@ -5,20 +5,20 @@ public class NSubsistuteTests
 {
 	private readonly IFnFactory _fnFactory;
 	private readonly IWorkflowContextFactory _workflowContextFactory;
-	private readonly INodeFactory _nodeFactory;
+	private readonly INodeBuilderFactory _nodeBuilderFactory;
 	private readonly IMsgFactory _msgFactory;
 	private CancellationToken CancellationTokenFactory() => new CancellationToken();
 
 	public NSubsistuteTests(
 		IFnFactory fnFactory,
 		IWorkflowContextFactory workflowContextFactory,
-		INodeFactory nodeFactory,
+		INodeBuilderFactory nodeBuilderFactory,
 		IMsgFactory msgFactory
 	)
 	{
 		this._fnFactory = fnFactory ?? throw new ArgumentNullException(nameof(fnFactory));
 		this._workflowContextFactory = workflowContextFactory ?? throw new ArgumentNullException(nameof(workflowContextFactory));
-		this._nodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
+		this._nodeBuilderFactory = nodeBuilderFactory ?? throw new ArgumentNullException(nameof(nodeBuilderFactory));
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
@@ -40,17 +40,26 @@ public class NSubsistuteTests
 		//var context = this._workflowContextFactory.Create();
 		var context = _workflowContextFactory.Create();
 
-		var n1 = this._nodeFactory.Create()
-										.SetContext(context)
-										.SetFn(this._fnFactory.Build(typeof(IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
-										.SetExceptionHandler(Substitute.For<Action<Exception>>())
-										.AddArg(this._msgFactory.Create<string>(string.Empty, "args"));
-		var n2 = this._nodeFactory.Create()
-										.SetContext(context)
-										.SetFn(this._fnFactory.Build(typeof(IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), null).AsAsync())
-										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
-										.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
-										.AddArg(n1);
+		var n1 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddContext(context)
+					.AddArg(this._msgFactory.Create<string>(string.Empty, "args"))
+			)
+			.AddFn(this._fnFactory.Build(typeof(IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
+			.SetExceptionHandler(Substitute.For<Action<Exception>>())
+			.Build();
+
+		var n2 = this._nodeBuilderFactory.Create()
+			.Configure(c => 
+				c
+					.AddContext(context)
+					.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
+					.AddArg(n1)
+			)
+			.AddFn(this._fnFactory.Build(typeof(IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), null).AsAsync())
+			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
+			.Build();
 
 		// Act / Assert
 		Assert.NotNull(n1);

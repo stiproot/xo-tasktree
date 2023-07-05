@@ -11,6 +11,12 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
+	public INodeConfigurationBuilder IgnorePromisedResults()
+	{
+		this._config.IgnoresPromisedResults = true;
+		return this;
+	}
+
 	public INodeConfigurationBuilder AddServiceType(Type serviceType)
 	{
 		this._serviceType = serviceType;
@@ -124,7 +130,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
-	public INodeConfigurationBuilder SetContext(IWorkflowContext? workflowContext)
+	public INodeConfigurationBuilder AddContext(IWorkflowContext? workflowContext)
 	{
 		this._config.WorkflowContext = workflowContext;
 		return this;
@@ -140,4 +146,5 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 	)
 		=> (this._config, this._serviceType) = (nodeConfiguration, serviceType);
 	public NodeConfigurationBuilder(Type serviceType) => this._serviceType = serviceType;
+	public NodeConfigurationBuilder(INodeConfiguration nodeConfiguration) => this._config = nodeConfiguration;
 }

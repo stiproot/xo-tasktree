@@ -7,10 +7,8 @@ public sealed class Node : BaseNode
 	///   Initializes a new instance of <see cref="Node"/>. 
 	/// </summary>
 	public Node(
-		ILogger? logger = null,
-		string? id = null,
-		IWorkflowContext? context = null
-	) : base(logger, id, context) 
+		ILogger? logger = null
+	) : base(logger) 
 	{ 
 	}
 }

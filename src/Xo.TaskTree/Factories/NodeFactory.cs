@@ -13,7 +13,7 @@ public class NodeFactory : INodeFactory
 	public INode Create(ILogger logger, string id) => this.Create(logger, id, null);
 
 	/// <inheritdoc />
-	public INode Create(ILogger logger) => this.Create(logger, null, null);
+	public INode Create(ILogger? logger) => this.Create(logger, null, null);
 
 	/// <inheritdoc />
 	public INode Create(IWorkflowContext context) => this.Create(null, null, context: context);
@@ -23,5 +23,5 @@ public class NodeFactory : INodeFactory
 		string? id = null,
 		IWorkflowContext? context = null
 	)
-		=> new Node(logger, id, context);
+		=> new Node(logger);
 }

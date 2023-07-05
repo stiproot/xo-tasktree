@@ -3,7 +3,7 @@ namespace Xo.TaskTree.Abstractions;
 public interface INodeConfigurationBuilder
 {
 	INodeConfigurationBuilder SetId(string id);
-	INodeConfigurationBuilder SetContext(IWorkflowContext? workflowContext);
+	INodeConfigurationBuilder AddContext(IWorkflowContext? workflowContext);
 	INodeConfigurationBuilder AddArg(params INode[] args);
 	INodeConfigurationBuilder AddArg(params IMetaNode[] args);
 	INodeConfigurationBuilder AddArg(params IMsg?[] args);
@@ -15,6 +15,7 @@ public interface INodeConfigurationBuilder
 	INodeConfigurationBuilder MatchArg<T>(T arg);
 	INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null);
 	INodeConfigurationBuilder RequireResult();
+	INodeConfigurationBuilder IgnorePromisedResults();
 	INodeConfigurationBuilder AddServiceType(Type serviceType);
 	INodeConfigurationBuilder NextParam(string nextParamName);
 	INodeConfigurationBuilder Key(string key);

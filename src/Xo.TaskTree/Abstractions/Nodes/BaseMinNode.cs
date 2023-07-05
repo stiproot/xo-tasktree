@@ -36,9 +36,9 @@ public abstract class BaseNode : INode
 	}
 
 	/// <inheritdoc />
-	public INode SetNodeEdge(INodeEdge nodeEdge)
+	public INode SetNodeEdge(INodeEdge? nodeEdge)
 	{
-		this._NodeEdge = nodeEdge ?? throw new ArgumentNullException(nameof(nodeEdge));
+		this._NodeEdge = nodeEdge;
 		return this;
 	}
 
@@ -48,9 +48,9 @@ public abstract class BaseNode : INode
 		return this;
 	}
 
-	public INode SetController(IController controller)
+	public INode SetController(IController? controller)
 	{
-		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
+		this._Controller = controller;
 
 		return this;
 	}
@@ -167,7 +167,7 @@ public abstract class BaseNode : INode
 			return;
 		}
 
-		if (this.NodeConfiguration.WorkflowContext == null)
+		if (this.NodeConfiguration.WorkflowContext is null)
 		{
 			throw new InvalidOperationException("Context has not been provided");
 		}
@@ -227,13 +227,9 @@ public abstract class BaseNode : INode
 	///   Initializes a new instance of <see cref="Node"/>. 
 	/// </summary>
 	public BaseNode(
-		ILogger? logger = null,
-		string? id = null,
-		IWorkflowContext? context = null
+		ILogger? logger = null
 	)
 	{
 		this._Logger = logger;
-		// if (id is not null) this.Id = id;
-		// this._Context = context;
 	}
 }

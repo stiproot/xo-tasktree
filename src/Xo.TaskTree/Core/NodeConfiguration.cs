@@ -13,5 +13,5 @@ public class NodeConfiguration : INodeConfiguration
 	public List<IMsg> Args { get; init; } = new();
 	public List<INode> PromisedArgs { get; init; } = new();
 	public List<IMetaNode> MetaPromisedArgs { get; init; } = new();
-	public List<Func<IWorkflowContext, IMsg>> ContextArgs { get; init; } = new ();
+	public List<Func<IWorkflowContext, IMsg>> ContextArgs { get; init; } = new();
 }

@@ -17,18 +17,20 @@ public class MetaNodeMapper : IMetaNodeMapper
 
 	public INode Map(IMetaNode source)
 	{
-		return source.NodeType switch
-		{
-			MetaNodeTypes.Default => this.Create<IMetaBranchBuilder>(source.NodeType).Init(source).Build(this),
-			MetaNodeTypes.Binary => this.Create<IMetaBinaryBranchBuilder>(source.NodeType).Init(source).Build(this),
-			MetaNodeTypes.Hash => this.Create<IMetaHashBranchBuilder>(source.NodeType).Init(source).Build(this),
-			MetaNodeTypes.Branch => this.Create<IMetaBinaryBranchBuilder>(source.NodeType).Init(source).Build(this),
-			MetaNodeTypes.Path => this.Create<IMetaPathBranchBuilder>(source.NodeType).Init(source).Build(this),
-			_ => throw new InvalidOperationException()
-		};
+		return this.Create(source.NodeType).Init(source).Build(this);
+
+		// return source.NodeType switch
+		// {
+			// MetaNodeTypes.Default => this.Create<IMetaBranchBuilder>(source.NodeType).Init(source).Build(this),
+			// MetaNodeTypes.Binary => this.Create<IMetaBinaryBranchBuilder>(source.NodeType).Init(source).Build(this),
+			// MetaNodeTypes.Hash => this.Create<IMetaHashBranchBuilder>(source.NodeType).Init(source).Build(this),
+			// MetaNodeTypes.Branch => this.Create<IMetaBinaryBranchBuilder>(source.NodeType).Init(source).Build(this),
+			// MetaNodeTypes.Path => this.Create<IMetaPathBranchBuilder>(source.NodeType).Init(source).Build(this),
+			// _ => throw new InvalidOperationException()
+		// };
 	}
 
-	private TBuilder Create<TBuilder>(MetaNodeTypes nodeType) => (TBuilder)this.Create(nodeType);
+	// private TBuilder Create<TBuilder>(MetaNodeTypes nodeType) => (TBuilder)this.Create(nodeType);
 
 	private IMetaBranchBuilder Create(MetaNodeTypes nodeType)
 	{

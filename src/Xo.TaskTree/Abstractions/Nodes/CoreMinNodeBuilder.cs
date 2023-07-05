@@ -4,12 +4,22 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 {
 	public ICoreNodeBuilder Configure(Action<INodeConfigurationBuilder> configure)
 	{
-		throw new NotImplementedException();
+		INodeConfigurationBuilder builder;
+
+		if (this._NodeConfiguration is not null) builder = new NodeConfigurationBuilder(this._NodeConfiguration);
+		else builder = new NodeConfigurationBuilder();
+
+		configure(builder);
+
+		this._NodeConfiguration = builder.Build();
+
+		return this;
 	}
 
 	public ICoreNodeBuilder Configure(INodeConfiguration nodeConfiguration)
 	{
-		throw new NotImplementedException();
+		this._NodeConfiguration = nodeConfiguration;
+		return this;
 	}
 
 	public ICoreNodeBuilder AddNodeEdge(INodeEdge nodeEdge)
@@ -37,15 +47,15 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	// /// <inheritdoc />
 	//public ICoreNodeBuilder RequireResult(bool requiresResult = true)
 	//{
-		//this.RequiresResult = requiresResult;
-		//return this;
+	//this.RequiresResult = requiresResult;
+	//return this;
 	//}
 
 	// // /// <inheritdoc />
 	// public ICoreNodeBuilder AddContext(IWorkflowContext? context)
 	// {
-		// this._Context = context;
-		// return this;
+	// this._Context = context;
+	// return this;
 	// }
 
 	/// <inheritdoc />
@@ -141,7 +151,7 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		INodeFactory nodeFactory,
 		ILogger? logger = null
 	) : base(
-			fnFactory, 
+			fnFactory,
 			nodeFactory,
 			logger
 	)
