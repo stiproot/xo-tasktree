@@ -2,6 +2,7 @@ namespace Xo.TaskTree.Abstractions;
 
 public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 {
+	/// <inheritdoc />
 	public ICoreNodeBuilder Configure(Action<INodeConfigurationBuilder> configure)
 	{
 		INodeConfigurationBuilder builder;
@@ -16,12 +17,14 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		return this;
 	}
 
+	/// <inheritdoc />
 	public ICoreNodeBuilder Configure(INodeConfiguration nodeConfiguration)
 	{
 		this._NodeConfiguration = nodeConfiguration;
 		return this;
 	}
 
+	/// <inheritdoc />
 	public ICoreNodeBuilder AddNodeEdge(INodeEdge nodeEdge)
 	{
 		this._NodeEdge = nodeEdge;
@@ -31,6 +34,7 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 	/// <inheritdoc />
 	public virtual bool HasParam(string paramName) => this._NodeConfiguration.Args.Any(p => p.ParamName == paramName);
 
+	/// <inheritdoc />
 	public virtual IFnFactory FnFactory => this._FnFactory;
 
 	/// <inheritdoc />
@@ -43,20 +47,6 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 			return null;
 		}
 	}
-
-	// /// <inheritdoc />
-	//public ICoreNodeBuilder RequireResult(bool requiresResult = true)
-	//{
-	//this.RequiresResult = requiresResult;
-	//return this;
-	//}
-
-	// // /// <inheritdoc />
-	// public ICoreNodeBuilder AddContext(IWorkflowContext? context)
-	// {
-	// this._Context = context;
-	// return this;
-	// }
 
 	/// <inheritdoc />
 	public ICoreNodeBuilder AddFn(IAsyncFn fn)
@@ -93,19 +83,19 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		return this;
 	}
 
+	/// <inheritdoc />
 	public ICoreNodeBuilder AddInvoker(IInvoker invoker)
 	{
 		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
 		return this;
 	}
 
+	/// <inheritdoc />
 	public ICoreNodeBuilder AddController(IController controller)
 	{
 		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
-
 		return this;
 	}
-
 
 	/// <inheritdoc />
 	public ICoreNodeBuilder SetExceptionHandler(Func<Exception, Task> handler)
@@ -114,13 +104,14 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		return this;
 	}
 
-	// /// <inheritdoc />
+	// <inheritdoc />
 	public ICoreNodeBuilder SetExceptionHandler(Action<Exception> handler)
 	{
 		this._ExceptionHandler = handler;
 		return this;
 	}
 
+	// <inheritdoc />
 	public virtual INode Build()
 	{
 		INode n = this._NodeFactory.Create(this._Logger)
@@ -135,16 +126,11 @@ public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 		if (this._ExceptionHandlerAsync is not null) n.SetExceptionHandler(this._ExceptionHandlerAsync);
 		if (this._ExceptionHandler is not null) n.SetExceptionHandler(this._ExceptionHandler);
 
-		// if (this._Params.Any()) n.AddArg(this._Params.ToArray());
-		// if (this._PromisedParams.Any()) n.AddArg(this._PromisedParams.ToArray());
-		// if (this._ContextParams.Any()) n.AddArg(this._ContextParams.ToArray());
-		// n.RequireResult(this.RequiresResult);
-
 		return n;
 	}
 
 	/// <summary>
-	///   Initializes a new instance of <see cref="NodeBuilder"/>. 
+	///   Initializes a new instance of <see cref="ICoreNodeBuilder"/>. 
 	/// </summary>
 	public CoreNodeBuilder(
 		IFnFactory fnFactory,

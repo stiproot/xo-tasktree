@@ -23,7 +23,7 @@ public abstract class BaseNode : INode
 	public IFn Fn => this._AsyncFn is not null ? (IFn)this._AsyncFn! : (IFn)this._SyncFn!;
 
 	/// <inheritdoc />
-	public int ArgCount() => throw new NotImplementedException(); // this._Params.Count() + this._PromisedParams.Count() + this._ContextParams.Count();
+	public int ArgCount() => throw new NotImplementedException();
 
 	/// <inheritdoc />
 	protected bool _IsSync => this._SyncFn != null;

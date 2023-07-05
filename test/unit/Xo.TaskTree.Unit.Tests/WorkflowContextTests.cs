@@ -8,9 +8,7 @@ public class WorkflowContextTests
 	public WorkflowContextTests(
 		IWorkflowContextFactory workflowContextFactory
 	)
-	{
-		this._workflowContextFactory = workflowContextFactory ?? throw new ArgumentNullException(nameof(workflowContextFactory));
-	}
+		=> this._workflowContextFactory = workflowContextFactory ?? throw new ArgumentNullException(nameof(workflowContextFactory));
 
 	[Fact]
 	public void WorkflowContextReturnsResultOfType()
