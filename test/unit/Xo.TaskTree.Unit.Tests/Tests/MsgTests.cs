@@ -5,12 +5,8 @@ public class MsgTests
 {
 	private readonly IMsgFactory _msgFactory;
 
-	public MsgTests(
-		IMsgFactory msgFactory
-	)
-	{
-		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
-	}
+	public MsgTests(IMsgFactory msgFactory)
+		=> this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 
 	[Fact]
 	public void Msg_ProvidedType_CastsData()

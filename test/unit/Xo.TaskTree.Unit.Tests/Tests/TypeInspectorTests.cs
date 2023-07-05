@@ -21,7 +21,6 @@ public class TypeInspectorTests
 		this._returnsBoolService = returnsBoolService ?? throw new System.ArgumentNullException(nameof(returnsBoolService));
 	}
 
-	// MethodHasReturnTypeOfTask() --------------------------------------------------------
 	[Fact]
 	public void TypeInspector_MethodHasReturnTypeOfTask_ProvidedInterfaceMethodThatReturnsTaskOfBool_ReturnTrue()
 	{

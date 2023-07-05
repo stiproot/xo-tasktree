@@ -5,9 +5,7 @@ public class WorkflowContextTests
 {
 	private readonly IWorkflowContextFactory _workflowContextFactory;
 
-	public WorkflowContextTests(
-		IWorkflowContextFactory workflowContextFactory
-	)
+	public WorkflowContextTests(IWorkflowContextFactory workflowContextFactory)
 		=> this._workflowContextFactory = workflowContextFactory ?? throw new ArgumentNullException(nameof(workflowContextFactory));
 
 	[Fact]
