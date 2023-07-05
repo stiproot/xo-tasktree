@@ -2,20 +2,20 @@ namespace Xo.TaskTree.Core;
 
 public class NodeConfigurationBuilder : INodeConfigurationBuilder
 {
-	private readonly INodeConfiguration _config = new NodeConfiguration();
+	private readonly INodeConfiguration _nodeConfiguration = new NodeConfiguration();
 	private Type? _serviceType;
 
 	public Type ServiceType => this._serviceType!;
 
 	public INodeConfigurationBuilder RequireResult()
 	{
-		this._config.RequiresResult = true;
+		this._nodeConfiguration.RequiresResult = true;
 		return this;
 	}
 
 	public INodeConfigurationBuilder IgnorePromisedResults()
 	{
-		this._config.IgnoresPromisedResults = true;
+		this._nodeConfiguration.IgnoresPromisedResults = true;
 		return this;
 	}
 
@@ -27,13 +27,13 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 	public INodeConfigurationBuilder NextParam(string nextParamName)
 	{
-		this._config.NextParamName = nextParamName;
+		this._nodeConfiguration.NextParamName = nextParamName;
 		return this;
 	}
 
 	public INodeConfigurationBuilder Key(string key)
 	{
-		this._config.Key = key;
+		this._nodeConfiguration.Key = key;
 		return this;
 	}
 
@@ -44,7 +44,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 	{
 		var msg = new Msg<T>(data, paramName);
 
-		this._config.Args.Add(msg);
+		this._nodeConfiguration.Args.Add(msg);
 
 		return this;
 	}
@@ -53,7 +53,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 	{
 		foreach (var a in args)
 		{
-			this._config.PromisedArgs.Add(a);
+			this._nodeConfiguration.PromisedArgs.Add(a);
 		}
 
 		return this;
@@ -63,7 +63,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 	{
 		foreach (var a in args)
 		{
-			this._config.MetaPromisedArgs.Add(a);
+			this._nodeConfiguration.MetaPromisedArgs.Add(a);
 		}
 
 		return this;
@@ -78,7 +78,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 				continue;
 			}
 
-			this._config.Args.Add(a);
+			this._nodeConfiguration.Args.Add(a);
 		}
 
 		return this;
@@ -88,7 +88,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 	{
 		foreach (var a in args)
 		{
-			this._config.ContextArgs.Add(a);
+			this._nodeConfiguration.ContextArgs.Add(a);
 		}
 
 		return this;
@@ -104,7 +104,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 		var msg = new Msg<T>(arg, serviceParamName);
 
-		this._config.Args.Add(msg);
+		this._nodeConfiguration.Args.Add(msg);
 
 		return this;
 	}
@@ -121,32 +121,32 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 		arg.NodeConfiguration!.NextParamName = serviceParamName;
 
-		this._config.MetaPromisedArgs.Add(arg);
+		this._nodeConfiguration.MetaPromisedArgs.Add(arg);
 
 		return this;
 	}
 
 	public INodeConfigurationBuilder SetId(string id)
 	{
-		this._config.Id = id;
+		this._nodeConfiguration.Id = id;
 		return this;
 	}
 
 	public INodeConfigurationBuilder AddContext(IWorkflowContext? workflowContext)
 	{
-		this._config.WorkflowContext = workflowContext;
+		this._nodeConfiguration.WorkflowContext = workflowContext;
 		return this;
 	}
 
 	// todo: delay build operation, or just reference config directly -> Build() is misleading.
-	public INodeConfiguration Build() => this._config;
+	public INodeConfiguration Build() => this._nodeConfiguration;
 
 	public NodeConfigurationBuilder() { }
 	public NodeConfigurationBuilder(
 		INodeConfiguration nodeConfiguration,
 		Type serviceType
 	)
-		=> (this._config, this._serviceType) = (nodeConfiguration, serviceType);
+		=> (this._nodeConfiguration, this._serviceType) = (nodeConfiguration, serviceType);
 	public NodeConfigurationBuilder(Type serviceType) => this._serviceType = serviceType;
-	public NodeConfigurationBuilder(INodeConfiguration nodeConfiguration) => this._config = nodeConfiguration;
+	public NodeConfigurationBuilder(INodeConfiguration nodeConfiguration) => this._nodeConfiguration = nodeConfiguration;
 }

@@ -23,24 +23,17 @@ public class WorkflowContext : IWorkflowContext
 	/// <inheritdoc />
 	public IMsg GetMsg(string key)
 	{
-		if (this._dictionary.TryGetValue(key, out var msg))
-		{
-			return msg;
-		}
+		if (this._dictionary.TryGetValue(key, out var msg)) return msg;
+
 		throw new InvalidOperationException($"WorkflowContext.GetResult - No msg found. key: {key}");
 	}
 
 	/// <inheritdoc />
 	public IEnumerable<IMsg> GetMsgs(params string[] keys)
 	{
-		if (keys == null)
-		{
-			throw new ArgumentNullException(nameof(keys));
-		}
-		if (!keys.Any())
-		{
-			throw new ArgumentException("WorkflowContext.GetResults - No keys provided.");
-		}
+		if (keys is null) throw new ArgumentNullException(nameof(keys));
+
+		if (!keys.Any()) throw new ArgumentException("WorkflowContext.GetResults - No keys provided.");
 
 		return keys.Select(k => this.GetMsg(k));
 	}
@@ -48,23 +41,16 @@ public class WorkflowContext : IWorkflowContext
 	/// <inheritdoc />
 	public IEnumerable<(string, IMsg)> GetKeyMsgPairs(params string[] keys)
 	{
-		if (keys == null)
-		{
-			throw new ArgumentNullException(nameof(keys));
-		}
-		if (!keys.Any())
-		{
-			throw new ArgumentException("WorkflowContext.GetResults - No keys provided.");
-		}
+		if (keys is null) throw new ArgumentNullException(nameof(keys));
+
+		if (!keys.Any()) throw new ArgumentException("WorkflowContext.GetResults - No keys provided.");
 
 		return keys.Select(k => (k, this.GetMsg(k)));
 	}
 
 	/// <inheritdoc />
 	public IEnumerable<(string, IMsg)> GetAllKeyMsgPairs()
-	{
-		return this._dictionary.Select(kvp => (kvp.Key, kvp.Value));
-	}
+		=> this._dictionary.Select(kvp => (kvp.Key, kvp.Value));
 
 	/// <inheritdoc />
 	public void AddMsg(string key, IMsg msg) => this._dictionary.TryAdd(key, msg);

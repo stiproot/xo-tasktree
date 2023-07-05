@@ -6,6 +6,7 @@ namespace Xo.TaskTree.Core;
 public static class TypeInspector
 {
 	private readonly static Type TaskType = typeof(Task);
+	private readonly static Type GenericTaskType = typeof(Task<>);
 
 	/// <summary>
 	///   Determines if a method returns a Task or Task{T}. 
@@ -29,7 +30,7 @@ public static class TypeInspector
 				.ReturnType;
 
 		string? argReturnTypeName;
-		if (outReturnType.IsGenericType && outReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+		if (outReturnType.IsGenericType && outReturnType.GetGenericTypeDefinition() == GenericTaskType)
 		{
 			Type genericArgument = outReturnType.GetGenericArguments()[0];
 			argReturnTypeName = genericArgument.Name;
