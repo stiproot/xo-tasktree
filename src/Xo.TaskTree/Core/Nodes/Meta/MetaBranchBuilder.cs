@@ -25,7 +25,7 @@ public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
-			.Create(this._Logger, this._WorkflowContext)
+			.Create(this._Logger)
 			.Configure(this._MetaNode.NodeConfiguration)
 			.AddFn(fn)
 			.Build();

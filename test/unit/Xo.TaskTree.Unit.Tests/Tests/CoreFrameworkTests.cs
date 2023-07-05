@@ -35,7 +35,7 @@ public class CoreFrameworkTests
 		var guid = GuidGenerator.NewGuidAsString();
 
 		// Act
-		var th = this._nodeBuilderFactory.Create(guid).Configure(c => c.SetId(guid)).Build();
+		var th = this._nodeBuilderFactory.Create().Configure(c => c.SetId(guid)).Build();
 
 		// Assert
 		Assert.Equal(guid, th.NodeConfiguration.Id);

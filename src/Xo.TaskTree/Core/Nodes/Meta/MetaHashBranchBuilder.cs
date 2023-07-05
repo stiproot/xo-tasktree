@@ -29,7 +29,7 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INodeEdge e = new MultusNodeEdge { Edges = decisions };
 
 		INode n = this._NodeBuilderFactory
-			.Create(this._Logger, this._WorkflowContext)
+			.Create(this._Logger)
 			.Configure(this._MetaNode.NodeConfiguration)
 			.AddFn(fn)
 			.AddNodeEdge(e)
@@ -50,7 +50,7 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
-			.Create(this._Logger, this._WorkflowContext)
+			.Create(this._Logger)
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn)
 			.Build();

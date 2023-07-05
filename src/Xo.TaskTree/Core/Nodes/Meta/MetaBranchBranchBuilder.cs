@@ -28,7 +28,7 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INodeEdge e = new MultusNodeEdge { Edges = ns };
 
 		INode n = this._NodeBuilderFactory
-			.Create(this._Logger, this._WorkflowContext)
+			.Create(this._Logger)
 			.AddFn(fn)
 			.AddNodeEdge(e)
 			.Build();
@@ -49,7 +49,7 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
-			.Create(this._Logger, this._WorkflowContext)
+			.Create(this._Logger)
 			.AddFn(fn)
 			.Build();
 	

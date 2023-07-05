@@ -38,7 +38,7 @@ public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INode[] promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 
 		ICoreNodeBuilder n = this._NodeBuilderFactory
-			.Create(this._Logger, this._WorkflowContext)
+			.Create(this._Logger)
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn);
 

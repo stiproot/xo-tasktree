@@ -1,6 +1,6 @@
-namespace Xo.TaskTree.Abstractions;
+namespace Xo.TaskTree.Core;
 
-public abstract class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
+public class CoreNodeBuilder : BaseNodeBuilder, ICoreNodeBuilder
 {
 	/// <inheritdoc />
 	public ICoreNodeBuilder Configure(Action<INodeConfigurationBuilder> configure)
