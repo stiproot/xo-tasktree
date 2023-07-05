@@ -13,7 +13,7 @@ public class NodeEdgeResolver : INodeEdgeResolver
 			NodeEdgeTypes.Monarius => ResolveMonariusNodeEdge(nodeEdge, msgs, cancellationToken),
 			NodeEdgeTypes.Binarius => ResolveBinariusNodeEdge(nodeEdge, msgs, cancellationToken),
 			NodeEdgeTypes.Multus => ResolveMultusNodeEdge(nodeEdge, msgs, cancellationToken),
-			_ => throw new InvalidOperationException()
+			_ => throw new NotSupportedException()
 		};
 	}
 

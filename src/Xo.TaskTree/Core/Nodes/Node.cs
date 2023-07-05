@@ -144,13 +144,11 @@ public class Node : INode
 
 		if (!this.NodeConfiguration.PromisedArgs.Any()) return;
 
-		var results = await this._Nodevaluator.RunAsync(this.NodeConfiguration.PromisedArgs, cancellationToken);
-
-		IEnumerable<IMsg> nonNullResults = results.Where(p => p is not null).ToList()!;
+		IList<IMsg> results = await this._Nodevaluator.RunAsync(this.NodeConfiguration.PromisedArgs, cancellationToken);
 
 		if(this.NodeConfiguration.IgnoresPromisedResults) return;
 
-		foreach (var r in nonNullResults)
+		foreach (var r in results)
 		{
 			this.NodeConfiguration.Args.Add(r);
 		}

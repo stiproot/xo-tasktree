@@ -4,20 +4,20 @@ namespace Xo.TaskTree.Core;
 public class LoopNodeEvaluator : INodevaluator
 {
 	/// <inheritdoc />
-	public async Task<IList<IMsg?>> RunAsync(
+	public async Task<IList<IMsg>> RunAsync(
 		IList<INode> nodes,
 		CancellationToken cancellationToken
 	)
 	{
-		var results = new List<IMsg?>();
+		var results = new List<IMsg>();
 
 		foreach (var node in nodes)
 		{
-			var result = await node.Run(cancellationToken);
+			IMsg?[] result = await node.Run(cancellationToken);
 
 			if (result is null) continue;
 
-			results.AddRange(result);
+			results.AddRange(result.NonNull());
 		}
 
 		return results;

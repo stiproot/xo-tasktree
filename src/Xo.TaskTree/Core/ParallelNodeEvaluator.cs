@@ -4,16 +4,16 @@ namespace Xo.TaskTree.Core;
 public class ParallelNodeEvaluator : INodevaluator
 {
 	/// <inheritdoc />
-	public async Task<IList<IMsg?>> RunAsync(
+	public async Task<IList<IMsg>> RunAsync(
 		IList<INode> nodes,
 		CancellationToken cancellationToken
 	)
 	{
-		var promisedArgs = nodes.Select(p => p.Run(cancellationToken));
+		IEnumerable<Task<IMsg?[]>> promisedArgs = nodes.Select(p => p.Run(cancellationToken));
 
 		var continuation = await Task.WhenAll(promisedArgs);
 
-		var results = continuation.SelectMany(r => r).ToList();
+		var results = continuation.SelectMany(r => r).ToList().NonNull();
 
 		return results;
 	}
