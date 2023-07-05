@@ -1,6 +1,6 @@
 namespace Xo.TaskTree.Core;
 
-public static class ObjectExtensions
+internal static class ObjectExtensions
 {
 	public static void ThrowIfNull(this object? @this)
 	{
