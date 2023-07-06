@@ -17,8 +17,8 @@ public class NodeConfigurationBuilderTests
 		// ASSERT......
 		var config = builder.Build();
 
-		Assert.True(config.Args.Exists(a => a.ParamName == "flag" && (a as Msg<bool>)!.GetData() is true));
-		Assert.True(config.Args.Exists(a => a.ParamName == "args" && (a as Msg<string>)!.GetData() == "<<args>>"));
+		Assert.True(config.Args.Matches<bool>("flag", true));
+		Assert.True(config.Args.Matches<string>("args", "<<args>>"));
 	}
 
 	[Fact]
@@ -36,8 +36,8 @@ public class NodeConfigurationBuilderTests
 		// ASSERT...
 		var config = builder.Build();
 
-		Assert.True(config.Args.Exists(a => a.ParamName == "flag" && (a as Msg<bool>)!.GetData() is true));
-		Assert.True(config.Args.Exists(a => a.ParamName == "args" && (a as Msg<string>)!.GetData() == "<<args>>"));
+		Assert.True(config.Args.Matches<bool>("flag", true));
+		Assert.True(config.Args.Matches<string>("args", "<<args>>"));
 	}
 
 	[Fact]
