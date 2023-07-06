@@ -177,7 +177,28 @@ public class StateManagerTests
 	}
 
 	[Fact]
-	public async Task PATH()
+	public async Task PATH_two_nodes()
+	{
+		var cancellationToken = NewCancellationToken();
+
+		var mn = this._stateManager
+			.Root<IY_OutConstBool_SyncService>()
+			.Path<IY_InBool_OutConstStr_AsyncService, IY_InStr_OutConstInt_AsyncService>(
+				c => c.RequireResult(),
+				c => c.RequireResult()
+			);
+
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = msg.Data<int>(); 
+
+		Assert.Equal(1, d);
+	}
+
+	[Fact]
+	public async Task PATH_three_nodes()
 	{
 		var cancellationToken = NewCancellationToken();
 
@@ -193,7 +214,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<int>)!.GetData();
+		var d = msg.Data<int>(); 
 
 		Assert.Equal(1, d);
 	}
