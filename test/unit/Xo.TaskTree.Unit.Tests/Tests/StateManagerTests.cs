@@ -24,7 +24,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<bool>)!.GetData();
+		var d = msg.Data<bool>(); 
 
 		Assert.True(d);
 	}
@@ -43,7 +43,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<int>)!.GetData();
+		var d = msg.Data<int>(); 
 
 		Assert.Equal(1, d);
 	}
@@ -65,7 +65,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<string>)!.GetData();
+		var d = msg.Data<string>(); 
 
 		Assert.NotNull(d);
 		Assert.IsType<Guid>(Guid.Parse(d));
@@ -84,7 +84,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<int>)!.GetData();
+		var d = msg.Data<int>(); 
 
 		Assert.Equal(1, d);
 	}
@@ -105,7 +105,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<int>)!.GetData();
+		var d = msg.Data<int>(); 
 
 		Assert.Equal(1, d);
 	}
@@ -126,7 +126,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<int>)!.GetData();
+		var d = msg.Data<int>(); 
 
 		Assert.Equal(1, d);
 	}
@@ -148,7 +148,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<int>)!.GetData();
+		var d = msg.Data<int>(); 
 
 		Assert.Equal(1, d);
 	}
@@ -171,7 +171,7 @@ public class StateManagerTests
 
 		var msgs = await n.Run(cancellationToken);
 		var msg = msgs.First(); 
-		var d = (msg as Msg<int>)!.GetData();
+		var d = msg.Data<int>(); 
 
 		Assert.Equal(1, d);
 	}
