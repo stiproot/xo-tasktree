@@ -5,12 +5,12 @@ namespace Xo.TaskTree.Core;
 /// <inheritdoc cref="IWorkflowContext"/>
 public class WorkflowContext : IWorkflowContext
 {
-	private readonly ConcurrentDictionary<string, IMsg> _dictionary;
+	private readonly ConcurrentDictionary<string, IMsg> _hash;
 
 	/// <summary>
 	///   Initializes a new instance of <see cref="WorkflowContext"/>.
 	/// </summary>
-	public WorkflowContext() => this._dictionary = new ConcurrentDictionary<string, IMsg>();
+	public WorkflowContext() => this._hash = new ConcurrentDictionary<string, IMsg>();
 
 	/// <inheritdoc />
 	public T? GetMsgData<T>(string key)
@@ -23,7 +23,7 @@ public class WorkflowContext : IWorkflowContext
 	/// <inheritdoc />
 	public IMsg GetMsg(string key)
 	{
-		if (this._dictionary.TryGetValue(key, out var msg)) return msg;
+		if (this._hash.TryGetValue(key, out var msg)) return msg;
 
 		throw new InvalidOperationException($"WorkflowContext.GetResult - No msg found. key: {key}");
 	}
@@ -50,10 +50,10 @@ public class WorkflowContext : IWorkflowContext
 
 	/// <inheritdoc />
 	public IEnumerable<(string, IMsg)> GetAllKeyMsgPairs()
-		=> this._dictionary.Select(kvp => (kvp.Key, kvp.Value));
+		=> this._hash.Select(kvp => (kvp.Key, kvp.Value));
 
 	/// <inheritdoc />
-	public void AddMsg(string key, IMsg msg) => this._dictionary.TryAdd(key, msg);
+	public void AddMsg(string key, IMsg msg) => this._hash.TryAdd(key, msg);
 
 	/// <inheritdoc />
 	public void AddData<T>(

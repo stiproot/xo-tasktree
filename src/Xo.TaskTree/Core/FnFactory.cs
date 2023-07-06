@@ -24,16 +24,14 @@ public sealed class FnFactory : IFnFactory
 		string? nextParamName = null
 	)
 	{
+		var service = this.GetService(serviceType);
+
+		var methodInfo = GetMethodInfo(serviceType, methodName);
+
+		var parameters = methodInfo.GetParameters();
+
 		Func<IArgs, Task<IMsg?>> fn = async (args) =>
 			{
-				var service = this.GetService(serviceType);
-
-				// Validate that service has method to be invoked, represented by methodName...
-				var methodInfo = GetMethodInfo(serviceType, methodName);
-
-				// Get the parameter information for the method in question...
-				var parameters = methodInfo.GetParameters();
-
 				ValidateMethod(args, methodInfo, parameters);
 
 				var arguments = GetArguments(args, parameters);
@@ -43,7 +41,9 @@ public sealed class FnFactory : IFnFactory
 				if (TypeInspector.MethodHasReturnTypeOfTask(methodInfo))
 				{
 					var task = (Task)methodInfo.Invoke(service, arguments)!;
+
 					await task;
+
 					if(methodInfo.ReturnType != _taskType) result = task.GetType().GetProperty("Result")?.GetValue(task);
 				}
 				else
@@ -57,21 +57,18 @@ public sealed class FnFactory : IFnFactory
 		return new AsyncFnAdaptor(fn!).SetServiceType(serviceType);
 	}
 
-
 	public IAsyncFn BuildAsyncFn<T>(string? methodName = null)
 	{
+		var serviceType = typeof(T);
+
+		var service = this.GetService(serviceType);
+
+		var methodInfo = GetMethodInfo(serviceType, methodName);
+
+		var parameters = methodInfo.GetParameters();
+
 		Func<IArgs, Task<IMsg?>> fn = async (args) =>
 			{
-				var serviceType = typeof(T);
-
-				var service = this.GetService(serviceType);
-
-				// Validate that service has method to be invoked, represented by methodName...
-				var methodInfo = GetMethodInfo(serviceType, methodName);
-
-				// Get the parameter information for the method in question...
-				var parameters = methodInfo.GetParameters();
-
 				ValidateMethod(args, methodInfo, parameters);
 
 				var arguments = GetArguments(args, parameters);
@@ -93,18 +90,16 @@ public sealed class FnFactory : IFnFactory
 
 	public ISyncFn BuildSyncFn<T>(string? methodName = null)
 	{
+		var serviceType = typeof(T);
+
+		var service = this.GetService(serviceType);
+
+		var methodInfo = GetMethodInfo(serviceType, methodName);
+
+		var parameters = methodInfo.GetParameters();
+
 		Func<IArgs, IMsg?> fn = (args) =>
 			{
-				var serviceType = typeof(T);
-
-				var service = this.GetService(serviceType);
-
-				// Validate that service has method to be invoked, represented by methodName...
-				var methodInfo = GetMethodInfo(serviceType, methodName);
-
-				// Get the parameter information for the method in question...
-				var parameters = methodInfo.GetParameters();
-
 				ValidateMethod(args, methodInfo, parameters);
 
 				var arguments = GetArguments(args, parameters);
@@ -126,14 +121,13 @@ public sealed class FnFactory : IFnFactory
 		in IEnumerable<ParameterInfo> parameters
 	)
 	{
-		if (parameters.Count() != arguments.Count())
-		{
-			throw new ArgumentException(
-				$"Invalid parameters for method {methodInfo.Name}. " +
-				$"Arguments provided: {string.Join(",", arguments.Params())}, " +
-				$"Parameters expected: {string.Join(",", parameters.Select(p => p.Name))}"
-			);
-		}
+		if (parameters.Count() == arguments.Count()) return;
+
+		throw new ArgumentException(
+			$"Invalid parameters for method {methodInfo.Name}. " +
+			$"Arguments provided: {string.Join(",", arguments.Params())}, " +
+			$"Parameters expected: {string.Join(",", parameters.Select(p => p.Name))}"
+		);
 	}
 
 	public static MethodInfo GetMethodInfo(
@@ -148,44 +142,12 @@ public sealed class FnFactory : IFnFactory
 
 	private static object[] GetArguments(
 		IArgs arguments,
-		IEnumerable<ParameterInfo> parameters,
-		object[]? staticArgs = null
+		IEnumerable<ParameterInfo> parameters
 	)
 	{
-		// todo: multiple strategies for argument placement...
-		if (staticArgs is null) 
-		{
-			if(parameters.Count() is 1)
-			{
-				return arguments.ToObjArray();
-			}
+		if(parameters.Count() is 1) return arguments.ToObjArray();
 
-			return arguments.ToObjArray(parameters);
-		}
-		
-		object[] finalArgs = new object[parameters.Count()];
-
-		foreach (var p in parameters)
-		{
-			// todo: optimize this.
-			if (arguments.Exists(p.Name!))
-			{
-				var msg = arguments[p.Name!];
-				finalArgs[p.Position] = msg!.ObjectData;
-			}
-			else
-			{
-				var staticArg = staticArgs.FirstOrDefault(a => a.GetType() == p.ParameterType);
-				if (staticArg is not null)
-				{
-					finalArgs[p.Position] = staticArg;
-					continue;
-				}
-				throw new ArgumentException($"No argument found for parameter {p.Name} of type {p.ParameterType.Name}");
-			}
-		}
-
-		return finalArgs;
+		return arguments.ToObjArray(parameters);
 	}
 
 	public static IMsg CreateMsg(object result, string? nextParamName)

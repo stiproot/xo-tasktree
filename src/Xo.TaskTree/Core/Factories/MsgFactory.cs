@@ -7,5 +7,6 @@ public class MsgFactory : IMsgFactory
 	public IMsg Create<T>(
 		T data,
 		string? paramName = null
-	) => paramName == null ? new Msg<T>(data) : new Msg<T>(data, paramName);
+	) 
+		=> paramName == null ? new Msg<T>(data) : new Msg<T>(data, paramName);
 }

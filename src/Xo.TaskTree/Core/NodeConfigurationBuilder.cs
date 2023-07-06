@@ -153,8 +153,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
-	// todo: delay build operation, or just reference config directly -> Build() is misleading.
-	public INodeConfiguration Build() => this._nodeConfiguration;
+	public INodeConfiguration Configuration() => this._nodeConfiguration;
 
 	public NodeConfigurationBuilder() { }
 	public NodeConfigurationBuilder(

@@ -35,6 +35,7 @@ internal static class TypeExtensions
 	)
 	{
 		var fn = fnFactory.Build(@this, methodName, nextParamName).AsAsync();
+
 		return new Node().SetFn(fn);
 	}
 }

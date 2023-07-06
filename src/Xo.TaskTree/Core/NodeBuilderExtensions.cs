@@ -37,6 +37,7 @@ public static class NodeBuildeExtensions
 	{
 		// todo: assumes first method...
 		var method = type.GetMethods().First()!;
+
 		var parameters = method.GetParameters();
 
 		string? paramName = null;

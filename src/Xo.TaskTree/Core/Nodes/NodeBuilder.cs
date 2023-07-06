@@ -12,7 +12,7 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 
 		configure(builder);
 
-		this._NodeConfiguration = builder.Build();
+		this._NodeConfiguration = builder.Configuration();
 
 		return this;
 	}

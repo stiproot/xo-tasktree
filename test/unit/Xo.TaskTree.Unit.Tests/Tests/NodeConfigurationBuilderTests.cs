@@ -15,7 +15,7 @@ public class NodeConfigurationBuilderTests
 		matchArg(builder);
 
 		// ASSERT......
-		var config = builder.Build();
+		var config = builder.Configuration();
 
 		Assert.True(config.Args.Matches<bool>("flag", true));
 		Assert.True(config.Args.Matches<string>("args", "<<args>>"));
@@ -34,7 +34,7 @@ public class NodeConfigurationBuilderTests
 		matchArg1(builder);
 
 		// ASSERT...
-		var config = builder.Build();
+		var config = builder.Configuration();
 
 		Assert.True(config.Args.Matches<bool>("flag", true));
 		Assert.True(config.Args.Matches<string>("args", "<<args>>"));
@@ -55,7 +55,7 @@ public class NodeConfigurationBuilderTests
 		matchArg3(builder);
 
 		// ASSERT...
-		var config = builder.Build();
+		var config = builder.Configuration();
 
 		Assert.True(config.Args.Matches("arg1", "<<args-1>>"));
 		Assert.True(config.Args.Matches("arg2", "<<args-2>>"));

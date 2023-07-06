@@ -8,7 +8,9 @@ public class Msg<T> : BaseMsg<T>
 	///   Initializes a new instance.
 	/// </summary>
 	/// <param name="data">The instance of some type that this msg will contain.</param>
-	public Msg(T data) : base(data) { }
+	public Msg(T data) : base(data) 
+	{
+	}
 
 	/// <summary>
 	///   Initializes a new instance.
@@ -18,5 +20,7 @@ public class Msg<T> : BaseMsg<T>
 	public Msg(
 		T data,
 		string paramName
-	) : base(data, paramName) { }
+	) : base(data, paramName)
+	{ 
+	}
 }
