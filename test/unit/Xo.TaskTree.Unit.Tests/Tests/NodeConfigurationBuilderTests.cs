@@ -45,20 +45,20 @@ public class NodeConfigurationBuilderTests
 	{
 		// Arrange
 		var builder = new NodeConfigurationBuilder(typeof(IY_InStrStrStr_OutConstInt_AsyncService));
-		Action<INodeConfigurationBuilder> matchArg0 = b => b.MatchArgs("<<args-0>>");
 		Action<INodeConfigurationBuilder> matchArg1 = b => b.MatchArgs("<<args-1>>");
 		Action<INodeConfigurationBuilder> matchArg2 = b => b.MatchArgs("<<args-2>>");
+		Action<INodeConfigurationBuilder> matchArg3 = b => b.MatchArgs("<<args-3>>");
 
 		// Act
-		matchArg0(builder);
 		matchArg1(builder);
 		matchArg2(builder);
+		matchArg3(builder);
 
 		// Assert
 		var config = builder.Build();
 
-		Assert.True(config.Args.Exists(a => a.ParamName == "arg1" && (a as Msg<string>)!.GetData() == "<<args-0>>"));
-		Assert.True(config.Args.Exists(a => a.ParamName == "arg2" && (a as Msg<string>)!.GetData() == "<<args-1>>"));
-		Assert.True(config.Args.Exists(a => a.ParamName == "arg3" && (a as Msg<string>)!.GetData() == "<<args-2>>"));
+		Assert.True(config.Args.Matches("arg1", "<<args-1>>"));
+		Assert.True(config.Args.Matches("arg2", "<<args-2>>"));
+		Assert.True(config.Args.Matches("arg3", "<<args-3>>"));
 	}
 }
