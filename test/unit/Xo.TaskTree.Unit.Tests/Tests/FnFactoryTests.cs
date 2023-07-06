@@ -24,14 +24,14 @@ public class FnFactoryTests
 	[Fact]
 	public void FnBuilder_Constructor_ProvidedNullServiceProvider_ThrowsArgumentNullException()
 	{
-		// Act / Assert
+		// ACT... / Assert
 		Assert.Throws<ArgumentNullException>(() => new FnFactory(null!));
 	}
 
 	[Fact]
 	public async Task FnBuilder_ProvidedTypeAndSyncMethodName_ReturnsFactory()
 	{
-		// Arrange
+		// ARRANGE...
 		IArgs @params = new Args(new List<IMsg>()); 
 		var type = this._serviceThatReturnsBool.GetType();
 		var methodName = nameof(this._serviceThatReturnsBool.GetBool);
@@ -39,12 +39,12 @@ public class FnFactoryTests
 		serviceProvider.GetService(type).Returns(x => new Y_OutConstBool_SyncService());
 		var builder = new FnFactory(serviceProvider);
 
-		// Act
+		// ACT...
 		var fn = builder.Build(type, methodName).AsAsync();
 		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
-		// Assert
+		// ASSERT...
 		Assert.IsType<bool>(data);
 		Assert.True(data);
 	}
@@ -52,7 +52,7 @@ public class FnFactoryTests
 	[Fact]
 	public async Task FnBuilder_ProvidedTypeAndAsyncMethodName_ReturnsFactory()
 	{
-		// Arrange
+		// ARRANGE...
 		// var @params = new Dictionary<string, IMsg> { { "args", this._msgFactory.Create<string>("some-string", "args") } };
 		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args") });
 		var type = this._testService1.GetType();
@@ -61,12 +61,12 @@ public class FnFactoryTests
 		serviceProvider.GetService(type).Returns(x => new Y_InStr_OutBool_AsyncService());
 		var builder = new FnFactory(serviceProvider);
 
-		// Act
+		// ACT...
 		var fn = builder.Build(type, methodName, nextParamName: null).AsAsync();
 		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
-		// Assert
+		// ASSERT...
 		Assert.IsType<bool>(data);
 		Assert.True(data);
 	}
@@ -74,7 +74,7 @@ public class FnFactoryTests
 	[Fact]
 	public async Task FnBuilder_ProvidedIncorrectNumberOfParams_ThrowsArgumentException()
 	{
-		// Arrange
+		// ARRANGE...
 		// we will leave out "flag3" param of type bool that ITestServie3WithTwoArgs expects.
 		// var @params = new Dictionary<string, IMsg> { { "args3", this._msgFactory.Create<string>("some-string", "args3") } };
 		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args3") });
@@ -84,10 +84,10 @@ public class FnFactoryTests
 		serviceProvider.GetService(type).Returns(x => new Y_InStrBool_AsyncService());
 		var builder = new FnFactory(serviceProvider);
 
-		// Act
+		// ACT...
 		var fn = builder.Build(type, methodName, nextParamName: null).AsAsync();
 
-		// Assert
+		// ASSERT...
 		var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await fn.Invoke(@params));
 		Assert.Equal($"Invalid parameters for method {nameof(this._testService3WithTwoArgs.ProcessStrBool)}. Arguments provided: args3, Parameters expected: args3,flag3", exception.Message);
 	}
@@ -95,7 +95,7 @@ public class FnFactoryTests
 	[Fact]
 	public async Task FnBuilder_ProvidedTypeOnly_BuildsFnUsingFirstMethodName()
 	{
-		// Arrange
+		// ARRANGE...
 		// var @params = new Dictionary<string, IMsg> { { "args", this._msgFactory.Create<string>("some-string", "args") } };
 		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args") });
 		var type = this._testService1.GetType();
@@ -103,12 +103,12 @@ public class FnFactoryTests
 		serviceProvider.GetService(type).Returns(x => new Y_InStr_OutBool_AsyncService());
 		var builder = new FnFactory(serviceProvider);
 
-		// Act
+		// ACT...
 		var fn = builder.Build(type).AsAsync();
 		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
-		// Assert
+		// ASSERT...
 		Assert.IsType<bool>(data);
 		Assert.True(data);
 	}
@@ -116,19 +116,19 @@ public class FnFactoryTests
 	[Fact]
 	public async Task FnBuilder_ProvidedGenericType_BuildsFn()
 	{
-		// Arrange
+		// ARRANGE...
 		// var @params = new Dictionary<string, IMsg> { { "args", this._msgFactory.Create<string>("some-string", "args") } };
 		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args") });
 		var serviceProvider = Substitute.For<IServiceProvider>();
 		serviceProvider.GetService(typeof(IY_InStr_OutBool_AsyncService)).Returns(x => new Y_InStr_OutBool_AsyncService());
 		var builder = new FnFactory(serviceProvider);
 
-		// Act
+		// ACT...
 		var fn = builder.Build<IY_InStr_OutBool_AsyncService>().AsAsync();
 		var result = await fn.Invoke(@params);
 		var data = (result as Msg<bool>)!.GetData();
 
-		// Assert
+		// ASSERT...
 		Assert.IsType<bool>(data);
 		Assert.True(data);
 	}

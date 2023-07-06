@@ -11,15 +11,15 @@ public class MsgTests
 	[Fact]
 	public void Msg_ProvidedType_CastsData()
 	{
-		// Arrange
+		// ARRANGE...
 		const string paramName = "now";
 		var data = DateTime.UtcNow;
 		IMsg msg = this._msgFactory.Create<DateTime>(data, paramName);
 
-		// Act
+		// ACT...
 		var castedData = ((Msg<DateTime>)msg).GetData();
 
-		// Assert
+		// ASSERT...
 		Assert.Equal(data, castedData);
 		Assert.Equal(paramName, msg.ParamName);
 	}

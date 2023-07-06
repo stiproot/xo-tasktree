@@ -25,39 +25,39 @@ public class WorkflowContextTests
 	[Fact]
 	public void WorkflowContextProvidedInvalidKeyThrowsInvalidOperationException()
 	{
-		// Arrange
+		// ARRANGE...
 		var key = GuidGenerator.NewGuidAsString();
 		var workflowContext = this._workflowContextFactory.Create();
 
-		// Act / Assert
+		// ACT... / Assert
 		Assert.Throws<InvalidOperationException>(() => workflowContext.GetMsg(key));
 	}
 
 	[Fact]
 	public void WorkflowContext_ProvidedInvalidKeyForReferenceType_ThrowsInvalidOperationException()
 	{
-		// Arrange
+		// ARRANGE...
 		var key = GuidGenerator.NewGuidAsString();
 		var workflowContext = this._workflowContextFactory.Create();
 
-		// Act / Assert
+		// ACT... / Assert
 		Assert.Throws<InvalidOperationException>(() => workflowContext.GetMsgData<object>(key));
 	}
 
 	[Fact]
 	public void WorkflowContext_ProvidedNullKey_ThrowsInvalidOperationException()
 	{
-		// Arrange
+		// ARRANGE...
 		var workflowContext = this._workflowContextFactory.Create();
 
-		// Act / Assert
+		// ACT... / Assert
 		Assert.Throws<ArgumentNullException>(() => workflowContext.GetMsgs(null!));
 	}
 
 	[Fact]
 	public void WorkflowContext_ReturnsMultipleResults()
 	{
-		// Arrange
+		// ARRANGE...
 		var key = GuidGenerator.NewGuidAsString();
 		var value = DateTime.UtcNow;
 		var key2 = GuidGenerator.NewGuidAsString();
@@ -67,10 +67,10 @@ public class WorkflowContextTests
 		workflowContext.AddData<DateTime>(key, value);
 		workflowContext.AddData<DateTime>(key2, value2);
 
-		// Act
+		// ACT...
 		var results = workflowContext.GetMsgs(key, key2);
 
-		// Assert
+		// ASSERT...
 		Assert.Equal(2, results.Count());
 	}
 

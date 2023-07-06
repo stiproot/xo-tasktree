@@ -25,7 +25,7 @@ public class NSubsistuteTests
 	[Fact]
 	public async Task WorkflowWithServicesMockedWithNSubstitute()
 	{
-		// Arrange
+		// ARRANGE...
 		// Behavior: Workflows, with fn factories constructed with the FnFactory, with services mocked using NSubstitute should run.
 		var services = new ServiceCollection();
 		var testService1 = Substitute.For<IY_InStr_OutBool_AsyncService>();
@@ -61,7 +61,7 @@ public class NSubsistuteTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act / Assert
+		// ACT... / Assert
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		await n2.Run(cancellationToken);

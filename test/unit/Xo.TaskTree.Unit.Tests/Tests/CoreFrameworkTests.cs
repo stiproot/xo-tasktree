@@ -31,20 +31,20 @@ public class CoreFrameworkTests
 	[Fact]
 	public void NodeFactoryCanBeSuppliedId()
 	{
-		// Arrange
+		// ARRANGE...
 		var guid = GuidGenerator.NewGuidAsString();
 
-		// Act
+		// ACT...
 		var th = this._nodeBuilderFactory.Create().Configure(c => c.SetId(guid)).Build();
 
-		// Assert
+		// ASSERT...
 		Assert.Equal(guid, th.NodeConfiguration.Id);
 	}
 
 	[Fact]
 	public async Task FrameworkTest()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		// The output of this Node will be used as a param for the Task produced by the fn contained in Node n2, "flag2" of type bool.
 		var n1 = this._nodeBuilderFactory.Create()
@@ -67,10 +67,10 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
-		// Act
+		// ACT...
 		await n3.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		Assert.NotNull(n3);
@@ -79,7 +79,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task UserDefinedStrategyFrameworkTest()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		// The output of this Node will be used as a param for the Task produced by the fn contained in Node n2, "flag2" of type bool.
 		// We will provide a "user defined fn", IY_InStr_OutBool_AsyncService_Fn.
@@ -104,10 +104,10 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
-		// Act
+		// ACT...
 		await n3.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		Assert.NotNull(n3);
@@ -116,7 +116,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task ServiceThatAcceptsNoArgumentsFrameworkTest()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		var n3 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create(string.Empty, "args3")))
@@ -131,10 +131,10 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
-		// Act
+		// ACT...
 		await n4.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n3);
 		Assert.NotNull(n4);
 	}
@@ -142,7 +142,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task SingletonServiceUsedByTwoParamHandlesTest()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		// The point of this test will be to use a service that is registered as a singleton (IY_InObj_OutObj_SingletonAsyncService) in two task nodes.
 		// These task nodes will be used as params for a third task node.
@@ -165,10 +165,10 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
-		// Act
+		// ACT...
 		await n3.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		Assert.NotNull(n3);
@@ -177,7 +177,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task ResultChainAccessibleThroughSharedContext()
 	{
-		// Arrange
+		// ARRANGE...
 		// Behavior: Ability to access previous tasks' results further down the workflow chain
 		// i.e the result of n1 should be accessible by n3... 
 		var cancellationToken = this.CancellationTokenFactory();
@@ -200,10 +200,10 @@ public class CoreFrameworkTests
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
-		// Act
+		// ACT...
 		await n3.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		Assert.NotNull(n3);
@@ -212,7 +212,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowUsingOnlyTheSharedContextForParams()
 	{
-		// Arrange
+		// ARRANGE...
 		// Behavior: Define a workflow using only the shared workflowContext to pass params between strategies.
 		// i.e no next param specified when creating a fn factory
 		var cancellationToken = this.CancellationTokenFactory();
@@ -249,10 +249,10 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
-		// Act
+		// ACT...
 		await n3.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		Assert.NotNull(n3);
@@ -261,7 +261,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowWithSyncStrategyResultFeedingIntoAsyncFnWithoutWorkflowContext()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(this._msgFactory.Create<int>(300, "sleep")))
@@ -275,10 +275,10 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act
+		// ACT...
 		await n2.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 	}
@@ -286,7 +286,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowWithSyncStrategyResultFeedingIntoAsyncFnUsingWorkflowContext()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
@@ -312,10 +312,10 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act
+		// ACT...
 		await n2.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 	}
@@ -323,7 +323,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowWithAsyncStrategyResultFeedingIntoSyncFnWithoutWorkflowContext()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args")))
@@ -337,10 +337,10 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act
+		// ACT...
 		await n2.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 	}
@@ -348,7 +348,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowWithAsyncStrategyResultFeedingIntoSyncFnUsingWorkflowContext()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		var workflowContext = this._workflowContextFactory.Create();
 
@@ -373,10 +373,10 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act
+		// ACT...
 		await n2.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 	}
@@ -384,7 +384,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowWithBaseAsyncStrategyResultFeedingIntoSyncBaseFn()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 
 		var n1 = this._nodeBuilderFactory.Create()
@@ -401,10 +401,10 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act
+		// ACT...
 		await n2.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 	}
@@ -412,7 +412,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowWithBaseAsyncStrategyResultFeedingIntoSyncBaseFnUsingWorkflowContext()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
@@ -436,10 +436,10 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act
+		// ACT...
 		await n2.Run(cancellationToken);
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 	}
@@ -447,7 +447,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task NodesProvidedRawDataConstructMsgsAndUseThem()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 
 		// Service types are irrelevant in this scenario... so let's just use the singleton...
@@ -477,11 +477,11 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
-		// Act
+		// ACT...
 		var msgs = await n3.Run(cancellationToken);
 		var msg = msgs.First();
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		Assert.NotNull(n3);
@@ -491,7 +491,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task NodesProvidedTypesForConstructingFn()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 
 		// Service types are irrelevant in this scenario... so let's just use the singleton...
@@ -519,11 +519,11 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
-		// Act
+		// ACT...
 		var msgs = await n3.Run(cancellationToken);
 		var msg = msgs.First();
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		Assert.NotNull(n3);
@@ -533,7 +533,7 @@ public class CoreFrameworkTests
 	[Fact]
 	public async Task WorkflowComposedOfAsyncAndSyncNodesThatAreBuiltFromFunctionPointers()
 	{
-		// Arrange
+		// ARRANGE...
 		var cancellationToken = this.CancellationTokenFactory();
 
 		var n1 = this._nodeBuilderFactory.Create()
@@ -566,12 +566,12 @@ public class CoreFrameworkTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// Act
+		// ACT...
 		var msgs = await n2.Run(cancellationToken);
 		var msg = msgs.First();
 		var data = (msg as BaseMsg<int>)!.GetData();
 
-		// Assert
+		// ASSERT...
 		Assert.Equal(300, data);
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
@@ -580,7 +580,7 @@ public class CoreFrameworkTests
 	//[Fact]
 	//public async Task GIVEN_AMultiNodeWorkflow_WHEN_SyncFnAdapterUsingWorkflowContext_THEN_BuildsOffContext()
 	//{
-		//// Arrange
+		//// ARRANGE...
 		//var cancellationToken = this.CancellationTokenFactory();
 		//var workflowContext = new WorkflowContext();
 
@@ -600,12 +600,12 @@ public class CoreFrameworkTests
 				//})
 				//.Build();
 
-		//// Act
+		//// ACT...
 		//var msgs = await root.Run(cancellationToken);
 		//var msg = msgs.First();
 		//var data = (msg as BaseMsg<int>)!.GetData();
 
-		//// Assert
+		//// ASSERT...
 		//Assert.Equal(1, data);
 	//}
 }

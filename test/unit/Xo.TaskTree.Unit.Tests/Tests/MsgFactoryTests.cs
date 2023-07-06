@@ -15,20 +15,20 @@ public class MsgFactoryTests
 	[Fact]
 	public void MsgFactory_ProvidedParamNameAndData_ProducesMsg()
 	{
-		// Act
+		// ACT...
 		var msg = this._msgFactory.Create<object>(new object(), "paramName");
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(msg);
 	}
 
 	[Fact]
 	public void MsgFactory_ProvidedParamNameAndData_ProducesValueTypeMsg()
 	{
-		// Act
+		// ACT...
 		var msg = this._msgFactory.Create<int>(10, "paramName");
 
-		// Assert
+		// ASSERT...
 		Assert.NotNull(msg);
 	}
 }
