@@ -15,6 +15,7 @@ public interface INodeConfigurationBuilder
 	);
 	INodeConfigurationBuilder MatchArg<T>(T arg);
 	INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null);
+	INodeConfigurationBuilder MatchArgs<T>(T arg);
 	INodeConfigurationBuilder RequireResult();
 	INodeConfigurationBuilder IgnorePromisedResults();
 	INodeConfigurationBuilder AddServiceType(Type serviceType);

@@ -51,6 +51,24 @@ public static class TypeInspector
 	}
 
 	public static string MatchTypeToParamType(
+		INodeConfiguration nodeConfiguration,
+		in Type @out,
+		in Type @in
+	)
+	{
+		string? argType = @out.Name;
+
+		var inParamName = @in
+				.GetMethods()
+				.First()
+				.GetParameters()
+				.First(p => p.ParameterType.Name == argType && !nodeConfiguration.Args.Any(a => a.ParamName == p.Name))
+				.Name;
+
+		return inParamName!;
+	}
+
+	public static string MatchTypeToParamType(
 		in Type @out,
 		in Type @in
 	)

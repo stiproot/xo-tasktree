@@ -109,6 +109,21 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
+	public INodeConfigurationBuilder MatchArgs<T>(T arg)
+	{
+		if (this._serviceType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
+
+		var argType = typeof(T);
+
+		var serviceParamName = TypeInspector.MatchTypeToParamType(this._nodeConfiguration, argType, this._serviceType);
+
+		var msg = new Msg<T>(arg, serviceParamName);
+
+		this._nodeConfiguration.Args.Add(msg);
+
+		return this;
+	}
+
 	public INodeConfigurationBuilder MatchArg<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
 		if (this._serviceType is null) throw new InvalidOperationException($"{nameof(NodeConfigurationBuilder)}.{nameof(MatchArg)}<T> - fn-type is null.");
