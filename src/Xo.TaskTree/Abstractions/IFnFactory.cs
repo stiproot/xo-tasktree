@@ -17,19 +17,6 @@ public interface IFnFactory
 	IFn Build<T>(string? nextParamName = null);
 
 	/// <summary>
-	///   Builds a fn around a service provided as a generic type param.
-	/// </summary>
-	/// <typeparam name="TService">The type of the service that a fn will be built around.</param>
-	/// <typeparam name="TArg">The type of the argument that will be passed to the service.</param>
-	/// <param name="arg">The argument that will be passed to the service.</param>
-	/// <param name="nextParamName">The name of the parameter of the next fn that the result of this fn should be fed into as an argument.</param>
-	/// <returns><see cref="IFn"/></returns>
-	IFn Build<TService, TArg>(
-		TArg arg,
-		string? nextParamName = null
-	);
-
-	/// <summary>
 	///   Builds a fn around a service provided as <see cref="System.Type"/> and method name. 
 	///   The result of method can be used as a argument for the next fn by providing `nextParamName`.
 	/// </summary>
@@ -41,8 +28,7 @@ public interface IFnFactory
 	IFn Build(
 		Type serviceType,
 		string? methodName = null,
-		string? nextParamName = null,
-		object[]? staticArgs = null
+		string? nextParamName = null
 	);
 
 	/// <summary>
@@ -52,9 +38,7 @@ public interface IFnFactory
 	/// <typeparam name="T">The type of the service that a fn will be built around.</param>
 	/// <param name="methodName">The name of the method to be invoked.</param>
 	/// <returns><see cref="IFn"/></returns>
-	IAsyncFn BuildAsyncFn<T>(
-		string? methodName = null
-	);
+	IAsyncFn BuildAsyncFn<T>(string? methodName = null);
 
 	/// <summary>
 	///   Builds a fn around a service provided as <see cref="System.Type"/> and method name. 
@@ -63,7 +47,5 @@ public interface IFnFactory
 	/// <typeparam name="T">The type of the service that a fn will be built around.</param>
 	/// <param name="methodName">The name of the method to be invoked.</param>
 	/// <returns><see cref="IFn"/></returns>
-	ISyncFn BuildSyncFn<T>(
-		string? methodName = null
-	);
+	ISyncFn BuildSyncFn<T>(string? methodName = null);
 }

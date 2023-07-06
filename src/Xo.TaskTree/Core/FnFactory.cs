@@ -5,6 +5,7 @@ public sealed class FnFactory : IFnFactory
 {
 	private readonly IServiceProvider _serviceProvider;
 	private static readonly Type _msgType = typeof(Msg<>);
+	private static readonly Type _taskType = typeof(Task);
 
 	/// <summary>
 	///   Initializes a new instance of <see cref="FnFactory"/>.
@@ -13,21 +14,14 @@ public sealed class FnFactory : IFnFactory
 	public FnFactory(IServiceProvider serviceProvider)
 		=> this._serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-	/// <inheritdoc />
-	public IFn Build<TService, TArg>(
-		TArg arg,
-		string? nextParamName = null
-	)
-		=> this.Build(typeof(TService), nextParamName: nextParamName, staticArgs: new object[] { arg! });
-
-	public IFn Build<T>(string? nextParamName = null) => this.Build(typeof(T), nextParamName: nextParamName);
+	public IFn Build<T>(string? nextParamName = null) 
+		=> this.Build(typeof(T), nextParamName: nextParamName);
 
 	/// <inheritdoc />
 	public IFn Build(
 		Type serviceType,
 		string? methodName = null,
-		string? nextParamName = null,
-		object[]? staticArgs = null
+		string? nextParamName = null
 	)
 	{
 		Func<IArgs, Task<IMsg?>> fn = async (args) =>
@@ -40,9 +34,9 @@ public sealed class FnFactory : IFnFactory
 				// Get the parameter information for the method in question...
 				var parameters = methodInfo.GetParameters();
 
-				ValidateMethod(args, methodInfo, parameters, staticArgs);
+				ValidateMethod(args, methodInfo, parameters);
 
-				var arguments = GetArguments(args, parameters, staticArgs);
+				var arguments = GetArguments(args, parameters);
 
 				object? result = null;
 
@@ -50,7 +44,7 @@ public sealed class FnFactory : IFnFactory
 				{
 					var task = (Task)methodInfo.Invoke(service, arguments)!;
 					await task;
-					if(methodInfo.ReturnType != typeof(Task)) result = task.GetType().GetProperty("Result")?.GetValue(task);
+					if(methodInfo.ReturnType != _taskType) result = task.GetType().GetProperty("Result")?.GetValue(task);
 				}
 				else
 				{
@@ -88,7 +82,7 @@ public sealed class FnFactory : IFnFactory
 
 				await task;
 
-				if(methodInfo.ReturnType != typeof(Task)) result = task.GetType().GetProperty("Result")?.GetValue(task);
+				if(methodInfo.ReturnType != _taskType) result = task.GetType().GetProperty("Result")?.GetValue(task);
 
 				return result == null ? null : CreateMsg(result, null);
 			};
@@ -126,15 +120,13 @@ public sealed class FnFactory : IFnFactory
 	private object? GetService(Type serviceType)
 		=> this._serviceProvider.GetService(serviceType) ?? throw new InvalidOperationException($"Service not found for service type {serviceType.Name}");
 
-	// todo: this static arg business needs to go... it's a hack...	
 	private static void ValidateMethod(
 		in IArgs arguments,
 		in MethodInfo methodInfo,
-		in IEnumerable<ParameterInfo> parameters,
-		in object[]? staticArgs = null
+		in IEnumerable<ParameterInfo> parameters
 	)
 	{
-		if (parameters.Count() != arguments.Count() && parameters.Count() != arguments.Count() + (staticArgs?.Count() ?? 0))
+		if (parameters.Count() != arguments.Count())
 		{
 			throw new ArgumentException(
 				$"Invalid parameters for method {methodInfo.Name}. " +
