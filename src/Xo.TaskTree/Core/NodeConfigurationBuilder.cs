@@ -153,6 +153,12 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 		return this;
 	}
 
+	public INodeConfigurationBuilder ControllerType(ControllerTypes controllerType)
+	{
+		this._nodeConfiguration.ControllerType = controllerType;
+		return this;
+	}
+
 	public INodeConfiguration Configuration() => this._nodeConfiguration;
 
 	public NodeConfigurationBuilder() { }

@@ -32,6 +32,17 @@ public class Y_InStr_OutInt_AsyncService : IY_InStr_OutInt_AsyncService
 	}
 }
 
+public interface IY_OutObj_SyncService { Task<object> GetObj(); }
+public class Y_OutObj_SyncService : IY_OutObj_SyncService
+{
+	public async Task<object> GetObj()
+	{
+		var processTime = Utils.ProcessTimeGenerator();
+		await Task.Delay(processTime);
+		return new object();
+	}
+}
+
 /// <summary>
 ///   Test service that has some async operation that takes an argument of type string. And returns an int. 
 /// </summary>
@@ -187,6 +198,16 @@ public class Y_InObj_OutObj_SingletonAsyncService : IY_InObj_OutObj_SingletonAsy
 		// Simulate some process time
 		await Task.Delay(Utils.ProcessTimeGenerator());
 		return new object();
+	}
+}
+
+public interface IY_InObj_OutConstInt_AsyncService { Task<int> GetIntAsync(object arg1); }
+public class Y_InObj_OutConstInt_AsyncService : IY_InObj_OutConstInt_AsyncService
+{
+	public async Task<int> GetIntAsync(object arg1)
+	{
+		await Task.Delay(Utils.ProcessTimeGenerator());
+		return 1; 
 	}
 }
 

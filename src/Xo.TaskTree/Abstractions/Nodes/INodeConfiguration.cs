@@ -6,12 +6,11 @@ public interface INodeConfiguration
 	string? NextParamName { get; set; }
 	string? Key { get; set; }
 	IWorkflowContext? WorkflowContext { get; set; }
-
 	List<IMsg> Args { get; init; }
 	List<INode> PromisedArgs { get; init; }
 	List<IMetaNode> MetaPromisedArgs { get; init; }
 	List<Func<IWorkflowContext, IMsg>> ContextArgs { get; init; }
-
 	string Id { get; set; }
 	bool IgnoresPromisedResults { get; set; }
+	ControllerTypes? ControllerType { get; set; }
 }

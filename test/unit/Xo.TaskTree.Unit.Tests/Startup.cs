@@ -28,6 +28,8 @@ public class Startup
 		services.AddTransient<IY_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService, Y_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>();
 		services.AddTransient<IY_InBool_OutConstStr_AsyncService, Y_InBool_OutConstStr_AsyncService>();
 		services.AddTransient<IY_InStrStrStr_OutConstInt_AsyncService, Y_InStrStrStr_OutConstInt_AsyncService>();
+		services.AddTransient<IY_OutObj_SyncService, Y_OutObj_SyncService>();
+		services.AddTransient<IY_InObj_OutConstInt_AsyncService, Y_InObj_OutConstInt_AsyncService>();
 
 		services.AddTaskTreeServices();
 	}

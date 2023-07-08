@@ -30,6 +30,27 @@ public class StateManagerTests
 	}
 
 	[Fact]
+	public async Task IF_not_null_THEN_then()
+	{
+		var cancellationToken = NewCancellationToken();
+
+		var mn = this._stateManager
+			.RootIf<IY_OutObj_SyncService>(c => c.ControllerType(ControllerTypes.IsNotNull))
+			// todo: we need a way for a conditional node to propogate the previous output to the next input (after the check)...
+			// todo: fix multiple controller types needing to be specified...
+			.Then<IY_InObj_OutConstInt_AsyncService>(c => c.AddArg(new object(), "arg1").ControllerType(ControllerTypes.IsNotNull))
+			.Else<IY_InStr_AsyncService>(c => c.AddArg("<<args>>", "args3").ControllerType(ControllerTypes.IsNotNull));
+		
+		var n = mn.Build();
+
+		var msgs = await n.Run(cancellationToken);
+		var msg = msgs.First(); 
+		var d = msg.Data<int>(); 
+
+		Assert.Equal(1, d);
+	}
+
+	[Fact]
 	public async Task IF_then_ELSE_args()
 	{
 		var cancellationToken = NewCancellationToken();

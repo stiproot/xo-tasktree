@@ -75,16 +75,6 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.AddFn(fn)
 			.Build();
 		
-		// if(mn.NodeConfiguration is not null)
-		// {
-			// n.AddArg(mn.NodeConfiguration.Args.ToArray());
-		// }
-
-		// if(mn.NodeConfiguration?.RequiresResult is true)
-		// {
-			// n.RequireResult();
-		// }
-
 		if(mn.NodeEdge is not null)
 		{
 			INode thenNode = metaNodeMapper.Map(mn.NodeEdge.Next!);
@@ -94,9 +84,8 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			n.SetNodeEdge(thenEdge);
 		}
 
-		Func<IArgs, IMsg?> decisionFn = binaryBranchType
-			? (p) => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is true)
-			: (p) => SMsgFactory.Create<bool>(((p.First() as Msg<bool>)!.GetData()) is false);
+		// Func<IArgs, IMsg?> decisionFn = p => SMsgFactory.Create<bool>(p.First()!.Data<bool>() == binaryBranchType);
+		Func<IArgs, IMsg?> decisionFn = DecisionFactory(mn.NodeConfiguration.ControllerType, binaryBranchType);
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 
@@ -104,11 +93,24 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Create()
 			.Configure(c => c.RequireResult())
 			.AddFn(decisionFn)
-			.AddController(new TrueController())
+			.AddController(ControllerTypeFactory.Create(mn.NodeConfiguration.ControllerType))
 			.AddNodeEdge(decisionEdge)
 			.Build();
 	
 		return decisionNode;
+	}
+
+	private static Func<IArgs, IMsg?> DecisionFactory(
+		ControllerTypes? controllerType,
+		bool conditionType
+	)
+	{
+		return controllerType switch
+		{
+			ControllerTypes.True => p => SMsgFactory.Create<bool>(p.First()!.Data<bool>() == conditionType),
+			ControllerTypes.IsNotNull => p => SMsgFactory.Create<bool>(p.First()!.HasData == conditionType),
+			_ => throw new NotSupportedException()
+		};
 	}
 
 	public MetaBinaryBranchBuilder(

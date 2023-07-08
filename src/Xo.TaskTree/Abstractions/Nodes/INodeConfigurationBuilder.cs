@@ -21,5 +21,6 @@ public interface INodeConfigurationBuilder
 	INodeConfigurationBuilder AddServiceType(Type serviceType);
 	INodeConfigurationBuilder NextParam(string nextParamName);
 	INodeConfigurationBuilder Key(string key);
+	INodeConfigurationBuilder ControllerType(ControllerTypes controllerType);
 	INodeConfiguration Configuration();
 }
