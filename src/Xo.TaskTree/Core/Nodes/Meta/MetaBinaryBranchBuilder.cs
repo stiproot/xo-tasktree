@@ -38,19 +38,11 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
-			// .Create(this._Logger, workflowContext: this._Context)
 			.Create()
 			.Configure(this._MetaNode.NodeConfiguration)
 			.AddFn(fn)
-			// .AddArg(this._MetaNode.NodeConfiguration.Args.ToArray())
-			// .AddArg(promisedArgs)
 			.AddNodeEdge(e)
 			.Build();
-		
-		// if(this._MetaNode.NodeConfiguration?.RequiresResult is true)
-		// {
-			// n.RequireResult();
-		// }
 
 		return n;
 	}
@@ -69,7 +61,6 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
-			// .Create(this._Logger, workflowContext: this._Context)
 			.Create()
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn)
@@ -84,7 +75,6 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			n.SetNodeEdge(thenEdge);
 		}
 
-		// Func<IArgs, IMsg?> decisionFn = p => SMsgFactory.Create<bool>(p.First()!.Data<bool>() == binaryBranchType);
 		Func<IArgs, IMsg?> decisionFn = DecisionFactory(mn.NodeConfiguration.ControllerType, binaryBranchType);
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
@@ -93,7 +83,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Create()
 			.Configure(c => c.RequireResult())
 			.AddFn(decisionFn)
-			.AddController(ControllerTypeFactory.Create(mn.NodeConfiguration.ControllerType))
+			.AddController(new TrueController())
 			.AddNodeEdge(decisionEdge)
 			.Build();
 	

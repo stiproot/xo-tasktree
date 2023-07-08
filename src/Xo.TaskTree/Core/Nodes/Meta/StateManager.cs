@@ -61,6 +61,7 @@ public class StateManager : IStateManager
 
 		if (this.StateNode.NodeType is MetaNodeTypes.Binary)
 		{
+			transition.NodeConfiguration.ControllerType = this.StateNode.NodeConfiguration.ControllerType;
 			this.StateNode.NodeEdge.True = transition;
 			return this;
 		}
@@ -86,6 +87,7 @@ public class StateManager : IStateManager
 		// Not sure what else this could be? But anyway...
 		if (this.StateNode!.NodeType is MetaNodeTypes.Binary)
 		{
+			transition.NodeConfiguration.ControllerType = this.StateNode.NodeConfiguration.ControllerType;
 			this.StateNode!.NodeEdge!.False = transition;
 		}
 
