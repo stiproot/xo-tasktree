@@ -6,8 +6,6 @@ public class TrueController : IController
 	{
 		if (msg is null) return false;
 
-		bool data = (msg as Msg<bool>)!.GetData();
-
-		return data;
+		return msg.Data<bool>();
 	}
 }

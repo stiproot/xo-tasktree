@@ -27,15 +27,4 @@ internal static class TypeExtensions
 		string? nextParamName
 	)
 		=> fnFactory.Build(@this, nextParamName: nextParamName).SetServiceType(@this).AsAsync();
-
-	public static INode ToNode(this Type @this,
-		IFnFactory fnFactory,
-		string? methodName = null,
-		string? nextParamName = null
-	)
-	{
-		var fn = fnFactory.Build(@this, methodName, nextParamName).AsAsync();
-
-		return new Node().SetFn(fn);
-	}
 }

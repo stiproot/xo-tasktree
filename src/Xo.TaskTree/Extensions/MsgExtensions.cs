@@ -17,9 +17,6 @@ public static class MsgExtensions
 	)
 		=> @this.Any(m => m.ParamName == paramName && m.Data<TData>()!.Equals(data));
 
-	public static IArgs AsArgs(this IReadOnlyCollection<IMsg> @this) 
-		=> new Args(@this.ToList());
-
 	public static TData Data<TData>(this IMsg @this) 
 		=> (@this as Msg<TData>)!.GetData();
 }
