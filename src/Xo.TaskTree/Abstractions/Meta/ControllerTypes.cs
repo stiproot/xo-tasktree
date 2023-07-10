@@ -2,6 +2,7 @@ namespace Xo.TaskTree.Abstractions;
 
 public enum ControllerTypes
 {
-	True = 0,
-	IsNotNull = 1
+	None = 0,
+	True = 1,
+	IsNotNull = 2
 }

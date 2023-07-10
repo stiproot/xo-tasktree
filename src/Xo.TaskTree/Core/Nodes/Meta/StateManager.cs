@@ -15,14 +15,27 @@ public class StateManager : IStateManager
 
 	public IStateManager RootIf<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		this.RootNode = this.StateNode = typeof(T).ToMetaNode(configure, nodeType: MetaNodeTypes.Binary);
+		var enriched = configure.Enrich(c => c.ControllerType(ControllerTypes.True));
+
+		this.RootNode = this.StateNode = typeof(T).ToMetaNode(enriched, nodeType: MetaNodeTypes.Binary);
+
+		return this;
+	}
+
+	public IStateManager IsNotNull<T>(Action<INodeConfigurationBuilder>? configure = null)
+	{
+		var enriched = configure.Enrich(c => c.ControllerType(ControllerTypes.IsNotNull));
+
+		this.RootNode = this.StateNode = typeof(T).ToMetaNode(enriched, nodeType: MetaNodeTypes.Binary);
 
 		return this;
 	}
 
 	public IStateManager If<T>(Action<INodeConfigurationBuilder>? configure = null)
 	{
-		IMetaNode transition = typeof(T).ToMetaNode(configure, MetaNodeTypes.Binary);
+		var enriched = configure.Enrich(c => c.ControllerType(ControllerTypes.True));
+
+		IMetaNode transition = typeof(T).ToMetaNode(enriched, MetaNodeTypes.Binary);
 
 		if (this.RootNode is null)
 		{

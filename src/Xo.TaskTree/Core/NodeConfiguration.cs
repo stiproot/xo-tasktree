@@ -12,5 +12,5 @@ public class NodeConfiguration : INodeConfiguration
 	public List<INode> PromisedArgs { get; init; } = new();
 	public List<IMetaNode> MetaPromisedArgs { get; init; } = new();
 	public List<Func<IWorkflowContext, IMsg>> ContextArgs { get; init; } = new();
-	public ControllerTypes? ControllerType { get; set; } = ControllerTypes.True;
+	public ControllerTypes ControllerType { get; set; } = ControllerTypes.None;
 }

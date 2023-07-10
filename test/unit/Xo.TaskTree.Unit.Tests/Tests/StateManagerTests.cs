@@ -35,7 +35,7 @@ public class StateManagerTests
 		var cancellationToken = NewCancellationToken();
 
 		var mn = this._stateManager
-			.RootIf<IY_OutObj_SyncService>(c => c.ControllerType(ControllerTypes.IsNotNull))
+			.IsNotNull<IY_OutObj_SyncService>()
 			// todo: we need a way for a conditional node to propogate the previous output to the next input (after the check)...
 			.Then<IY_InObj_OutConstInt_AsyncService>(c => c.AddArg(new object(), "arg1"))
 			.Else<IY_InStr_AsyncService>(c => c.AddArg("<<args>>", "args3"));

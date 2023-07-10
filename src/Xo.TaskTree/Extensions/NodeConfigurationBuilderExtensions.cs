@@ -12,4 +12,9 @@ public static class NodeConfigurationBuilderExtensions
 
 		return @this;
 	}
+
+	public static Action<INodeConfigurationBuilder> Enrich(this Action<INodeConfigurationBuilder>? @this,
+		Action<INodeConfigurationBuilder> enrichment
+	)
+		=> (Action<INodeConfigurationBuilder>)Delegate.Combine(@this, enrichment);
 }

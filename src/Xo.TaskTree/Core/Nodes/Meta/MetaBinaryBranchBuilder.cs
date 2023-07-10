@@ -77,7 +77,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		Func<IArgs, IMsg?> decisionFn = DecisionFactory(mn.NodeConfiguration.ControllerType, binaryBranchType);
 
-		var decisionEdge = new MonariusNodeEdge().Add(n);
+		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(n);
 
 		var decisionNode  = this._NodeBuilderFactory
 			.Create()

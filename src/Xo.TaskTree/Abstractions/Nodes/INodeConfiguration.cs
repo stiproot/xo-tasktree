@@ -12,5 +12,5 @@ public interface INodeConfiguration
 	List<Func<IWorkflowContext, IMsg>> ContextArgs { get; init; }
 	string Id { get; set; }
 	bool IgnoresPromisedResults { get; set; }
-	ControllerTypes? ControllerType { get; set; }
+	ControllerTypes ControllerType { get; set; }
 }
