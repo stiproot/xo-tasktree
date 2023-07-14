@@ -11,7 +11,7 @@ public class Node : INode
 	protected INodeEdge? _NodeEdge;
 	protected INodeConfiguration? _NodeConfiguration;
 	protected IController? _Controller;
-	protected IInvoker _Invoker = new Invoker(new NodeEdgeResolver());
+	protected INodeEdgeResolver _Resolver = new NodeEdgeResolver();
 	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
 
 	/// <inheritdoc />
@@ -42,9 +42,9 @@ public class Node : INode
 		return this;
 	}
 
-	public INode SetInvoker(IInvoker invoker)
+	public INode SetResolver(INodeEdgeResolver resolver)
 	{
-		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
+		this._Resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
 		return this;
 	}
 
@@ -197,11 +197,18 @@ public class Node : INode
 			var bit = this._Controller.Control(result);
 
 			if(bit is false) return Array.Empty<IMsg>();
+
+			if(this._NodeEdge is not null)
+			{
+				var args = result!.Propagate.ToArray();
+
+				return await this._Resolver.Resolve(this._NodeEdge, args, cancellationToken);
+			}
 		}
 
 		if(this._NodeEdge is not null)
 		{
-			return await this._Invoker.Invoke(this._NodeEdge, result.ToArray(), cancellationToken);
+			return await this._Resolver.Resolve(this._NodeEdge, result.ToArray(), cancellationToken);
 		}
 
 		return result.ToArray();

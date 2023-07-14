@@ -85,9 +85,9 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 	}
 
 	/// <inheritdoc />
-	public INodeBuilder AddInvoker(IInvoker invoker)
+	public INodeBuilder AddResolver(INodeEdgeResolver resolver)
 	{
-		this._Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
+		this._Resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
 		return this;
 	}
 
@@ -118,7 +118,7 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 		INode n = this._NodeFactory.Create(this._Logger)
 			.SetNodeConfiguration(this._NodeConfiguration ?? throw new InvalidOperationException("Node configuration is required."))
 			.SetController(this._Controller)
-			.SetInvoker(this._Invoker)
+			.SetResolver(this._Resolver)
 			.SetNodeEdge(this._NodeEdge)
 			.SetNodevaluator(this._Nodevaluator);
 

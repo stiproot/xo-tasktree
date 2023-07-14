@@ -5,7 +5,7 @@ namespace Xo.TaskTree.Abstractions;
 /// </summary>
 public interface IMsg
 {
-	IMsg? _Previous { get; init; }
+	IMsg? Propagate { get; init; }
 
 	/// <summary>
 	///   The name of the parameter that the data contained in this msg needs to be passed in as an argument.

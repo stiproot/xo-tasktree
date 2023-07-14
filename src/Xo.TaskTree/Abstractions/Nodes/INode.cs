@@ -8,7 +8,7 @@ public interface INode
 	int ArgCount();
 	INode SetNodeConfiguration(INodeConfiguration nodeConfiguration);
 	INode SetNodeEdge(INodeEdge? nodeEdge);
-	INode SetInvoker(IInvoker invoker);
+	INode SetResolver(INodeEdgeResolver resolver);
 	INode SetController(IController? controller);
 	INode SetNodevaluator(INodevaluator nodevaluator);
 	INode RunNodesInLoop();

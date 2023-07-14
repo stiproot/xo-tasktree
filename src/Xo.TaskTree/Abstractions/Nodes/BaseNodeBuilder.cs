@@ -12,7 +12,7 @@ public abstract class BaseNodeBuilder
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
 	protected IController? _Controller;
-	protected IInvoker _Invoker = new Invoker(new NodeEdgeResolver());
+	protected INodeEdgeResolver _Resolver = new NodeEdgeResolver();
 	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
 
 	public BaseNodeBuilder(
