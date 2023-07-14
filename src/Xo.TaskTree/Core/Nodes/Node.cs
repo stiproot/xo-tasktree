@@ -198,11 +198,9 @@ public class Node : INode
 
 			if(bit is false) return Array.Empty<IMsg>();
 
-			if(this._NodeEdge is not null)
+			if(this._NodeEdge is not null && result?.Propagate is not null)
 			{
-				var args = result!.Propagate.ToArray();
-
-				return await this._Resolver.Resolve(this._NodeEdge, args, cancellationToken);
+				return await this._Resolver.Resolve(this._NodeEdge, result.Propagate.ToArray(), cancellationToken);
 			}
 		}
 
