@@ -6,6 +6,7 @@ public abstract class BaseMsg<T> : IMsg
 {
 	protected readonly Type _Type;
 	protected readonly T _Data;
+	public IMsg? _Previous { get; init; }
 
 	/// <inheritdoc />
 	public string? ParamName { get; set; }
@@ -58,5 +59,22 @@ public abstract class BaseMsg<T> : IMsg
 		this._Data = data ?? throw new ArgumentNullException(nameof(data));
 		this._Type = this._Data.GetType();
 		this.ParamName = paramName ?? throw new ArgumentNullException(nameof(paramName));
+	}
+
+	/// <summary>
+	///   Initializes a new instance.
+	/// </summary>
+	/// <param name="data">The instance of some type that this msg will contain.</param>
+	/// <param name="paramName">The name of the parameter that the data contained by this msg should be used for as an argument.</param>
+	public BaseMsg(
+		T data,
+		// string paramName,
+		IMsg previous
+	)
+	{
+		this._Data = data ?? throw new ArgumentNullException(nameof(data));
+		this._Type = this._Data.GetType();
+		// this.ParamName = paramName ?? throw new ArgumentNullException(nameof(paramName));
+		this._Previous = previous ?? throw new ArgumentNullException(nameof(previous));
 	}
 }

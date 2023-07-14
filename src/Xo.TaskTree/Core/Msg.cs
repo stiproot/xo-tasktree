@@ -23,4 +23,11 @@ public class Msg<T> : BaseMsg<T>
 	) : base(data, paramName)
 	{ 
 	}
+
+	public Msg(
+		T data,
+		IMsg previous
+	) : base(data, previous)
+	{ 
+	}
 }

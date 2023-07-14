@@ -14,12 +14,12 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	public virtual IMetaBranchBuilder Validate()
 	{
 		this._MetaNode.ThrowIfNull();
-		
-		if(this._MetaNode!.NodeType is not MetaNodeTypes.Binary) throw new InvalidOperationException("Invalid meta node type.");
+
+		if (this._MetaNode!.NodeType is not MetaNodeTypes.Binary) throw new InvalidOperationException("Invalid meta node type.");
 
 		this._MetaNode.NodeEdge.ThrowIfNull();
 
-		if(this._MetaNode.NodeEdge!.True is null && this._MetaNode.NodeEdge!.False is null) throw new InvalidOperationException();
+		if (this._MetaNode.NodeEdge!.True is null && this._MetaNode.NodeEdge!.False is null) throw new InvalidOperationException();
 
 		return this;
 	}
@@ -34,7 +34,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode.NodeConfiguration?.NextParamName);
 
-		INode[] promisedArgs = _MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = _MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
@@ -51,9 +51,9 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		IMetaNodeMapper metaNodeMapper,
 		IMetaNode? mn,
 		bool binaryBranchType
-	) 
+	)
 	{
-		if(mn is null) return null;
+		if (mn is null) return null;
 
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration.NextParamName);
 
@@ -65,8 +65,8 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn)
 			.Build();
-		
-		if(mn.NodeEdge is not null)
+
+		if (mn.NodeEdge is not null)
 		{
 			INode thenNode = metaNodeMapper.Map(mn.NodeEdge.Next!);
 
@@ -79,14 +79,14 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(n);
 
-		var decisionNode  = this._NodeBuilderFactory
+		var decisionNode = this._NodeBuilderFactory
 			.Create()
 			.Configure(c => c.RequireResult())
 			.AddFn(decisionFn)
 			.AddController(new TrueController())
 			.AddNodeEdge(decisionEdge)
 			.Build();
-	
+
 		return decisionNode;
 	}
 
@@ -98,7 +98,8 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		return controllerType switch
 		{
 			ControllerTypes.True => p => SMsgFactory.Create<bool>(p.First()!.Data<bool>() == conditionType),
-			ControllerTypes.IsNotNull => p => SMsgFactory.Create<bool>(p.First()!.HasData == conditionType),
+			// ControllerTypes.IsNotNull => p => SMsgFactory.Create<bool>(p.First()!.HasData == conditionType),
+			ControllerTypes.IsNotNull => p => new Msg<bool>(p.First()!.HasData == conditionType, p.First()!),
 			_ => throw new NotSupportedException()
 		};
 	}
@@ -110,8 +111,8 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		IWorkflowContext? workflowContext = null
 	) : base(
 			nodeBuilderFactory,
-			fnFactory, 
-			logger, 
+			fnFactory,
+			logger,
 			workflowContext
 	)
 	{
