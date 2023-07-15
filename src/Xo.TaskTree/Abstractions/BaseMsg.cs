@@ -6,7 +6,7 @@ public abstract class BaseMsg<T> : IMsg
 {
 	protected readonly Type _Type;
 	protected readonly T _Data;
-	public IMsg? Propagate { get; init; }
+	public IMsg? ControlMsg { get; internal set; }
 
 	/// <inheritdoc />
 	public string? ParamName { get; set; }
@@ -27,6 +27,13 @@ public abstract class BaseMsg<T> : IMsg
 	public IMsg SetParam(string paramName)
 	{
 		this.ParamName = paramName ?? throw new ArgumentNullException(nameof(paramName));
+		return this;
+	}
+
+	/// <inheritdoc />
+	public IMsg SetControlMsg(IMsg controlMsg)
+	{
+		this.ControlMsg = controlMsg ?? throw new ArgumentNullException(nameof(controlMsg));
 		return this;
 	}
 
@@ -68,11 +75,11 @@ public abstract class BaseMsg<T> : IMsg
 	/// <param name="propagate">The name of the parameter that the data contained by this msg should be used for as an argument.</param>
 	public BaseMsg(
 		T data,
-		IMsg propagate
+		IMsg controlMsg
 	)
 	{
 		this._Data = data ?? throw new ArgumentNullException(nameof(data));
 		this._Type = this._Data.GetType();
-		this.Propagate = propagate ?? throw new ArgumentNullException(nameof(propagate));
+		this.ControlMsg = controlMsg ?? throw new ArgumentNullException(nameof(controlMsg));
 	}
 }

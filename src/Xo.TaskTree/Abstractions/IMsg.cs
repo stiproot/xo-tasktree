@@ -5,7 +5,7 @@ namespace Xo.TaskTree.Abstractions;
 /// </summary>
 public interface IMsg
 {
-	IMsg? Propagate { get; init; }
+	IMsg? ControlMsg { get; }
 
 	/// <summary>
 	///   The name of the parameter that the data contained in this msg needs to be passed in as an argument.
@@ -16,6 +16,8 @@ public interface IMsg
 	///   Sets <see cref="Msg.ParamName"/>. Call can be chained.
 	/// </summary>
 	IMsg SetParam(string paramName);
+
+	IMsg SetControlMsg(IMsg controlMsg);
 
 	/// <summary>
 	///   Is the data contained in this msg of value-type? 

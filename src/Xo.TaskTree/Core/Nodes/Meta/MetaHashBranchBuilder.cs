@@ -65,7 +65,7 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		}
 
 		Func<IArgs, IMsg?> decisionFn = 
-			(p) => SMsgFactory.Create<bool>(((p.First() as Msg<string>)!.GetData()).Equals(mn.NodeConfiguration!.Key));
+			(p) => p.First()!.SetControlMsg(SMsgFactory.Create<bool>(p.First()!.Data<string>().Equals(mn.NodeConfiguration!.Key)));
 
 		var decisionEdge = new MonariusNodeEdge().Add(n);
 

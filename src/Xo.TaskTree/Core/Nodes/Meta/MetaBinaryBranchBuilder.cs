@@ -97,9 +97,8 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	{
 		return controllerType switch
 		{
-			ControllerTypes.True => p => SMsgFactory.Create<bool>(p.First()!.Data<bool>() == conditionType),
-			// ControllerTypes.IsNotNull => p => SMsgFactory.Create<bool>(p.First()!.HasData == conditionType),
-			ControllerTypes.IsNotNull => p => new Msg<bool>(p.First()!.HasData == conditionType, p.First()!),
+			ControllerTypes.True => p => p.First()!.SetControlMsg(SMsgFactory.Create<bool>(p.First()!.Data<bool>() == conditionType)),
+			ControllerTypes.IsNotNull => p => p.First()!.SetControlMsg(SMsgFactory.Create<bool>(p.First()!.HasData == conditionType)),
 			_ => throw new NotSupportedException()
 		};
 	}

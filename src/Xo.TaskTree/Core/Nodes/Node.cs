@@ -194,14 +194,9 @@ public class Node : INode
 
 		if(this._Controller is not null)
 		{
-			var bit = this._Controller.Control(result);
+			bool bit = this._Controller.Control(result?.ControlMsg);
 
 			if(bit is false) return Array.Empty<IMsg>();
-
-			if(this._NodeEdge is not null && result?.Propagate is not null)
-			{
-				return await this._Resolver.Resolve(this._NodeEdge, result.Propagate.ToArray(), cancellationToken);
-			}
 		}
 
 		if(this._NodeEdge is not null)
