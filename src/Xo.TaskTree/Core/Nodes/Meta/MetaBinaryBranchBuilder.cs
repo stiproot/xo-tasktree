@@ -30,7 +30,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		INode? @true = this.BuildBinary(metaNodeMapper, this._MetaNode!.NodeEdge!.True, true);
 		INode? @false = this.BuildBinary(metaNodeMapper, this._MetaNode!.NodeEdge!.False, false);
-		INodeEdge e = new BinariusNodeEdge { Edge1 = @true, Edge2 = @false };
+		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Binarius).Add(@true, @false);
 
 		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode.NodeConfiguration?.NextParamName);
 
@@ -50,7 +50,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	protected INode? BuildBinary(
 		IMetaNodeMapper metaNodeMapper,
 		IMetaNode? mn,
-		bool binaryBranchType
+		bool resolveTo
 	)
 	{
 		if (mn is null) return null;
@@ -75,7 +75,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			n.SetNodeEdge(thenEdge);
 		}
 
-		Func<IArgs, IMsg?> decisionFn = DecisionFactory(mn.NodeConfiguration.ControllerType, binaryBranchType);
+		Func<IArgs, IMsg?> decisionFn = DecisionFnFactory.Create(mn.NodeConfiguration.ControllerType, resolveTo);
 
 		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(n);
 
@@ -88,19 +88,6 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Build();
 
 		return decisionNode;
-	}
-
-	private static Func<IArgs, IMsg?> DecisionFactory(
-		ControllerTypes? controllerType,
-		bool conditionType
-	)
-	{
-		return controllerType switch
-		{
-			ControllerTypes.True => p => p.First()!.SetControlMsg(SMsgFactory.Create<bool>(p.First()!.Data<bool>() == conditionType)),
-			ControllerTypes.IsNotNull => p => p.First()!.SetControlMsg(SMsgFactory.Create<bool>(p.First()!.HasData == conditionType)),
-			_ => throw new NotSupportedException()
-		};
 	}
 
 	public MetaBinaryBranchBuilder(

@@ -13,19 +13,19 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	public virtual IMetaBranchBuilder Validate()
 	{
 		this._MetaNode.ThrowIfNull();
-		
+
 		return this;
 	}
 
 	public INode Build(IMetaNodeMapper metaNodeMapper)
 	{
 		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory);
-		INode[] promisedArgs = this._MetaNode.NodeConfiguration.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		INode[] promisedArgs = this._MetaNode.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode[] ns = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.Build(metaNodeMapper, v)).ToArray();
 
-		INodeEdge e = new MultusNodeEdge { Edges = ns };
+		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Multus).Add(ns);
 
 		INode n = this._NodeBuilderFactory
 			.Create(this._Logger)
@@ -39,9 +39,9 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	protected INode Build(
 		IMetaNodeMapper metaNodeMapper,
 		IMetaNode? mn
-	) 
+	)
 	{
-		if(mn is null) throw new InvalidOperationException();
+		if (mn is null) throw new InvalidOperationException();
 
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory);
 
@@ -52,7 +52,7 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Create(this._Logger)
 			.AddFn(fn)
 			.Build();
-	
+
 		return n;
 	}
 
@@ -63,8 +63,8 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		IWorkflowContext? workflowContext = null
 	) : base(
 			nodeBuilderFactory,
-			fnFactory, 
-			logger, 
+			fnFactory,
+			logger,
 			workflowContext
 	)
 	{

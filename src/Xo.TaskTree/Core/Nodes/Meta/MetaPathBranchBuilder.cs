@@ -31,7 +31,7 @@ public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	protected INode Build(
 		IMetaNodeMapper metaNodeMapper,
 		IMetaNode mn
-	) 
+	)
 	{
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory);
 
@@ -42,8 +42,8 @@ public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn);
 
-		if(mn.NodeEdge is not null) n.AddNodeEdge(new MonariusNodeEdge { Edge = this.Build(metaNodeMapper, mn.NodeEdge.Next!)});
-	
+		if (mn.NodeEdge is not null) n.AddNodeEdge(NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(this.Build(metaNodeMapper, mn.NodeEdge.Next!)));
+
 		return n.Build();
 	}
 
@@ -54,8 +54,8 @@ public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		IWorkflowContext? workflowContext = null
 	) : base(
 			nodeBuilderFactory,
-			fnFactory, 
-			logger, 
+			fnFactory,
+			logger,
 			workflowContext
 	)
 	{
