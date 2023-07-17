@@ -11,13 +11,16 @@ public class WorkflowContextTests
 	[Fact]
 	public void WorkflowContextReturnsResultOfType()
 	{
+		// ARRANGE...
 		var key = GuidGenerator.NewGuidAsString();
 		var value = DateTime.UtcNow;
 		var workflowContext = this._workflowContextFactory.Create();
 		workflowContext.AddData<DateTime>(key, value);
 
+		// ACT...
 		var result = workflowContext.GetMsgData<DateTime>(key);
 
+		// ASSERT...
 		Assert.IsType<DateTime>(result);
 		Assert.Equal(value, result);
 	}
@@ -29,7 +32,7 @@ public class WorkflowContextTests
 		var key = GuidGenerator.NewGuidAsString();
 		var workflowContext = this._workflowContextFactory.Create();
 
-		// ACT... / Assert
+		// ACT / ASSERT...
 		Assert.Throws<InvalidOperationException>(() => workflowContext.GetMsg(key));
 	}
 
@@ -40,7 +43,7 @@ public class WorkflowContextTests
 		var key = GuidGenerator.NewGuidAsString();
 		var workflowContext = this._workflowContextFactory.Create();
 
-		// ACT... / Assert
+		// ACT / ASSERT...
 		Assert.Throws<InvalidOperationException>(() => workflowContext.GetMsgData<object>(key));
 	}
 
@@ -50,7 +53,7 @@ public class WorkflowContextTests
 		// ARRANGE...
 		var workflowContext = this._workflowContextFactory.Create();
 
-		// ACT... / Assert
+		// ACT / ASSERT...
 		Assert.Throws<ArgumentNullException>(() => workflowContext.GetMsgs(null!));
 	}
 
@@ -77,6 +80,7 @@ public class WorkflowContextTests
 	[Fact]
 	public void WorkflowContextReturnsMultipleKeyResultPairs()
 	{
+		// ARRANGE...
 		var key = GuidGenerator.NewGuidAsString();
 		var value = DateTime.UtcNow;
 		var key2 = GuidGenerator.NewGuidAsString();
@@ -86,8 +90,10 @@ public class WorkflowContextTests
 		workflowContext.AddData<DateTime>(key, value);
 		workflowContext.AddData<DateTime>(key2, value2);
 
+		// ACT...
 		var results = workflowContext.GetKeyMsgPairs(key, key2);
 
+		// ASSERT...
 		Assert.Equal(2, results.Count());
 		Assert.Equal(key, results.First().Item1);
 		Assert.Equal(key2, results.ElementAt(1).Item1);
@@ -98,6 +104,7 @@ public class WorkflowContextTests
 	[Fact]
 	public void WorkflowContextReturnsAllKeyResultPairs()
 	{
+		// ARRANGE...
 		var key1 = GuidGenerator.NewGuidAsString();
 		var value1 = DateTime.UtcNow;
 		var key2 = GuidGenerator.NewGuidAsString();
@@ -105,11 +112,13 @@ public class WorkflowContextTests
 		var key3 = GuidGenerator.NewGuidAsString();
 		var value3 = DateTime.UtcNow;
 
+		// ACT...
 		var workflowContext = this._workflowContextFactory.Create();
 		workflowContext.AddData(key1, value1);
 		workflowContext.AddData(key2, value2);
 		workflowContext.AddData(key3, value3);
 
+		// ASSERT...
 		var results = workflowContext.GetAllKeyMsgPairs();
 		Assert.Equal(3, results.Count());
 		var firstPair = results.FirstOrDefault(r => r.Item1.Equals(key1));

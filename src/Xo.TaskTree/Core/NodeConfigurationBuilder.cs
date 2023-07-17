@@ -134,7 +134,7 @@ public class NodeConfigurationBuilder : INodeConfigurationBuilder
 
 		var serviceParamName = TypeInspector.MatchReturnTypeToParamType(argType, this._serviceType);
 
-		arg.NodeConfiguration!.NextParamName = serviceParamName;
+		arg.NodeConfiguration.NextParamName = serviceParamName;
 
 		this._nodeConfiguration.MetaPromisedArgs.Add(arg);
 

@@ -2,44 +2,38 @@ namespace Xo.TaskTree.Abstractions;
 
 public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
-	protected IMetaNode? _MetaNode;
-
-	public IMetaBranchBuilder Init(IMetaNode metaNode)
+	public virtual IMetaBranchBuilder Validate(IMetaNode metaNode)
 	{
-		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
+		metaNode.ThrowIfNull();
+
+		if (metaNode!.NodeType is not MetaNodeTypes.Binary) throw new InvalidOperationException("Invalid meta node type.");
+
+		metaNode.NodeEdge.ThrowIfNull();
+
+		if (metaNode.NodeEdge!.True is null && metaNode.NodeEdge!.False is null) throw new InvalidOperationException();
 
 		return this;
 	}
 
-	public virtual IMetaBranchBuilder Validate()
+	public INode Build(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode metaNode
+	)
 	{
-		this._MetaNode.ThrowIfNull();
+		this.Validate(metaNode);
 
-		if (this._MetaNode!.NodeType is not MetaNodeTypes.Binary) throw new InvalidOperationException("Invalid meta node type.");
-
-		this._MetaNode.NodeEdge.ThrowIfNull();
-
-		if (this._MetaNode.NodeEdge!.True is null && this._MetaNode.NodeEdge!.False is null) throw new InvalidOperationException();
-
-		return this;
-	}
-
-	public INode Build(IMetaNodeMapper metaNodeMapper)
-	{
-		this.Validate();
-
-		INode? @true = this.BuildBinary(metaNodeMapper, this._MetaNode!.NodeEdge!.True, true);
-		INode? @false = this.BuildBinary(metaNodeMapper, this._MetaNode!.NodeEdge!.False, false);
+		INode? @true = this.BuildBinary(metaNodeMapper, metaNode!.NodeEdge!.True, true);
+		INode? @false = this.BuildBinary(metaNodeMapper, metaNode!.NodeEdge!.False, false);
 		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Binarius).Add(@true, @false);
 
-		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode.NodeConfiguration?.NextParamName);
+		IAsyncFn fn = metaNode!.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
 
-		INode[] promisedArgs = _MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
-		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
+		INode[] promisedArgs = metaNode.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		metaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
 			.Create()
-			.Configure(this._MetaNode.NodeConfiguration)
+			.Configure(metaNode.NodeConfiguration)
 			.AddFn(fn)
 			.AddNodeEdge(e)
 			.Build();
@@ -57,7 +51,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration.NextParamName);
 
-		IList<INode> promisedArgs = mn.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToList();
+		IList<INode> promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToList();
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory

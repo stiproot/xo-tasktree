@@ -61,7 +61,7 @@ public class NSubsistuteTests
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
-		// ACT... / Assert
+		// ACT / ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
 		await n2.Run(cancellationToken);

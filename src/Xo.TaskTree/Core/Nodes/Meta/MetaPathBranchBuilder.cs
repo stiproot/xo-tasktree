@@ -2,33 +2,28 @@ namespace Xo.TaskTree.Abstractions;
 
 public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
-	protected IMetaNode? _MetaNode;
-
-	public IMetaBranchBuilder Init(IMetaNode metaNode)
+	public virtual IMetaBranchBuilder Validate(IMetaNode metaNode)
 	{
-		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
-		return this;
-	}
+		metaNode.ThrowIfNull();
 
-	public virtual IMetaBranchBuilder Validate()
-	{
-		this._MetaNode.ThrowIfNull();
+		metaNode.NodeEdge.ThrowIfNull();
 
-		this._MetaNode!.NodeEdge.ThrowIfNull();
-
-		this._MetaNode!.NodeEdge!.Next.ThrowIfNull();
+		metaNode.NodeEdge?.Next.ThrowIfNull();
 
 		return this;
 	}
 
-	public INode Build(IMetaNodeMapper metaNodeMapper)
+	public INode Build(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode metaNode
+	)
 	{
-		this.Validate();
+		this.Validate(metaNode);
 
-		return this.Build(metaNodeMapper, this._MetaNode!);
+		return this.BuildPathStep(metaNodeMapper, metaNode);
 	}
 
-	protected INode Build(
+	protected INode BuildPathStep(
 		IMetaNodeMapper metaNodeMapper,
 		IMetaNode mn
 	)
@@ -42,7 +37,7 @@ public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn);
 
-		if (mn.NodeEdge is not null) n.AddNodeEdge(NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(this.Build(metaNodeMapper, mn.NodeEdge.Next!)));
+		if (mn.NodeEdge is not null) n.AddNodeEdge(NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(this.BuildPathStep(metaNodeMapper, mn.NodeEdge.Next!)));
 
 		return n.Build();
 	}

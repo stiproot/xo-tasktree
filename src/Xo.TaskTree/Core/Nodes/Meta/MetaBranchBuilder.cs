@@ -2,37 +2,34 @@ namespace Xo.TaskTree.Abstractions;
 
 public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
-	protected IMetaNode? _MetaNode;
-
-	public IMetaBranchBuilder Init(IMetaNode metaNode)
+	public virtual IMetaBranchBuilder Validate(IMetaNode metaNode)
 	{
-		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
-		return this;
-	}
-
-	public virtual IMetaBranchBuilder Validate()
-	{
-		this._MetaNode.ThrowIfNull();
+		metaNode.ThrowIfNull();
 
 		return this;
 	}
 
-	public INode Build(IMetaNodeMapper metaNodeMapper)
+	public INode Build(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode metaNode
+	)
 	{
-		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode!.NodeConfiguration?.NextParamName);
+		this.Validate(metaNode);
 
-		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
-		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
+		IAsyncFn fn = metaNode.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
+
+		INode[] promisedArgs = metaNode.NodeConfiguration.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
+		metaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
 			.Create(this._Logger)
-			.Configure(this._MetaNode.NodeConfiguration)
+			.Configure(metaNode.NodeConfiguration)
 			.AddFn(fn)
 			.Build();
 		
-		if(this._MetaNode.NodeEdge is not null)
+		if(metaNode.NodeEdge is not null)
 		{
-			INode thenNode = metaNodeMapper.Map(this._MetaNode.NodeEdge.Next!);
+			INode thenNode = metaNodeMapper.Map(metaNode.NodeEdge.Next!);
 
 			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
 
@@ -48,10 +45,10 @@ public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		ILogger? logger = null,
 		IWorkflowContext? workflowContext = null
 	) : base(
-			nodeBuilderFactory,
-			fnFactory, 
-			logger, 
-			workflowContext
+		nodeBuilderFactory,
+		fnFactory, 
+		logger, 
+		workflowContext
 	)
 	{
 	}

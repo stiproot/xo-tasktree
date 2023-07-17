@@ -2,28 +2,23 @@ namespace Xo.TaskTree.Abstractions;
 
 public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
-	protected IMetaNode? _MetaNode;
-
-	public IMetaBranchBuilder Init(IMetaNode metaNode)
+	public virtual IMetaBranchBuilder Validate(IMetaNode metaNode)
 	{
-		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
-		return this;
-	}
-
-	public virtual IMetaBranchBuilder Validate()
-	{
-		this._MetaNode.ThrowIfNull();
+		metaNode.ThrowIfNull();
 
 		return this;
 	}
 
-	public INode Build(IMetaNodeMapper metaNodeMapper)
+	public INode Build(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode metaNode
+	)
 	{
-		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory);
-		INode[] promisedArgs = this._MetaNode.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
-		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
+		IAsyncFn fn = metaNode!.ServiceType.ToFn(this._FnFactory);
+		INode[] promisedArgs = metaNode.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		metaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
-		INode[] ns = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.Build(metaNodeMapper, v)).ToArray();
+		INode[] ns = metaNode!.NodeEdge!.Nexts!.Select(v => this.BuildNext(metaNodeMapper, v)).ToArray();
 
 		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Multus).Add(ns);
 
@@ -36,7 +31,7 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		return n;
 	}
 
-	protected INode Build(
+	protected INode BuildNext(
 		IMetaNodeMapper metaNodeMapper,
 		IMetaNode? mn
 	)

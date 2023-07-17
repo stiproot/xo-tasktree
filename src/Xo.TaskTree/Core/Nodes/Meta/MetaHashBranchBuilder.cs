@@ -2,35 +2,30 @@ namespace Xo.TaskTree.Abstractions;
 
 public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 {
-	protected IMetaNode? _MetaNode;
-
-	public IMetaBranchBuilder Init(IMetaNode metaNode)
+	public virtual IMetaBranchBuilder Validate(IMetaNode metaNode)
 	{
-		this._MetaNode = metaNode ?? throw new ArgumentNullException(nameof(metaNode));
-		return this;
-	}
-
-	public virtual IMetaBranchBuilder Validate()
-	{
-		this._MetaNode.ThrowIfNull();
+		metaNode.ThrowIfNull();
 
 		return this;
 	}
 
-	public INode Build(IMetaNodeMapper metaNodeMapper)
+	public INode Build(
+		IMetaNodeMapper metaNodeMapper,
+		IMetaNode metaNode
+	)
 	{
-		IAsyncFn fn = this._MetaNode!.ServiceType.ToFn(this._FnFactory, this._MetaNode.NodeConfiguration?.NextParamName);
+		IAsyncFn fn = metaNode!.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
 
-		INode[] promisedArgs = this._MetaNode.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
-		this._MetaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
+		INode[] promisedArgs = metaNode.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		metaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
-		INode[] decisions = this._MetaNode!.NodeEdge!.Nexts!.Select(v => this.BuildDecision(metaNodeMapper, v)).ToArray();
+		INode[] decisions = metaNode!.NodeEdge!.Nexts!.Select(v => this.BuildDecision(metaNodeMapper, v)).ToArray();
 
 		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Multus).Add(decisions);
 
 		INode n = this._NodeBuilderFactory
 			.Create(this._Logger)
-			.Configure(this._MetaNode.NodeConfiguration)
+			.Configure(metaNode.NodeConfiguration)
 			.AddFn(fn)
 			.AddNodeEdge(e)
 			.Build();
@@ -45,8 +40,8 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	{
 		if (mn is null) throw new InvalidOperationException();
 
-		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration?.NextParamName);
-		INode[] promisedArgs = mn.NodeConfiguration!.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
+		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration.NextParamName);
+		INode[] promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
 		INode n = this._NodeBuilderFactory
@@ -64,7 +59,7 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			n.SetNodeEdge(thenEdge);
 		}
 
-		Func<IArgs, IMsg?> decisionFn = DecisionFnFactory.Create(ControllerTypes.Equals, true, mn.NodeConfiguration.Key);
+		Func<IArgs, IMsg?> decisionFn = DecisionFnFactory.Create(mn.NodeConfiguration.ControllerType, true, mn.NodeConfiguration.Key);
 
 		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(n);
 
@@ -85,10 +80,10 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		ILogger? logger = null,
 		IWorkflowContext? workflowContext = null
 	) : base(
-			nodeBuilderFactory,
-			fnFactory,
-			logger,
-			workflowContext
+		nodeBuilderFactory,
+		fnFactory,
+		logger,
+		workflowContext
 	)
 	{
 	}
