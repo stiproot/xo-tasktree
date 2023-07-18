@@ -3,7 +3,7 @@ namespace Xo.TaskTree.Abstractions;
 /// <summary>
 ///   A node evaluator.
 /// </summary>
-public interface INodevaluator
+public interface INodeEvaluator
 {
 	/// <summary>
 	///   Core run operation. 

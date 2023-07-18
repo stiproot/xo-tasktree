@@ -13,7 +13,7 @@ public abstract class BaseNodeBuilder
 	protected Action<Exception>? _ExceptionHandler;
 	protected IController? _Controller;
 	protected INodeEdgeResolver _Resolver = new NodeEdgeResolver();
-	protected INodevaluator _Nodevaluator = new ParallelNodeEvaluator();
+	protected INodeEvaluator _Nodevaluator = new ParallelNodeEvaluator();
 
 	public BaseNodeBuilder(
 		IFnFactory fnFactory,

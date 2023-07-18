@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Abstractions;
 
 /// <inheritdoc cref="INode"/>
-public class Node : INode
+public class XNode : IXNode
 {
 	protected ILogger? _Logger;
 	protected IAsyncFn? _AsyncFn;
@@ -14,76 +14,17 @@ public class Node : INode
 	protected INodeEdgeResolver _Resolver = new NodeEdgeResolver();
 	protected INodeEvaluator _Nodevaluator = new ParallelNodeEvaluator();
 
-	/// <inheritdoc />
-	public INodeConfiguration NodeConfiguration => this._NodeConfiguration!;
+	public INodeConfiguration NodeConfiguration { get; init; }
+	public INodeEdge? NodeEdge { get; init; }
+	public INodeEdgeResolver NodeEdgeResolver { get; init; }
+	public IController? Controller { get; init; }
+	public INodeEvaluator NodeEvaluator { get; init; }
+	public IAsyncFn? AsyncFn { get; set; }
+	public ISyncFn SyncFn { get; init; }
+	public Func<Exception, Task>? AsyncExceptionHandler { get; init; }
+	public Func<Exception>? ExceptionHandler { get; init; }
 
-	/// <inheritdoc />
 	protected bool _IsSync => this._SyncFn != null;
-
-	/// <inheritdoc />
-	public INode SetNodeConfiguration(INodeConfiguration nodeConfiguration)
-	{
-		this._NodeConfiguration = nodeConfiguration ?? throw new ArgumentNullException(nameof(nodeConfiguration));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetNodeEdge(INodeEdge? nodeEdge)
-	{
-		this._NodeEdge = nodeEdge;
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetResolver(INodeEdgeResolver resolver)
-	{
-		this._Resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
-		return this;
-	}
-
-	public INode SetController(IController? controller)
-	{
-		this._Controller = controller;
-
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetNodevaluator(INodeEvaluator nodeEvaluator)
-	{
-		this._Nodevaluator = nodeEvaluator ?? throw new ArgumentNullException(nameof(nodeEvaluator));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetFn(IAsyncFn fn)
-	{
-		this._AsyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetFn(ISyncFn fn)
-	{
-		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetExceptionHandler(Func<Exception, Task> handler)
-	{
-		this._ExceptionHandlerAsync = handler;
-
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INode SetExceptionHandler(Action<Exception> handler)
-	{
-		this._ExceptionHandler = handler;
-
-		return this;
-	}
 
 	/// <inheritdoc />
 	public virtual async Task<IMsg[]> Run(CancellationToken cancellationToken)
@@ -207,10 +148,11 @@ public class Node : INode
 		}
 	}
 
+
 	/// <summary>
 	///   Initializes a new instance of <see cref="Node"/>. 
 	/// </summary>
-	public Node(
+	public XNode(
 		ILogger? logger = null,
 		INodeConfiguration? nodeConfiguration = null
 	)

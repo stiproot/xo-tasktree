@@ -1,7 +1,7 @@
 namespace Xo.TaskTree.Core;
 
-/// <inheritdoc cref="INodevaluator"/>
-public class ParallelNodeEvaluator : INodevaluator
+/// <inheritdoc cref="INodeEvaluator"/>
+public class ParallelNodeEvaluator : INodeEvaluator
 {
 	/// <inheritdoc />
 	public async Task<IList<IMsg>> RunAsync(
