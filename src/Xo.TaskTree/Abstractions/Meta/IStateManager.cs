@@ -1,13 +1,13 @@
 namespace Xo.TaskTree.Abstractions;
 
-public interface IStateManager : 
-    IRootBranch, 
-    IIfBranch, 
-    IHashBranch,
-    IBranchBranch,
-    IPathBranch
+public interface IStateManager :
+	IRootBranch,
+	IIfBranch,
+	IHashBranch,
+	IBranchBranch,
+	IPathBranch
 {
-    IMetaNode? RootNode { get; set; }
-    IMetaNode? StateNode { get; set; }
-    INode Build();
+	IMetaNode? RootNode { get; set; }
+	IMetaNode? StateNode { get; set; }
+	INode Build();
 }
