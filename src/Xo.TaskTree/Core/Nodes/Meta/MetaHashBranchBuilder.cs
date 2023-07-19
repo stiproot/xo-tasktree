@@ -44,11 +44,10 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INode[] promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
-		INode n = this._NodeBuilderFactory
+		INodeBuilder nb = this._NodeBuilderFactory
 			.Create(this._Logger)
 			.Configure(mn.NodeConfiguration)
-			.AddFn(fn)
-			.Build();
+			.AddFn(fn);
 
 		if (mn.NodeEdge is not null)
 		{
@@ -56,12 +55,12 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
 
-			n.SetNodeEdge(thenEdge);
+			nb.AddNodeEdge(thenEdge);
 		}
 
 		Func<IArgs, IMsg?> decisionFn = DecisionFnFactory.Create(mn.NodeConfiguration.ControllerType, true, mn.NodeConfiguration.Key);
 
-		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(n);
+		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(nb.Build());
 
 		var decisionNode = this._NodeBuilderFactory
 			.Create()

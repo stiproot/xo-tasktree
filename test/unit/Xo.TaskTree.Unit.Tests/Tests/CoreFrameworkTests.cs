@@ -68,7 +68,7 @@ public class CoreFrameworkTests
 										.Build();
 
 		// ACT...
-		await n3.Run(cancellationToken);
+		await n3.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -105,7 +105,7 @@ public class CoreFrameworkTests
 										.Build();
 
 		// ACT...
-		await n3.Run(cancellationToken);
+		await n3.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -132,7 +132,7 @@ public class CoreFrameworkTests
 										.Build();
 
 		// ACT...
-		await n4.Run(cancellationToken);
+		await n4.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n3);
@@ -166,7 +166,7 @@ public class CoreFrameworkTests
 										.Build();
 
 		// ACT...
-		await n3.Run(cancellationToken);
+		await n3.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -201,7 +201,7 @@ public class CoreFrameworkTests
 										.Build();
 
 		// ACT...
-		await n3.Run(cancellationToken);
+		await n3.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -250,7 +250,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		await n3.Run(cancellationToken);
+		await n3.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -276,7 +276,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		await n2.Run(cancellationToken);
+		await n2.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -313,7 +313,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		await n2.Run(cancellationToken);
+		await n2.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -338,7 +338,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		await n2.Run(cancellationToken);
+		await n2.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -374,7 +374,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		await n2.Run(cancellationToken);
+		await n2.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -402,7 +402,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		await n2.Run(cancellationToken);
+		await n2.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -437,7 +437,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		await n2.Run(cancellationToken);
+		await n2.Resolve(cancellationToken);
 
 		// ASSERT...
 		Assert.NotNull(n1);
@@ -478,7 +478,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		var msgs = await n3.Run(cancellationToken);
+		var msgs = await n3.Resolve(cancellationToken);
 		var msg = msgs.First();
 
 		// ASSERT...
@@ -520,7 +520,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		var msgs = await n3.Run(cancellationToken);
+		var msgs = await n3.Resolve(cancellationToken);
 		var msg = msgs.First();
 
 		// ASSERT...
@@ -567,7 +567,7 @@ public class CoreFrameworkTests
 			.Build();
 
 		// ACT...
-		var msgs = await n2.Run(cancellationToken);
+		var msgs = await n2.Resolve(cancellationToken);
 		var msg = msgs.First();
 		var data = (msg as BaseMsg<int>)!.GetData();
 
@@ -601,7 +601,7 @@ public class CoreFrameworkTests
 				//.Build();
 
 		//// ACT...
-		//var msgs = await root.Run(cancellationToken);
+		//var msgs = await root.Resolve(cancellationToken);
 		//var msg = msgs.First();
 		//var data = (msg as BaseMsg<int>)!.GetData();
 

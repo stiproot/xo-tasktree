@@ -29,7 +29,7 @@ public class NodeEdgeResolver : INodeEdgeResolver
 
 		if(edge.NodeConfiguration.RequiresResult) edge.AddArg(msgs);
 
-		return await edge.Run(cancellationToken);
+		return await edge.Resolve(cancellationToken);
 	}
 
 	private static async Task<IMsg[]> ResolveBinariusNodeEdge(
@@ -49,8 +49,8 @@ public class NodeEdgeResolver : INodeEdgeResolver
 		if(edge1 is not null && edge2 is not null)
 		{
 			var c = Task.WhenAll(
-				edge1!.Run(cancellationToken),
-				edge2!.Run(cancellationToken)
+				edge1!.Resolve(cancellationToken),
+				edge2!.Resolve(cancellationToken)
 			);
 
 			var r = await c;
@@ -59,9 +59,9 @@ public class NodeEdgeResolver : INodeEdgeResolver
 			return r[0].Concat(r[1]).ToArray();
 		}
 
-		if(edge1 is not null) return await edge1!.Run(cancellationToken);
+		if(edge1 is not null) return await edge1!.Resolve(cancellationToken);
 
-		return await edge2!.Run(cancellationToken);
+		return await edge2!.Resolve(cancellationToken);
 	}
 
 	private static async Task<IMsg[]> ResolveMultusNodeEdge(
@@ -79,7 +79,7 @@ public class NodeEdgeResolver : INodeEdgeResolver
 			if(e is not null && e.NodeConfiguration.RequiresResult) e.AddArg(msgs);
 		}
 
-		var c = Task.WhenAll(edges.Select(e => e!.AddArg(msgs).Run(cancellationToken)));
+		var c = Task.WhenAll(edges.Select(e => e!.AddArg(msgs).Resolve(cancellationToken)));
 
 		var r = await c;
 

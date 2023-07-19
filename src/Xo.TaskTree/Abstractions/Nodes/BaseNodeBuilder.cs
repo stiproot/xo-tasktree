@@ -3,7 +3,6 @@ namespace Xo.TaskTree.Abstractions;
 public abstract class BaseNodeBuilder
 {
 	protected readonly IFnFactory _FnFactory;
-	protected readonly INodeFactory _NodeFactory;
 	protected ILogger? _Logger;
 	protected IAsyncFn? _AsyncFn;
 	protected ISyncFn? _SyncFn;
@@ -12,17 +11,16 @@ public abstract class BaseNodeBuilder
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;
 	protected Action<Exception>? _ExceptionHandler;
 	protected IController? _Controller;
-	protected INodeEdgeResolver _Resolver = new NodeEdgeResolver();
-	protected INodeEvaluator _Nodevaluator = new ParallelNodeEvaluator();
+	protected INodeResolver _Resolver;
 
 	public BaseNodeBuilder(
 		IFnFactory fnFactory,
-		INodeFactory nodeFactory,
+		INodeResolver nodeResolver,
 		ILogger? logger = null
 	)
 	{
 		this._FnFactory = fnFactory ?? throw new ArgumentNullException(nameof(fnFactory));
-		this._NodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
+		this._Resolver = nodeResolver ?? throw new ArgumentNullException(nameof(nodeResolver));
 		this._Logger = logger;
 	}
 }

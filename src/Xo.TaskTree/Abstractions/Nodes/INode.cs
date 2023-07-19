@@ -2,16 +2,15 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface INode
 {
-	INodeConfiguration NodeConfiguration { get; }
-	INode SetNodeConfiguration(INodeConfiguration nodeConfiguration);
-	INode SetNodeEdge(INodeEdge? nodeEdge);
-	INode SetResolver(INodeEdgeResolver resolver);
-	INode SetController(IController? controller);
-	INode SetNodevaluator(INodeEvaluator nodeEvaluator);
-	INode SetFn(IAsyncFn fn);
-	INode SetFn(ISyncFn fn);
-	INode SetExceptionHandler(Func<Exception, Task> handler);
-	INode SetExceptionHandler(Action<Exception> handler);
-	Task<IMsg[]> Run(CancellationToken cancellationToken);
+	INodeConfiguration NodeConfiguration { get; init; }
+	INodeResolver Resolver { get; init; }
+	INodeEdge? NodeEdge { get; init; }
+	IController? Controller { get; init; }
+	IAsyncFn? AsyncFn { get; set; }
+	ISyncFn? SyncFn { get; init; }
+	bool IsSync { get; }
+	Func<Exception, Task>? AsyncExceptionHandler { get; init; }
+	Action<Exception>? ExceptionHandler { get; init; }
+	Task<IMsg[]> Resolve(CancellationToken cancellationToken);
 	void Validate();
 }

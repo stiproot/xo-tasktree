@@ -3,26 +3,26 @@ namespace Xo.TaskTree.Factories;
 /// <inheritdoc cref="INodeBuilderFactory"/>
 public class NodeBuilderFactory : INodeBuilderFactory
 {
-	private readonly INodeFactory _nodeFactory;
 	private readonly IFnFactory _fnFactory;
+	private readonly INodeResolver _nodeResolver;
 
 	public NodeBuilderFactory(
-			INodeFactory nodeFactory,
-			IFnFactory fnFactory
+		IFnFactory fnFactory,
+		INodeResolver nodeResolver
 	)
 	{
-		this._nodeFactory = nodeFactory ?? throw new ArgumentNullException(nameof(nodeFactory));
 		this._fnFactory = fnFactory ?? throw new ArgumentNullException(nameof(fnFactory));
+		this._nodeResolver = nodeResolver ?? throw new ArgumentNullException(nameof(nodeResolver));
 	}
 
 	/// <inheritdoc />
 	public INodeBuilder Create(ILogger? logger = null)
-		=> this.Create(this._fnFactory, this._nodeFactory, logger);
+		=> this.Create(this._fnFactory, this._nodeResolver, logger);
 
 	private INodeBuilder Create(
-			IFnFactory fnFactory,
-			INodeFactory nodeFactory,
-			ILogger? logger = null
+		IFnFactory fnFactory,
+		INodeResolver nodeResolver,
+		ILogger? logger = null
 	)
-		=> new NodeBuilder(fnFactory, nodeFactory, logger);
+		=> new NodeBuilder(fnFactory, nodeResolver, logger);
 }

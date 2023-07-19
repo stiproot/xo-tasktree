@@ -1,10 +1,10 @@
 namespace Xo.TaskTree.Core;
 
-/// <inheritdoc cref="INodeEvaluator"/>
-public class LoopNodeEvaluator : INodeEvaluator
+/// <inheritdoc cref="IArgResolver"/>
+public class LoopArgResolver : IArgResolver
 {
 	/// <inheritdoc />
-	public async Task<IList<IMsg>> RunAsync(
+	public async Task<IList<IMsg>> ResolveAsync(
 		IList<INode> nodes,
 		CancellationToken cancellationToken
 	)
@@ -13,7 +13,7 @@ public class LoopNodeEvaluator : INodeEvaluator
 
 		foreach (var node in nodes)
 		{
-			IMsg?[] result = await node.Run(cancellationToken);
+			IMsg?[] result = await node.Resolve(cancellationToken);
 
 			if (result is null) continue;
 

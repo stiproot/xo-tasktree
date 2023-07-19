@@ -18,9 +18,11 @@ public static class ServiceCollectionExtensions
 		@this.TryAddSingleton<IMetaNodeMapper, MetaNodeMapper>();
 		@this.TryAddSingleton<INodeBuilderFactory, NodeBuilderFactory>();
 		@this.TryAddSingleton<IStateManager, StateManager>();
-		@this.TryAddSingleton<INodeFactory, NodeFactory>();
 		@this.TryAddSingleton<IMsgFactory, MsgFactory>();
 		@this.TryAddSingleton<IWorkflowContextFactory, WorkflowContextFactory>();
+		@this.TryAddSingleton<INodeResolver, NodeResolver>();
+		@this.TryAddSingleton<INodeEdgeResolver, NodeEdgeResolver>();
+		@this.TryAddSingleton<IArgResolver, ParallelArgResolver>();
 
 		return @this;
 	}

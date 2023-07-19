@@ -85,13 +85,6 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 	}
 
 	/// <inheritdoc />
-	public INodeBuilder AddResolver(INodeEdgeResolver resolver)
-	{
-		this._Resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
-		return this;
-	}
-
-	/// <inheritdoc />
 	public INodeBuilder AddController(IController controller)
 	{
 		this._Controller = controller ?? throw new ArgumentNullException(nameof(controller));
@@ -115,17 +108,18 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 	// <inheritdoc />
 	public virtual INode Build()
 	{
-		INode n = this._NodeFactory.Create(this._Logger)
-			.SetNodeConfiguration(this._NodeConfiguration ?? throw new InvalidOperationException("Node configuration is required."))
-			.SetController(this._Controller)
-			.SetResolver(this._Resolver)
-			.SetNodeEdge(this._NodeEdge)
-			.SetNodevaluator(this._Nodevaluator);
-
-		if (this._AsyncFn is not null) n.SetFn(this._AsyncFn);
-		if (this._SyncFn is not null) n.SetFn(this._SyncFn);
-		if (this._ExceptionHandlerAsync is not null) n.SetExceptionHandler(this._ExceptionHandlerAsync);
-		if (this._ExceptionHandler is not null) n.SetExceptionHandler(this._ExceptionHandler);
+		INode n = new Node
+		{
+			// todo: !
+			NodeConfiguration = this._NodeConfiguration!,
+			Resolver = this._Resolver,
+			Controller = this._Controller,
+			NodeEdge = this._NodeEdge,
+			AsyncFn = this._AsyncFn,
+			SyncFn = this._SyncFn,
+			AsyncExceptionHandler = this._ExceptionHandlerAsync,
+			ExceptionHandler = this._ExceptionHandler
+		};
 
 		return n;
 	}
@@ -135,11 +129,11 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 	/// </summary>
 	public NodeBuilder(
 		IFnFactory fnFactory,
-		INodeFactory nodeFactory,
+		INodeResolver nodeResolver,
 		ILogger? logger = null
 	) : base(
 			fnFactory,
-			nodeFactory,
+			nodeResolver,
 			logger
 	)
 	{

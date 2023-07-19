@@ -1,15 +1,15 @@
 namespace Xo.TaskTree.Core;
 
-/// <inheritdoc cref="INodeEvaluator"/>
-public class ParallelNodeEvaluator : INodeEvaluator
+/// <inheritdoc cref="IArgResolver"/>
+public class ParallelArgResolver : IArgResolver
 {
 	/// <inheritdoc />
-	public async Task<IList<IMsg>> RunAsync(
+	public async Task<IList<IMsg>> ResolveAsync(
 		IList<INode> nodes,
 		CancellationToken cancellationToken
 	)
 	{
-		IEnumerable<Task<IMsg[]>> promisedArgs = nodes.Select(p => p.Run(cancellationToken));
+		IEnumerable<Task<IMsg[]>> promisedArgs = nodes.Select(p => p.Resolve(cancellationToken));
 
 		var continuation = await Task.WhenAll(promisedArgs);
 

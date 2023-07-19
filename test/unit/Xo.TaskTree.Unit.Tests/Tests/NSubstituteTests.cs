@@ -64,6 +64,6 @@ public class NSubsistuteTests
 		// ACT / ASSERT...
 		Assert.NotNull(n1);
 		Assert.NotNull(n2);
-		await n2.Run(cancellationToken);
+		await n2.Resolve(cancellationToken);
 	}
 }

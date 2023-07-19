@@ -22,7 +22,7 @@ public class StateManagerTests
 		
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<bool>(); 
 
@@ -41,7 +41,7 @@ public class StateManagerTests
 		
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -60,7 +60,7 @@ public class StateManagerTests
 		
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -79,7 +79,7 @@ public class StateManagerTests
 		
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -101,7 +101,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<string>(); 
 
@@ -120,7 +120,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -141,7 +141,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -162,7 +162,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -184,7 +184,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -207,7 +207,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -228,7 +228,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 
@@ -250,7 +250,7 @@ public class StateManagerTests
 
 		var n = mn.Build();
 
-		var msgs = await n.Run(cancellationToken);
+		var msgs = await n.Resolve(cancellationToken);
 		var msg = msgs.First(); 
 		var d = msg.Data<int>(); 
 

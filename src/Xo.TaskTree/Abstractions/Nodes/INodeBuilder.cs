@@ -15,7 +15,6 @@ public interface INodeBuilder
 	INodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn);
 	INodeBuilder SetExceptionHandler(Func<Exception, Task> handler);
 	INodeBuilder SetExceptionHandler(Action<Exception> handler);
-	INodeBuilder AddResolver(INodeEdgeResolver resolver);
 	INodeBuilder AddController(IController controller);
 	INode Build();
 }

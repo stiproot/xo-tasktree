@@ -21,11 +21,10 @@ public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INode[] promisedArgs = metaNode.NodeConfiguration.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 		metaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
 
-		INode n = this._NodeBuilderFactory
+		INodeBuilder nb = this._NodeBuilderFactory
 			.Create(this._Logger)
 			.Configure(metaNode.NodeConfiguration)
-			.AddFn(fn)
-			.Build();
+			.AddFn(fn);
 		
 		if(metaNode.NodeEdge is not null)
 		{
@@ -33,10 +32,10 @@ public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
 
-			n.SetNodeEdge(thenEdge);
+			nb.AddNodeEdge(thenEdge);
 		}
 
-		return n;
+		return nb.Build();
 	}
 
 	public MetaBranchBuilder(
