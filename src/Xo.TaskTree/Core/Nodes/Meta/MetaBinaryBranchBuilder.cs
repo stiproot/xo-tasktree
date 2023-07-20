@@ -26,7 +26,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		INode? @false = this.BuildBinary(metaNodeMapper, metaNode!.NodeEdge!.False, false);
 		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Binarius).Add(@true, @false);
 
-		IAsyncFn fn = metaNode!.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
+		IFn fn = metaNode!.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
 
 		INode[] promisedArgs = metaNode.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		metaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);
@@ -49,7 +49,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	{
 		if (mn is null) return null;
 
-		IAsyncFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration.NextParamName);
+		IFn fn = mn.ServiceType.ToFn(this._FnFactory, mn.NodeConfiguration.NextParamName);
 
 		IList<INode> promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToList();
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);

@@ -16,7 +16,7 @@ public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	{
 		this.Validate(metaNode);
 
-		IAsyncFn fn = metaNode.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
+		IFn fn = metaNode.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
 
 		INode[] promisedArgs = metaNode.NodeConfiguration.MetaPromisedArgs.Select(p =>  metaNodeMapper.Map(p)).ToArray();
 		metaNode.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);

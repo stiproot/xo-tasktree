@@ -578,7 +578,7 @@ public class CoreFrameworkTests
 	}
 
 	//[Fact]
-	//public async Task GIVEN_AMultiNodeWorkflow_WHEN_SyncFnAdapterUsingWorkflowContext_THEN_BuildsOffContext()
+	//public async Task GIVEN_AMultiNodeWorkflow_WHEN_SyncFnAdaptorUsingWorkflowContext_THEN_BuildsOffContext()
 	//{
 		//// ARRANGE...
 		//var cancellationToken = this.CancellationTokenFactory();

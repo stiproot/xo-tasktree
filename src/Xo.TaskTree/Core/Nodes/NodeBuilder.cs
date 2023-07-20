@@ -43,44 +43,36 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 	{
 		get
 		{
-			if (this._AsyncFn is not null) return (this._AsyncFn as IFn)!.ServiceType!;
-			if (this._SyncFn is not null) return (this._SyncFn as IFn)!.ServiceType!;
+			if (this._Fn is not null) return (this._Fn as IFn)!.ServiceType!;
 			return null;
 		}
 	}
 
 	/// <inheritdoc />
-	public INodeBuilder AddFn(IAsyncFn fn)
+	public INodeBuilder AddFn(IFn fn)
 	{
-		this._AsyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
-		return this;
-	}
-
-	/// <inheritdoc />
-	public INodeBuilder AddFn(ISyncFn fn)
-	{
-		this._SyncFn = fn ?? throw new ArgumentNullException(nameof(fn));
+		this._Fn = fn ?? throw new ArgumentNullException(nameof(fn));
 		return this;
 	}
 
 	/// <inheritdoc />
 	public INodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn)
 	{
-		this._AsyncFn = new AsyncFnAdaptor(fn);
+		this._Fn = new FnAdaptor(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
 	public INodeBuilder AddFn(Func<IArgs, IMsg?> fn)
 	{
-		this._SyncFn = new SyncFnAdapter(fn);
+		this._Fn = new FnAdaptor(fn);
 		return this;
 	}
 
 	/// <inheritdoc />
 	public INodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn)
 	{
-		this._SyncFn = new SyncFnAdapter(fn);
+		this._Fn = new FnAdaptor(fn);
 		return this;
 	}
 
@@ -115,8 +107,8 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 			Resolver = this._Resolver,
 			Controller = this._Controller,
 			NodeEdge = this._NodeEdge,
-			AsyncFn = this._AsyncFn,
-			SyncFn = this._SyncFn,
+			Fn = this._Fn,
+			Fn = this._Fn,
 			AsyncExceptionHandler = this._ExceptionHandlerAsync,
 			ExceptionHandler = this._ExceptionHandler
 		};

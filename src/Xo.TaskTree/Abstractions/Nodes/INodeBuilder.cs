@@ -8,8 +8,7 @@ public interface INodeBuilder
 	INodeBuilder Configure(Action<INodeConfigurationBuilder> configure);
 	INodeBuilder Configure(INodeConfiguration nodeConfiguration);
 	INodeBuilder AddNodeEdge(INodeEdge nodeEdge);
-	INodeBuilder AddFn(IAsyncFn fn);
-	INodeBuilder AddFn(ISyncFn fn);
+	INodeBuilder AddFn(IFn fn);
 	INodeBuilder AddFn(Func<IArgs, Task<IMsg?>> fn);
 	INodeBuilder AddFn(Func<IArgs, IMsg?> fn);
 	INodeBuilder AddFn(Func<IWorkflowContext, IMsg?> fn);

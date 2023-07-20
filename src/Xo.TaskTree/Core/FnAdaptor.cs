@@ -18,19 +18,17 @@ public sealed class FnAdaptor : BaseFn
 	public FnAdaptor(Func<IWorkflowContext, IMsg?> fn)
 		=> this._contextFn = fn ?? throw new ArgumentNullException(nameof(fn));
 
-	public Task<IMsg?> InvokeAsync(
+	public override Task<IMsg?> InvokeAsync(
 		IArgs args,
 		IWorkflowContext? workflowContext = null
 	)
-		=> this._asyncFn(args);
+		=> this._asyncFn!(args);
 
 	public override IMsg? Invoke(
 		IArgs args,
 		IWorkflowContext? workflowContext = null
 	)
-		=> this._func is not null
-		? this._func(args)
+		=> this._fn is not null
+		? this._fn(args)
 		: this._contextFn!(workflowContext!);
-
-
 }

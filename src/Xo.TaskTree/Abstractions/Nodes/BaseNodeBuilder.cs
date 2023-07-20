@@ -4,8 +4,7 @@ public abstract class BaseNodeBuilder
 {
 	protected readonly IFnFactory _FnFactory;
 	protected ILogger? _Logger;
-	protected IAsyncFn? _AsyncFn;
-	protected ISyncFn? _SyncFn;
+	protected IFn? _Fn;
 	protected INodeEdge? _NodeEdge;
 	protected INodeConfiguration? _NodeConfiguration;
 	protected Func<Exception, Task>? _ExceptionHandlerAsync;

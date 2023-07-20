@@ -11,6 +11,13 @@ public abstract class BaseFn : IFn
 	public Type? ServiceType => this._ServiceType;
 
 	/// <inheritdoc />
+	public IFn SetServiceType(Type serviceType)
+	{
+		this._ServiceType = serviceType;
+		return this;
+	}
+
+	/// <inheritdoc />
 	public virtual IFn SetNextParamName(string? nextParamName = null)
 	{
 		this._NextParamName = nextParamName;
@@ -34,20 +41,20 @@ public abstract class BaseFn : IFn
 	public virtual T Cast<T>(IMsg engineMessage) => (T)engineMessage;
 
 	/// <inheritdoc />
-	public async Task<IMsg?> InvokeAsync(
+	public virtual async Task<IMsg?> InvokeAsync(
 		IArgs args,
 		IWorkflowContext? workflowContext = null
 	)
 	{
-
+		throw new NotImplementedException();
 	}
 
 	/// <inheritdoc />
-	public IMsg? Invoke(
+	public virtual IMsg? Invoke(
 		IArgs args,
 		IWorkflowContext? workflowContext = null
 	)
 	{
-
+		throw new NotImplementedException();
 	}
 }

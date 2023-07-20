@@ -43,7 +43,7 @@ public class FnFactoryBenchmarks
   [Benchmark]
   public async Task Resolve()
   {
-    var builder = this._fnFactory.Build(_serviceType, _methodName, _nextParamName) as IAsyncFn;
+    var builder = this._fnFactory.Build(_serviceType, _methodName, _nextParamName) as IFn;
     await builder.Invoke(_params)();
   }
 }

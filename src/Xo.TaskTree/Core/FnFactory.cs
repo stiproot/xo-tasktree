@@ -54,10 +54,10 @@ public sealed class FnFactory : IFnFactory
 				return result is null ? null : CreateMsg(result, nextParamName);
 			};
 
-		return new AsyncFnAdaptor(fn!).SetServiceType(serviceType);
+		return new FnAdaptor(fn!).SetServiceType(serviceType);
 	}
 
-	public IAsyncFn BuildAsyncFn<T>(string? methodName = null)
+	public IFn BuildAsyncFn<T>(string? methodName = null)
 	{
 		var serviceType = typeof(T);
 
@@ -85,7 +85,7 @@ public sealed class FnFactory : IFnFactory
 			};
 
 		// todo: clean this up...
-		return new AsyncFnAdaptor(fn!).SetServiceType(serviceType: typeof(T)).AsAsync();
+		return new FnAdaptor(fn!).SetServiceType(serviceType: typeof(T));
 	}
 
 	private object? GetService(Type serviceType)

@@ -17,12 +17,12 @@ internal static class TypeExtensions
 		return metaNode;
 	}
 
-	public static IAsyncFn ToFn(this Type @this,
+	public static IFn ToFn(this Type @this,
 		IFnFactory fnFactory
 	)
 		=> fnFactory.Build(@this).SetServiceType(@this).AsAsync();
 
-	public static IAsyncFn ToFn(this Type @this,
+	public static IFn ToFn(this Type @this,
 		IFnFactory fnFactory,
 		string? nextParamName
 	)
