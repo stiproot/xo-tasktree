@@ -5,25 +5,10 @@ namespace Xo.TaskTree.Abstractions;
 public abstract class BaseFn : IFn
 {
 	protected Type? _ServiceType;
+	protected string? _NextParamName;
 
 	/// <inheritdoc />
 	public Type? ServiceType => this._ServiceType;
-
-	/// <inheritdoc />
-	public virtual IFn SetServiceType(Type serviceType)
-	{
-		this._ServiceType = serviceType ?? throw new ArgumentNullException(nameof(serviceType));
-		return this;
-	}
-
-	/// <summary>
-	///   Value that will become this strategies output <see cref="IMsg"/> `ParamName`.
-	///   ie. the next fn parameter name that this output needs to be used for.
-	/// </summary>
-	/// <remarks>
-	///   Required if the result of this fn is to be "fed" into a fn one step up the call chain.
-	/// </remarks>
-	protected string? _NextParamName;
 
 	/// <inheritdoc />
 	public virtual IFn SetNextParamName(string? nextParamName = null)
@@ -49,14 +34,20 @@ public abstract class BaseFn : IFn
 	public virtual T Cast<T>(IMsg engineMessage) => (T)engineMessage;
 
 	/// <inheritdoc />
-	protected virtual T As<T>()
-		=> (T)(IFn)this;
+	public async Task<IMsg?> InvokeAsync(
+		IArgs args,
+		IWorkflowContext? workflowContext = null
+	)
+	{
+
+	}
 
 	/// <inheritdoc />
-	public virtual ISyncFn AsSync()
-		=> this.As<ISyncFn>();
+	public IMsg? Invoke(
+		IArgs args,
+		IWorkflowContext? workflowContext = null
+	)
+	{
 
-	/// <inheritdoc />
-	public virtual IAsyncFn AsAsync()
-		=> this.As<IAsyncFn>();
+	}
 }

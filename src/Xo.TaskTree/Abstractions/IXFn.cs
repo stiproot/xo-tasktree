@@ -20,11 +20,7 @@ public interface IFn
 	/// </summary>
 	IFn SetNextParamName(string? nextParamName = null);
 
-	/// <summary>
-	///  ... 
-	/// </summary>
-	/// <param name="pairs"></param>
-	/// <param name="key"></param>
+	/// <inheritdoc />
 	IMsg SafeGet(
 		IArgs pairs,
 		string key
@@ -33,18 +29,18 @@ public interface IFn
 	/// <summary>
 	///  ... 
 	/// </summary>
-	/// <param name="engineMessage"></param>
-	T Cast<T>(IMsg engineMessage);
+	/// <returns><see cref="Task{IMsg}"/></returns>
+	Task<IMsg?> InvokeAsync(
+		IArgs args,
+		IWorkflowContext? workflowContext = null
+	);
 
 	/// <summary>
 	///  ... 
 	/// </summary>
-	/// <returns><see cref="ISyncFn"/></returns>
-	ISyncFn AsSync();
-
-	/// <summary>
-	///  ... 
-	/// </summary>
-	/// <returns><see cref="IAsyncFn"/></returns>
-	IAsyncFn AsAsync();
+	/// <returns><see cref="IMsg"/></returns>
+	IMsg? Invoke(
+		IArgs args,
+		IWorkflowContext? workflowContext = null
+	);
 }

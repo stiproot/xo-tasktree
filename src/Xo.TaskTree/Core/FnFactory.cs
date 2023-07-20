@@ -88,30 +88,6 @@ public sealed class FnFactory : IFnFactory
 		return new AsyncFnAdaptor(fn!).SetServiceType(serviceType: typeof(T)).AsAsync();
 	}
 
-	public ISyncFn BuildSyncFn<T>(string? methodName = null)
-	{
-		var serviceType = typeof(T);
-
-		var service = this.GetService(serviceType);
-
-		var methodInfo = GetMethodInfo(serviceType, methodName);
-
-		var parameters = methodInfo.GetParameters();
-
-		Func<IArgs, IMsg?> fn = (args) =>
-			{
-				ValidateMethod(args, methodInfo, parameters);
-
-				var arguments = GetArguments(args, parameters);
-
-				object? result = methodInfo.Invoke(service, arguments);
-
-				return result == null ? null : CreateMsg(result, null);
-			};
-
-		return new SyncFnAdapter(fn!);
-	}
-
 	private object? GetService(Type serviceType)
 		=> this._serviceProvider.GetService(serviceType) ?? throw new InvalidOperationException($"Service not found for service type {serviceType.Name}");
 

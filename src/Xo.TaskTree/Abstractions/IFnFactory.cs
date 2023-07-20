@@ -39,13 +39,4 @@ public interface IFnFactory
 	/// <param name="methodName">The name of the method to be invoked.</param>
 	/// <returns><see cref="IFn"/></returns>
 	IAsyncFn BuildAsyncFn<T>(string? methodName = null);
-
-	/// <summary>
-	///   Builds a fn around a service provided as <see cref="System.Type"/> and method name. 
-	///   The result of method can be used as a argument for the next fn by providing `nextParamName`.
-	/// </summary>
-	/// <typeparam name="T">The type of the service that a fn will be built around.</param>
-	/// <param name="methodName">The name of the method to be invoked.</param>
-	/// <returns><see cref="IFn"/></returns>
-	ISyncFn BuildSyncFn<T>(string? methodName = null);
 }
