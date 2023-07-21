@@ -46,7 +46,7 @@ public class NSubsistuteTests
 					.AddContext(workflowContext)
 					.AddArg(this._msgFactory.Create<string>(string.Empty, "args"))
 			)
-			.AddFn(this._fnFactory.Build(typeof(IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2"))
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
@@ -57,7 +57,7 @@ public class NSubsistuteTests
 					.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
 					.AddArg(n1)
 			)
-			.AddFn(this._fnFactory.Build(typeof(IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), null).AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), null))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 

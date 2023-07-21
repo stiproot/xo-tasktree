@@ -20,11 +20,11 @@ internal static class TypeExtensions
 	public static IFn ToFn(this Type @this,
 		IFnFactory fnFactory
 	)
-		=> fnFactory.Build(@this).SetServiceType(@this).AsAsync();
+		=> fnFactory.Build(@this).SetServiceType(@this);
 
 	public static IFn ToFn(this Type @this,
 		IFnFactory fnFactory,
 		string? nextParamName
 	)
-		=> fnFactory.Build(@this, nextParamName: nextParamName).SetServiceType(@this).AsAsync();
+		=> fnFactory.Build(@this, nextParamName: nextParamName).SetServiceType(@this);
 }

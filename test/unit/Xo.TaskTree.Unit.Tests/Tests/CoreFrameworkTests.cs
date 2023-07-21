@@ -49,7 +49,7 @@ public class CoreFrameworkTests
 		// The output of this Node will be used as a param for the Task produced by the fn contained in Node n2, "flag2" of type bool.
 		var n1 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string", "args")))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										.Build();
 
@@ -57,13 +57,13 @@ public class CoreFrameworkTests
 		// An IMsg will be added which contains the value for "args2" param that is required by IY_InObjBool_OutStr_AsyncService, housed in th's fn factory.
 		var n2 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3").AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										.Build();
 
 		var n3 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(n2))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
@@ -86,7 +86,7 @@ public class CoreFrameworkTests
 		// Note that factories should be implemented by the consumer to provide their strategies, if they have gone this route.
 		var n1 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string", "args")))
-										.AddFn(new Mocked.IY_InStr_OutBool_AsyncService_Fn(new Mocked.Y_InStr_OutBool_AsyncService(), this._msgFactory).SetNextParamName("flag2").AsAsync())
+										.AddFn(new Mocked.IY_InStr_OutBool_AsyncService_Fn(new Mocked.Y_InStr_OutBool_AsyncService(), this._msgFactory).SetNextParamName("flag2"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										.Build();
 
@@ -94,13 +94,13 @@ public class CoreFrameworkTests
 		// An IMsg will be added which contains the value for "args2" param that is required by IY_InObjBool_OutStr_AsyncService, housed in th's fn factory.
 		var n2 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3").AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										.Build();
 
 		var n3 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(n2))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
@@ -120,14 +120,14 @@ public class CoreFrameworkTests
 		var cancellationToken = this.CancellationTokenFactory();
 		var n3 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create(string.Empty, "args3")))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)).AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_AsyncService), nameof(Mocked.IY_InStr_AsyncService.ProcessStrAsync)))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
 		// This is the focus of this test. A Node that wraps an async service that takes no arguments.
 		var n4 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(n3))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_AsyncService), nameof(Mocked.IY_AsyncService.ProcessAsync)).AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_AsyncService), nameof(Mocked.IY_AsyncService.ProcessAsync)))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
@@ -149,19 +149,19 @@ public class CoreFrameworkTests
 		// A random number generator will provide a process emulation time for "SomeOperationAsync" to make sure the service resource is held onto for some time by each task node.
 		var n1 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1")))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg1").AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg1"))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
 		var n2 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "arg1")))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg2").AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nameof(Mocked.IY_InObj_OutObj_SingletonAsyncService.GetObjAsync), "arg2"))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
 		var n3 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(n1).AddArg(n2))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService), nameof(Mocked.IY_InObjObj_OutObj_AsyncService.GetObjAsync)).AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService), nameof(Mocked.IY_InObjObj_OutObj_AsyncService.GetObjAsync)))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
@@ -184,19 +184,19 @@ public class CoreFrameworkTests
 		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(workflowContext))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2").AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2"))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
 		var n2 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1).AddContext(workflowContext))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3").AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), "args3"))
 										.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 										.Build();
 
 		var n3 = this._nodeBuilderFactory.Create()
 										.Configure(c => c.AddArg(n2).AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("flag3")).AddContext(workflowContext))
-										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
+										.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)))
 										.SetExceptionHandler(Substitute.For<Action<Exception>>())
 										.Build();
 
@@ -219,7 +219,7 @@ public class CoreFrameworkTests
 		var workflowContext = this._workflowContextFactory.Create();
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(this._msgFactory.Create<string>(string.Empty, "args")).AddContext(workflowContext).IgnorePromisedResults())
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync)).AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync)))
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
@@ -232,7 +232,7 @@ public class CoreFrameworkTests
 				.AddContext(workflowContext)
 				.IgnorePromisedResults()
 		)
-		.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
+		.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)))
 		.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 		.Build();
 
@@ -245,7 +245,7 @@ public class CoreFrameworkTests
 					.AddArg(n2)
 					.IgnorePromisedResults()
 			)
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)).AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStrBool_AsyncService), nameof(Mocked.IY_InStrBool_AsyncService.ProcessStrBool)))
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
@@ -265,13 +265,13 @@ public class CoreFrameworkTests
 		var cancellationToken = this.CancellationTokenFactory();
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(this._msgFactory.Create<int>(300, "sleep")))
-			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory).SetNextParamName("flag2").AsSync())
+			.AddFn(new Mocked.IQ_InInt_OutBool_Fn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory).SetNextParamName("flag2"))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
 		var n2 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(this._msgFactory.Create<object>(new object(), "args2")).AddArg(n1))
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -295,7 +295,7 @@ public class CoreFrameworkTests
 					.AddContext(workflowContext)
 					.AddArg(this._msgFactory.Create<int>(300, "sleep"))
 			)
-			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.AddFn(new Mocked.IQ_InInt_OutBool_Fn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -308,7 +308,7 @@ public class CoreFrameworkTests
 					.AddArg(n1)
 					.IgnorePromisedResults()
 			)
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)).AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync)))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -327,13 +327,13 @@ public class CoreFrameworkTests
 		var cancellationToken = this.CancellationTokenFactory();
 		var n1 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args")))
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync), "sleep").AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync), "sleep"))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
 		var n2 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(n1))
-			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.AddFn(new Mocked.IQ_InInt_OutBool_Fn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -358,7 +358,7 @@ public class CoreFrameworkTests
 					.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
 					.AddContext(workflowContext)
 			)
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync)).AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InStr_OutInt_AsyncService), nameof(Mocked.IY_InStr_OutInt_AsyncService.GetIntAsync)))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -369,7 +369,7 @@ public class CoreFrameworkTests
 					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("sleep"))
 					.AddContext(workflowContext)
 			)
-			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.AddFn(new Mocked.IQ_InInt_OutBool_Fn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -391,13 +391,13 @@ public class CoreFrameworkTests
 			.Configure(
 					c => c.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
 			)
-			.AddFn(new Mocked.TestStrategy2(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory).SetNextParamName("sleep").AsAsync())
+			.AddFn(new Mocked.IQ_InStr_OutInt_Fn(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory).SetNextParamName("sleep"))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
 		var n2 = this._nodeBuilderFactory.Create()
 			.Configure(c => c.AddArg(n1))
-			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.AddFn(new Mocked.IQ_InInt_OutBool_Fn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -421,7 +421,7 @@ public class CoreFrameworkTests
 					.AddArg(this._msgFactory.Create<string>("some string parameter", "args"))
 					.AddContext(workflowContext)
 			)
-			.AddFn(new Mocked.TestStrategy2(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory))
+			.AddFn(new Mocked.IQ_InStr_OutInt_Fn(new Mocked.Y_InStr_OutInt_AsyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -432,7 +432,7 @@ public class CoreFrameworkTests
 					.AddArg(n1)
 					.AddArg(c => c.GetMsg(n1.NodeConfiguration.Id).SetParam("sleep"))
 			)
-			.AddFn(new Mocked.TestSyncFn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
+			.AddFn(new Mocked.IQ_InInt_OutBool_Fn(new Mocked.Y_InInt_OutBool_SyncService(), this._msgFactory))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 
@@ -455,7 +455,7 @@ public class CoreFrameworkTests
 			.Configure(c =>
 				c.AddArg<object>(new object(), "arg1")
 			)
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg1").AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg1"))
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
@@ -463,7 +463,7 @@ public class CoreFrameworkTests
 			.Configure(c =>
 				c.AddArg<object>(new object(), "arg1")
 			)
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg2").AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObj_OutObj_SingletonAsyncService), nextParamName: "arg2"))
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
@@ -473,7 +473,7 @@ public class CoreFrameworkTests
 					.AddArg(n1)
 					.AddArg(n2)
 			)
-			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService)).AsAsync())
+			.AddFn(this._fnFactory.Build(typeof(Mocked.IY_InObjObj_OutObj_AsyncService)))
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 

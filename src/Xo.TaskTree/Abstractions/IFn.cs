@@ -15,6 +15,8 @@ public interface IFn
 
 	IFn SetServiceType(Type serviceType);
 
+	bool IsSync { get; }
+
 	/// <summary>
 	///   A factory that produces a Task (fn) that is used by a <see cref="INode"/>.
 	/// </summary>

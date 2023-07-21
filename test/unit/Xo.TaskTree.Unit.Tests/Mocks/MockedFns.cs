@@ -3,11 +3,13 @@ namespace Xo.TaskTree.Unit.Tests.Mocks;
 ///// <summary>
 /////   Test fn showing how a user/consumer might provide their own fn by extending BaseFn.
 ///// </summary>
-public class IY_InStr_OutBool_AsyncService_Fn : BaseAsyncFn
+public class IY_InStr_OutBool_AsyncService_Fn : BaseFn
 {
 	const string serviceParamName = "args";
 	private readonly IY_InStr_OutBool_AsyncService _service;
 	private readonly IMsgFactory _msgFactory;
+
+    public override bool IsSync => false; 
 
 	public IY_InStr_OutBool_AsyncService_Fn(
 		IY_InStr_OutBool_AsyncService service,
@@ -18,7 +20,13 @@ public class IY_InStr_OutBool_AsyncService_Fn : BaseAsyncFn
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
-	public override async Task<IMsg?> Invoke(
+	public override IMsg? Invoke(
+		IArgs param,
+		IWorkflowContext? workflowContext = null
+	) 
+		=> throw new NotSupportedException();
+
+	public override async Task<IMsg?> InvokeAsync(
 		IArgs param,
 		IWorkflowContext? workflowContext = null
 	)
@@ -42,13 +50,14 @@ public class IY_InStr_OutBool_AsyncService_Fn : BaseAsyncFn
 ///// <summary>
 /////   Test fn showing how a user/consumer might provide their own fn by extending BaseFn.
 ///// </summary>
-public class TestStrategy2 : BaseAsyncFn
+public class IQ_InStr_OutInt_Fn : BaseFn
 {
 	const string serviceParamName = "args";
 	private readonly IY_InStr_OutInt_AsyncService _service;
 	private readonly IMsgFactory _msgFactory;
+    public override bool IsSync => false; 
 
-	public TestStrategy2(
+	public IQ_InStr_OutInt_Fn(
 		IY_InStr_OutInt_AsyncService service,
 		IMsgFactory msgFactory
 	)
@@ -57,7 +66,13 @@ public class TestStrategy2 : BaseAsyncFn
 		this._msgFactory = msgFactory ?? throw new ArgumentNullException(nameof(msgFactory));
 	}
 
-	public override async Task<IMsg?> Invoke(
+	public override IMsg? Invoke(
+		IArgs param,
+		IWorkflowContext? workflowContext = null
+	)
+		=> throw new NotSupportedException();
+
+	public override async Task<IMsg?> InvokeAsync(
 		IArgs param,
 		IWorkflowContext? workflowContext = null
 	)

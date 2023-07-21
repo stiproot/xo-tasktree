@@ -107,8 +107,7 @@ public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 			Resolver = this._Resolver,
 			Controller = this._Controller,
 			NodeEdge = this._NodeEdge,
-			Fn = this._Fn,
-			Fn = this._Fn,
+			Fn = this._Fn!,
 			AsyncExceptionHandler = this._ExceptionHandlerAsync,
 			ExceptionHandler = this._ExceptionHandler
 		};

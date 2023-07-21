@@ -36,9 +36,9 @@ public class NodeResolver : INodeResolver
 
 		try
 		{
-			var result = node.IsSync
+			var result = node.Fn.IsSync
 				? node.Fn!.Invoke(node.NodeConfiguration.Args.AsArgs(), node.NodeConfiguration.WorkflowContext)
-				: await node.Fn!.Invoke(node.NodeConfiguration.Args.AsArgs(), node.NodeConfiguration.WorkflowContext);
+				: await node.Fn!.InvokeAsync(node.NodeConfiguration.Args.AsArgs(), node.NodeConfiguration.WorkflowContext);
 
 			if (result is not null && node.NodeConfiguration.WorkflowContext is not null)
 			{

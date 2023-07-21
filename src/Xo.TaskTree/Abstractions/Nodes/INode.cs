@@ -7,7 +7,7 @@ public interface INode
 	INodeEdge? NodeEdge { get; init; }
 	IController? Controller { get; init; }
 	IFn Fn { get; init; }
-	bool IsSync { get; }
+	// bool IsSync { get; }
 	Func<Exception, Task>? AsyncExceptionHandler { get; init; }
 	Action<Exception>? ExceptionHandler { get; init; }
 	Task<IMsg[]> Resolve(CancellationToken cancellationToken);

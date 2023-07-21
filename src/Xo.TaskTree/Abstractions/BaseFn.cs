@@ -11,6 +11,9 @@ public abstract class BaseFn : IFn
 	public Type? ServiceType => this._ServiceType;
 
 	/// <inheritdoc />
+	public abstract bool IsSync { get; }
+
+	/// <inheritdoc />
 	public IFn SetServiceType(Type serviceType)
 	{
 		this._ServiceType = serviceType;
@@ -41,20 +44,14 @@ public abstract class BaseFn : IFn
 	public virtual T Cast<T>(IMsg engineMessage) => (T)engineMessage;
 
 	/// <inheritdoc />
-	public virtual async Task<IMsg?> InvokeAsync(
+	public abstract Task<IMsg?> InvokeAsync(
 		IArgs args,
 		IWorkflowContext? workflowContext = null
-	)
-	{
-		throw new NotImplementedException();
-	}
+	);
 
 	/// <inheritdoc />
-	public virtual IMsg? Invoke(
+	public abstract IMsg? Invoke(
 		IArgs args,
 		IWorkflowContext? workflowContext = null
-	)
-	{
-		throw new NotImplementedException();
-	}
+	);
 }

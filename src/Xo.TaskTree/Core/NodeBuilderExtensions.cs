@@ -8,7 +8,7 @@ public static class NodeBuildeExtensions
 		string? nextParamName = null
 	)
 	{
-		IFn fn = @this.FnFactory.Build<T>(nextParamName).SetServiceType(typeof(T)).AsAsync(); 
+		IFn fn = @this.FnFactory.Build<T>(nextParamName).SetServiceType(typeof(T)); 
 
 		@this.AddFn(fn);
 

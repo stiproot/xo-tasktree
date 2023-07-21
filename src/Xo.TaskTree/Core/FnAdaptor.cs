@@ -18,6 +18,8 @@ public sealed class FnAdaptor : BaseFn
 	public FnAdaptor(Func<IWorkflowContext, IMsg?> fn)
 		=> this._contextFn = fn ?? throw new ArgumentNullException(nameof(fn));
 
+    public override bool IsSync => this._asyncFn is null; 
+
 	public override Task<IMsg?> InvokeAsync(
 		IArgs args,
 		IWorkflowContext? workflowContext = null
