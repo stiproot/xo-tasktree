@@ -6,13 +6,6 @@ public class BinariusNodeEdge : IBinariusNodeEdge
 	public INode? Edge1 { get; internal set; }
 	public INode? Edge2 { get; internal set; }
 
-	public INodeEdge Add(params INode?[] nodes)
-	{
-		this.Edge1 = nodes[0];
-		this.Edge2 = nodes[1];
-		return this;
-	}
-
 	public BinariusNodeEdge(
 		INode? edge1,
 		INode? edge2

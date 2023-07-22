@@ -11,6 +11,6 @@ public static class NodeEdgeFactory
 	) 
 		=> new BinariusNodeEdge(edge1, edge2); 
 
-	public static IMultusNodeEdge CreateMultus(IList<INode?> edges) 
+	public static IMultusNodeEdge CreateMultus(IList<INode> edges) 
 		=> new MultusNodeEdge(edges); 
 }
