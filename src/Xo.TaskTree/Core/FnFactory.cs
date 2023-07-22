@@ -84,7 +84,6 @@ public sealed class FnFactory : IFnFactory
 				return result == null ? null : CreateMsg(result, null);
 			};
 
-		// todo: clean this up...
 		return new FnAdaptor(fn!).SetServiceType(serviceType: typeof(T));
 	}
 

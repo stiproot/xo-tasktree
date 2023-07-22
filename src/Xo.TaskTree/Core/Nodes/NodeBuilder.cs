@@ -1,5 +1,6 @@
 namespace Xo.TaskTree.Core;
 
+/// <inheritdoc cref="INodeBuilder" />
 public class NodeBuilder : BaseNodeBuilder, INodeBuilder
 {
 	/// <inheritdoc />

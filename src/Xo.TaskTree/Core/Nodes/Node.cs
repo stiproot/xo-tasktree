@@ -11,7 +11,6 @@ public class Node : INode
 	public IFn Fn { get; init; } = default!;
 	public Func<Exception, Task>? AsyncExceptionHandler { get; init; }
 	public Action<Exception>? ExceptionHandler { get; init; }
-	// public bool IsSync => this.Fn is not null;
 
 	/// <inheritdoc />
 	public virtual async Task<IMsg[]> Resolve(CancellationToken cancellationToken)

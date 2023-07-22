@@ -1,8 +1,6 @@
 namespace Xo.TaskTree.Core;
 
-/// <summary>
-///   The fn adapter that wraps a fn... this could be the output of the <see cref="IFnFactory"/>'s core `Build` method, or an anonymous func.
-/// </summary>
+/// <inheritdoc cref="BaseFn"/>
 public sealed class FnAdaptor : BaseFn
 {
 	private readonly Func<IArgs, Task<IMsg?>>? _asyncFn;

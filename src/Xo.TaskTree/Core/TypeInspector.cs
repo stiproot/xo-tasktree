@@ -58,7 +58,7 @@ public static class TypeInspector
 	{
 		string? argType = @out.Name;
 
-		// todo: optimize this... store paramater metadata when the service type loaded.
+		// todo: optimize this... store paramater metadata when the service type loaded...
 		var inParamName = @in
 				.GetMethods()
 				.First()
