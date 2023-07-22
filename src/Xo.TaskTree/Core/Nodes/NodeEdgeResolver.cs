@@ -55,7 +55,6 @@ public class NodeEdgeResolver : INodeEdgeResolver
 
 			var r = await c;
 
-			// todo: do something about this...
 			return r[0].Concat(r[1]).ToArray();
 		}
 

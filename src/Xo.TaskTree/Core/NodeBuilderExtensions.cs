@@ -2,7 +2,6 @@ namespace Xo.TaskTree.Core;
 
 public static class NodeBuildeExtensions
 {
-	/// <inheritdoc />
 	public static INodeBuilder AddFn<T>(
 		this INodeBuilder @this,
 		string? nextParamName = null

@@ -2,9 +2,7 @@ namespace Xo.TaskTree.Abstractions;
 
 public interface INodeBuilder
 {
-	Type? ServiceType { get; }
 	IFnFactory FnFactory { get; }
-	bool HasParam(string paramName); 
 	INodeBuilder Configure(Action<INodeConfigurationBuilder> configure);
 	INodeBuilder Configure(INodeConfiguration nodeConfiguration);
 	INodeBuilder AddNodeEdge(INodeEdge nodeEdge);
