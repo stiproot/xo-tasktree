@@ -20,7 +20,7 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		INode[] ns = metaNode!.NodeEdge!.Nexts!.Select(v => this.BuildNext(metaNodeMapper, v)).ToArray();
 
-		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Multus).Add(ns);
+		INodeEdge e = NodeEdgeFactory.CreateMultus(ns);
 
 		INode n = this._NodeBuilderFactory
 			.Create(this._Logger)

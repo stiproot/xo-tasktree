@@ -21,7 +21,7 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		INode[] decisions = metaNode!.NodeEdge!.Nexts!.Select(v => this.BuildDecision(metaNodeMapper, v)).ToArray();
 
-		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Multus).Add(decisions);
+		INodeEdge e = NodeEdgeFactory.CreateMultus(decisions);
 
 		INode n = this._NodeBuilderFactory
 			.Create(this._Logger)
@@ -53,14 +53,14 @@ public class MetaHashBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		{
 			INode thenNode = metaNodeMapper.Map(mn.NodeEdge.Next!);
 
-			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
+			INodeEdge thenEdge = NodeEdgeFactory.CreateMonarius(thenNode);
 
 			nb.AddNodeEdge(thenEdge);
 		}
 
 		Func<IArgs, IMsg?> decisionFn = DecisionFnFactory.Create(mn.NodeConfiguration.ControllerType, true, mn.NodeConfiguration.Key);
 
-		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(nb.Build());
+		var decisionEdge = NodeEdgeFactory.CreateMonarius(nb.Build());
 
 		var decisionNode = this._NodeBuilderFactory
 			.Create()

@@ -24,7 +24,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 
 		INode? @true = this.BuildBinary(metaNodeMapper, metaNode!.NodeEdge!.True, true);
 		INode? @false = this.BuildBinary(metaNodeMapper, metaNode!.NodeEdge!.False, false);
-		INodeEdge e = NodeEdgeFactory.Create(NodeEdgeTypes.Binarius).Add(@true, @false);
+		INodeEdge e = NodeEdgeFactory.CreateBinarius(@true, @false);
 
 		IFn fn = metaNode!.ServiceType.ToFn(this._FnFactory, metaNode.NodeConfiguration.NextParamName);
 
@@ -63,14 +63,14 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		{
 			INode thenNode = metaNodeMapper.Map(mn.NodeEdge.Next!);
 
-			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
+			INodeEdge thenEdge = NodeEdgeFactory.CreateMonarius(thenNode);
 
 			nb.AddNodeEdge(thenEdge);
 		}
 
 		Func<IArgs, IMsg?> decisionFn = DecisionFnFactory.Create(mn.NodeConfiguration.ControllerType, resolveTo);
 
-		var decisionEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(nb.Build());
+		var decisionEdge = NodeEdgeFactory.CreateMonarius(nb.Build());
 
 		var decisionNode = this._NodeBuilderFactory
 			.Create()

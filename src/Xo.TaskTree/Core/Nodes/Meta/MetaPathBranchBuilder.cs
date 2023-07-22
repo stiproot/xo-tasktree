@@ -37,7 +37,7 @@ public class MetaPathBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 			.Configure(mn.NodeConfiguration)
 			.AddFn(fn);
 
-		if (mn.NodeEdge is not null) n.AddNodeEdge(NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(this.BuildPathStep(metaNodeMapper, mn.NodeEdge.Next!)));
+		if (mn.NodeEdge is not null) n.AddNodeEdge(NodeEdgeFactory.CreateMonarius(this.BuildPathStep(metaNodeMapper, mn.NodeEdge.Next!)));
 
 		return n.Build();
 	}

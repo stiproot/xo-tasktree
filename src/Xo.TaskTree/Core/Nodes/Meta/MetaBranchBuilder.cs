@@ -30,7 +30,7 @@ public class MetaBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		{
 			INode thenNode = metaNodeMapper.Map(metaNode.NodeEdge.Next!);
 
-			INodeEdge thenEdge = NodeEdgeFactory.Create(NodeEdgeTypes.Monarius).Add(thenNode);
+			INodeEdge thenEdge = NodeEdgeFactory.CreateMonarius(thenNode);
 
 			nb.AddNodeEdge(thenEdge);
 		}
