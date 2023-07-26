@@ -36,9 +36,9 @@ public class MetaBranchBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 		IMetaNode? mn
 	)
 	{
-		if (mn is null) throw new InvalidOperationException();
+		mn.ThrowIfNull();
 
-		IFn fn = mn.ServiceType.ToFn(this._FnFactory);
+		IFn fn = mn!.ServiceType.ToFn(this._FnFactory);
 
 		INode[] promisedArgs = mn.NodeConfiguration.MetaPromisedArgs.Select(p => metaNodeMapper.Map(p)).ToArray();
 		mn.NodeConfiguration.PromisedArgs.AddRange(promisedArgs);

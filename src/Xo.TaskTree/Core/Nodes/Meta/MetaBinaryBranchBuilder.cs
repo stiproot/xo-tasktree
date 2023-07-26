@@ -6,7 +6,7 @@ public class MetaBinaryBranchBuilder : CoreBranchBuilder, IMetaBranchBuilder
 	{
 		metaNode.ThrowIfNull();
 
-		if (metaNode!.NodeType is not MetaNodeTypes.Binary) throw new InvalidOperationException("Invalid meta node type.");
+		if (metaNode.NodeType is not MetaNodeTypes.Binary) throw new InvalidOperationException("Invalid meta node type.");
 
 		metaNode.NodeEdge.ThrowIfNull();
 
