@@ -1,5 +1,7 @@
 # xo-task-workflow-builder
 
+## VERY MUCH A WORK IN PROGRESS
+
 ## Laws
 - A Node contains a single fn.
 - Nodes do not directly reference other nodes, nodes reference edges. Edges reference nodes.
