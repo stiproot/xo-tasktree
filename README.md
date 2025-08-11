@@ -26,19 +26,32 @@ dotnet add package Xo.TaskTree
 
 ---
 
-## Getting Started
+## Meta Module & Workflow Building
 
-1. **Register services** in your DI container:
-    ```csharp
-    services.AddTaskTree();
-    ```
+When you use the fluent API to construct a workflow in xo-tasktree, you are initially working in a **meta-state**. In this phase, your workflow is represented by meta abstractions—such as `IMetaNode`, `IMetaNodeEdge`, and related meta types—rather than concrete runtime objects.
 
-2. **Inject** `IStateManager` to build workflows using the TaskTree's fluent API.
+- **Meta abstractions** (e.g., `IMetaNode`, `IMetaNodeEdge`) capture the structure, configuration, and intent of your workflow as you compose it.
+- This meta-state allows for validation, transformation, and analysis before any actual execution logic is created.
+- When you call `.Build()`, the meta workflow is transformed into a **concrete workflow**:
+    - `IMetaNode` → `INode`
+    - `IMetaNodeEdge` → `INodeEdge`
+    - ...and so on
 
-3. **Resolve** your workflow asynchronously:
-    ```csharp
-    var result = await workflow.Resolve(cancellationToken);
-    ```
+This separation enables powerful design-time features, such as:
+- Static analysis and validation of workflow structure
+- Flexible composition and reuse of workflow fragments
+- Late binding and dependency injection
+
+**Example:**
+```csharp
+// Meta-state (fluent API)
+var meta = _stateManager.RootIf<IMyService>().Then<IOtherService>();
+
+// Concrete workflow (after build)
+var node = meta.Build(); // node is an INode, ready for execution
+```
+
+This design makes xo-tasktree both expressive and safe, supporting advanced scenarios in workflow authoring and execution.
 
 ---
 
@@ -175,13 +188,30 @@ graph LR
 
 These edge types allow you to model any workflow branching scenario, from simple linear flows to complex decision trees and parallel execution paths, all with type safety and composability.
 
-## Logic
 
-### Decisions
+## Node Controllers
 
-$$
-S : S(x) \rightarrow s
-\\
-f : f(S) \rightarrow f(S(x)) \rightarrow s
-\\
-$$
+A **node controller** determines whether a branch of the workflow tree is executed, acting as a gatekeeper for conditional logic. The controller type is set in the `NodeConfiguration` during workflow composition. When the workflow is built, the controller becomes a node whose core operation is to validate the output of a node (as `IArgs`) according to the controller type (e.g., `True`, `IsNotNull`, `Equals`).
+
+**How it works:**
+- The controller type is configured in the meta-state (via `NodeConfiguration.ControllerType`).
+- On build, a controller node is inserted into the tree.
+- This node evaluates the output of its predecessor and determines which branch (if any) to follow.
+
+**Common controller types:**
+- `True`: Proceeds if the condition is true.
+- `IsNotNull`: Proceeds if the value is not null.
+- `Equals`: Proceeds if the value equals a specified value.
+
+
+
+**Diagram:**
+```mermaid
+graph TD
+    A[Node] -->|output| C{Controller Node}
+    C -- true --> B[Then Branch]
+    C -- false --> D[Else Branch]
+    %% Controller Node can represent types like IsNotNull, True, Equals, etc.
+```
+
+This pattern enables expressive, type-safe conditional logic in your workflow graphs, with each controller node encapsulating a specific validation or decision.
