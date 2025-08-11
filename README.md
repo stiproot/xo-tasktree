@@ -110,21 +110,70 @@ var msgs = await n.Resolve(cancellationToken);
 - Nodes do not directly reference other nodes, nodes reference edges. Edges reference nodes.
 - There should be a single core node type. ie. no different type for a decision making node.
 
+
 ## Branching
-### Branch Types
+Branching in xo-tasktree is modeled using three core edge types, each representing a different branching structure in your workflow graph:
 
-``` mermaid
-graph LR
-    N((node)) --> M{edge} --> O((node))
+### Monarius (Single Edge)
+Represents a single outgoing edge from a node (linear or simple flow).
 
-    X((node)) --> 
-    Y{edge} --> Z((node))
-    Y{edge} --> P((node))
-
-    A((node)) --> E((node))
-    B((node)) --> E((node))
-    E((node)) --> F((node))
+**Interface:**
+```csharp
+public interface IMonariusNodeEdge : INodeEdge {
+    INode Edge { get; }
+}
 ```
+
+**Diagram:**
+```mermaid
+graph LR
+    A((Node)) -- Monarius --> B((Node))
+```
+
+---
+
+### Binarius (Dual Edge)
+Represents a binary (two-way) branch, such as if/else or true/false logic.
+
+**Interface:**
+```csharp
+public interface IBinariusNodeEdge : INodeEdge {
+    INode? Edge1 { get; }
+    INode? Edge2 { get; }
+}
+```
+
+**Diagram:**
+```mermaid
+graph LR
+    A((Node)) -- Edge1 --> B((Node))
+    A((Node)) -- Edge2 --> C((Node))
+```
+
+---
+
+### Multus (Multi Edge)
+Represents a node with multiple outgoing edges (e.g., switch/case, hash, or parallel branches).
+
+**Interface:**
+```csharp
+public interface IMultusNodeEdge : INodeEdge {
+    IList<INode> Edges { get; }
+}
+```
+
+**Diagram:**
+```mermaid
+graph LR
+    A((Node)) -- Edge1 --> B((Node))
+    A((Node)) -- Edge2 --> C((Node))
+    A((Node)) -- Edge3 --> D((Node))
+    %% ...and so on
+```
+
+---
+
+These edge types allow you to model any workflow branching scenario, from simple linear flows to complex decision trees and parallel execution paths, all with type safety and composability.
 
 ## Logic
 
