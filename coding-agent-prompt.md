@@ -1,14 +1,16 @@
+
 # Xo.TaskTree .NET Library - Coding Agent Guide
 
 ## Overview
 
-Xo.TaskTree is a powerful .NET library for building complex workflows using a fluent, declarative API. It enables developers to compose workflows by defining services, registering them with dependency injection, and using TaskTree to orchestrate their execution.
+Xo.TaskTree is a .NET 8 library for building composable, type-safe, and testable task workflows using a fluent, functional-style API. It enables advanced branching, argument matching, and workflow orchestration for complex business logic.
+
 
 ## Core Concepts
 
-### 1. Nodes and Edges
-- **Node**: Contains a single function/service call and its configuration
-- **Edge**: Connects nodes together, defining the flow between them
+### Nodes and Edges
+- **Node**: Encapsulates a single function (fn) and its configuration
+- **Edge**: Connects nodes, enabling branching and flow
 - **Workflow**: A connected graph of nodes representing your business logic
 
 ### 2. Key Interfaces and Components
@@ -35,7 +37,116 @@ Xo.TaskTree is a powerful .NET library for building complex workflows using a fl
 #### State Management (High-Level API)
 - **IStateManager**: High-level fluent API for building complex workflows with branching logic
 
-## Setup and Registration
+
+## Meta Module & Workflow Building
+
+When you use the fluent API to construct a workflow, you are initially working in a **meta-state**. In this phase, your workflow is represented by meta abstractions—such as `IMetaNode`, `IMetaNodeEdge`, and related meta types—rather than concrete runtime objects.
+
+- **Meta abstractions** (e.g., `IMetaNode`, `IMetaNodeEdge`) capture the structure, configuration, and intent of your workflow as you compose it.
+- This meta-state allows for validation, transformation, and analysis before any actual execution logic is created.
+- When you call `.Build()`, the meta workflow is transformed into a **concrete workflow**:
+    - `IMetaNode` → `INode`
+    - `IMetaNodeEdge` → `INodeEdge`
+    - ...and so on
+
+This separation enables powerful design-time features, such as:
+- Static analysis and validation of workflow structure
+- Flexible composition and reuse of workflow fragments
+- Late binding and dependency injection
+
+**Example:**
+```csharp
+// Meta-state (fluent API)
+var meta = _stateManager.RootIf<IMyService>().Then<IOtherService>();
+
+// Concrete workflow (after build)
+var node = meta.Build(); // node is an INode, ready for execution
+```
+
+---
+
+## Branching Edge Types
+
+Branching in Xo.TaskTree is modeled using three core edge types, each representing a different branching structure in your workflow graph:
+
+### Monarius (Single Edge)
+Represents a single outgoing edge from a node (linear or simple flow).
+
+```csharp
+public interface IMonariusNodeEdge : INodeEdge {
+    INode Edge { get; }
+}
+```
+
+```mermaid
+graph LR
+    A((Node)) -- Monarius --> B((Node))
+```
+
+---
+
+### Binarius (Dual Edge)
+Represents a binary (two-way) branch, such as if/else or true/false logic.
+
+```csharp
+public interface IBinariusNodeEdge : INodeEdge {
+    INode? Edge1 { get; }
+    INode? Edge2 { get; }
+}
+```
+
+```mermaid
+graph LR
+    A((Node)) -- Edge1 --> B((Node))
+    A((Node)) -- Edge2 --> C((Node))
+```
+
+---
+
+### Multus (Multi Edge)
+Represents a node with multiple outgoing edges (e.g., switch/case, hash, or parallel branches).
+
+```csharp
+public interface IMultusNodeEdge : INodeEdge {
+    IList<INode> Edges { get; }
+}
+```
+
+```mermaid
+graph LR
+    A((Node)) -- Edge1 --> B((Node))
+    A((Node)) -- Edge2 --> C((Node))
+    A((Node)) -- Edge3 --> D((Node))
+    %% ...and so on
+```
+
+---
+
+These edge types allow you to model any workflow branching scenario, from simple linear flows to complex decision trees and parallel execution paths, all with type safety and composability.
+## Node Controllers
+
+A **node controller** determines whether a branch of the workflow tree is executed, acting as a gatekeeper for conditional logic. The controller type is set in the `NodeConfiguration` during workflow composition. When the workflow is built, the controller becomes a node whose core operation is to validate the output of a node (as `IArgs`) according to the controller type (e.g., `True`, `IsNotNull`, `Equals`).
+
+**How it works:**
+- The controller type is configured in the meta-state (via `NodeConfiguration.ControllerType`).
+- On build, a controller node is inserted into the tree.
+- This node evaluates the output of its predecessor and determines which branch (if any) to follow.
+
+**Common controller types:**
+- `True`: Proceeds if the condition is true.
+- `IsNotNull`: Proceeds if the value is not null.
+- `Equals`: Proceeds if the value equals a specified value.
+
+**Diagram:**
+```mermaid
+graph TD
+    A[Node] -->|output| C{Controller Node}
+    C -- true --> B[Then Branch]
+    C -- false --> D[Else Branch]
+    %% Controller Node can represent types like IsNotNull, True, Equals, etc.
+```
+
+This pattern enables expressive, type-safe conditional logic in your workflow graphs, with each controller node encapsulating a specific validation or decision.
 
 ### 1. Service Registration
 ```csharp
