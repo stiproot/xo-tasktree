@@ -6,12 +6,12 @@ namespace Xo.TaskTree.Unit.Tests.Mocks;
 public class IQ_InInt_OutBool_Fn : BaseFn
 {
 	private const string paramName = "sleep";
-	private readonly IY_InInt_OutBool_SyncService _synchronousService;
+	private readonly ISvc_InInt_OutBool_SyncService _synchronousService;
 	private readonly IMsgFactory _msgFactory;
 	public override bool IsSync => true;
 
 	public IQ_InInt_OutBool_Fn(
-		IY_InInt_OutBool_SyncService synchronousService,
+		ISvc_InInt_OutBool_SyncService synchronousService,
 		IMsgFactory msgFactory
 	)
 	{

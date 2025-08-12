@@ -28,12 +28,12 @@ public class NSubsistuteTests
 		// ARRANGE...
 		// Behavior: Workflows, with fn factories constructed with the FnFactory, with services mocked using NSubstitute should run.
 		var services = new ServiceCollection();
-		var testService1 = Substitute.For<IY_InStr_OutBool_AsyncService>();
+		var testService1 = Substitute.For<ISvc_InStr_OutBool_AsyncService>();
 		testService1.GetBoolAsync(Arg.Any<string>()).Returns(true);
-		services.AddTransient<IY_InStr_OutBool_AsyncService>((provider) => testService1);
-		var testService2 = Substitute.For<IY_InObjBool_OutStr_AsyncService>();
+		services.AddTransient<ISvc_InStr_OutBool_AsyncService>((provider) => testService1);
+		var testService2 = Substitute.For<ISvc_InObjBool_OutStr_AsyncService>();
 		testService2.GetStrAsync(Arg.Any<object>(), Arg.Any<bool>()).Returns("");
-		services.AddTransient<IY_InObjBool_OutStr_AsyncService>((provider) => testService2);
+		services.AddTransient<ISvc_InObjBool_OutStr_AsyncService>((provider) => testService2);
 		var provider = services.BuildServiceProvider();
 		var fnFactory = new FnFactory(provider);
 		var cancellationToken = this.CancellationTokenFactory();
@@ -46,7 +46,7 @@ public class NSubsistuteTests
 					.AddContext(workflowContext)
 					.AddArg(this._msgFactory.Create<string>(string.Empty, "args"))
 			)
-			.AddFn(this._fnFactory.Build(typeof(IY_InStr_OutBool_AsyncService), nameof(Mocked.IY_InStr_OutBool_AsyncService.GetBoolAsync), "flag2"))
+			.AddFn(this._fnFactory.Build(typeof(ISvc_InStr_OutBool_AsyncService), nameof(Mocked.ISvc_InStr_OutBool_AsyncService.GetBoolAsync), "flag2"))
 			.SetExceptionHandler(Substitute.For<Action<Exception>>())
 			.Build();
 
@@ -57,7 +57,7 @@ public class NSubsistuteTests
 					.AddArg(this._msgFactory.Create<object>(new object(), "args2"))
 					.AddArg(n1)
 			)
-			.AddFn(this._fnFactory.Build(typeof(IY_InObjBool_OutStr_AsyncService), nameof(Mocked.IY_InObjBool_OutStr_AsyncService.GetStrAsync), null))
+			.AddFn(this._fnFactory.Build(typeof(ISvc_InObjBool_OutStr_AsyncService), nameof(Mocked.ISvc_InObjBool_OutStr_AsyncService.GetStrAsync), null))
 			.SetExceptionHandler(Substitute.For<Func<Exception, Task>>())
 			.Build();
 

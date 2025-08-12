@@ -3,15 +3,15 @@ namespace Xo.TaskTree.Unit.Tests;
 [ExcludeFromCodeCoverage]
 public class FnFactoryTests
 {
-	private readonly IY_InStr_OutBool_AsyncService _testService1;
-	private readonly IY_InStrBool_AsyncService _testService3WithTwoArgs;
-	private readonly IY_OutConstBool_SyncService _serviceThatReturnsBool;
+	private readonly ISvc_InStr_OutBool_AsyncService _testService1;
+	private readonly ISvc_InStrBool_AsyncService _testService3WithTwoArgs;
+	private readonly ISvc_OutConstBool_SyncService _serviceThatReturnsBool;
 	private readonly IMsgFactory _msgFactory;
 
 	public FnFactoryTests(
-		IY_InStr_OutBool_AsyncService testService1,
-		IY_InStrBool_AsyncService testService3WithTwoArgs,
-		IY_OutConstBool_SyncService serviceThatReturnsBool,
+		ISvc_InStr_OutBool_AsyncService testService1,
+		ISvc_InStrBool_AsyncService testService3WithTwoArgs,
+		ISvc_OutConstBool_SyncService serviceThatReturnsBool,
 		IMsgFactory msgFactory
 	)
 	{
@@ -116,11 +116,11 @@ public class FnFactoryTests
 		// ARRANGE...
 		IArgs @params = new Args(new List<IMsg> { new Msg<string>("some-string", "args") });
 		var serviceProvider = Substitute.For<IServiceProvider>();
-		serviceProvider.GetService(typeof(IY_InStr_OutBool_AsyncService)).Returns(x => new Y_InStr_OutBool_AsyncService());
+		serviceProvider.GetService(typeof(ISvc_InStr_OutBool_AsyncService)).Returns(x => new Y_InStr_OutBool_AsyncService());
 		var builder = new FnFactory(serviceProvider);
 
 		// ACT...
-		var fn = builder.Build<IY_InStr_OutBool_AsyncService>();
+		var fn = builder.Build<ISvc_InStr_OutBool_AsyncService>();
 		var result = await fn.InvokeAsync(@params);
 		var data = (result as Msg<bool>)!.GetData();
 

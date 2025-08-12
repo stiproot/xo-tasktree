@@ -6,7 +6,7 @@ public class NodeConfigurationBuilderTests
 	public void AddArg_MatchArg()
 	{
 		// ARRANGE...
-		var builder = new NodeConfigurationBuilder(typeof(IY_InBoolStr_OutConstInt_AsyncService));
+		var builder = new NodeConfigurationBuilder(typeof(ISvc_InBoolStr_OutConstInt_AsyncService));
 		Action<INodeConfigurationBuilder> addArgWithParamName = b => b.AddArg(true, "flag");
 		Action<INodeConfigurationBuilder> matchArg = b => b.MatchArg("<<args>>");
 
@@ -25,7 +25,7 @@ public class NodeConfigurationBuilderTests
 	public void MatchArg_MatchArg()
 	{
 		// ARRANGE...
-		var builder = new NodeConfigurationBuilder(typeof(IY_InBoolStr_OutConstInt_AsyncService));
+		var builder = new NodeConfigurationBuilder(typeof(ISvc_InBoolStr_OutConstInt_AsyncService));
 		Action<INodeConfigurationBuilder> matchArg = b => b.AddArg(true);
 		Action<INodeConfigurationBuilder> matchArg1 = b => b.MatchArg("<<args>>");
 
@@ -44,7 +44,7 @@ public class NodeConfigurationBuilderTests
 	public void MatchArgs_MatchArgs_MatchArgs()
 	{
 		// ARRANGE...
-		var builder = new NodeConfigurationBuilder(typeof(IY_InStrStrStr_OutConstInt_AsyncService));
+		var builder = new NodeConfigurationBuilder(typeof(ISvc_InStrStrStr_OutConstInt_AsyncService));
 		Action<INodeConfigurationBuilder> matchArg1 = b => b.MatchArgs("<<args-1>>");
 		Action<INodeConfigurationBuilder> matchArg2 = b => b.MatchArgs("<<args-2>>");
 		Action<INodeConfigurationBuilder> matchArg3 = b => b.MatchArgs("<<args-3>>");

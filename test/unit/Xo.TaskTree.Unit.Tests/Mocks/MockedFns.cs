@@ -3,16 +3,16 @@ namespace Xo.TaskTree.Unit.Tests.Mocks;
 ///// <summary>
 /////   Test fn showing how a user/consumer might provide their own fn by extending BaseFn.
 ///// </summary>
-public class IY_InStr_OutBool_AsyncService_Fn : BaseFn
+public class ISvc_InStr_OutBool_AsyncService_Fn : BaseFn
 {
 	const string serviceParamName = "args";
-	private readonly IY_InStr_OutBool_AsyncService _service;
+	private readonly ISvc_InStr_OutBool_AsyncService _service;
 	private readonly IMsgFactory _msgFactory;
 
     public override bool IsSync => false; 
 
-	public IY_InStr_OutBool_AsyncService_Fn(
-		IY_InStr_OutBool_AsyncService service,
+	public ISvc_InStr_OutBool_AsyncService_Fn(
+		ISvc_InStr_OutBool_AsyncService service,
 		IMsgFactory msgFactory
 	)
 	{
@@ -35,7 +35,7 @@ public class IY_InStr_OutBool_AsyncService_Fn : BaseFn
 
 		if (string.IsNullOrEmpty(serviceArgs))
 		{
-			throw new OperationCanceledException($"Invalid param provided for service {nameof(IY_InStr_OutBool_AsyncService)}");
+			throw new OperationCanceledException($"Invalid param provided for service {nameof(ISvc_InStr_OutBool_AsyncService)}");
 		}
 
 		// One of the strengths of user-defined fn is the ability to modify the result of a Task before it gets passed to the next Task.
@@ -53,12 +53,12 @@ public class IY_InStr_OutBool_AsyncService_Fn : BaseFn
 public class IQ_InStr_OutInt_Fn : BaseFn
 {
 	const string serviceParamName = "args";
-	private readonly IY_InStr_OutInt_AsyncService _service;
+	private readonly ISvc_InStr_OutInt_AsyncService _service;
 	private readonly IMsgFactory _msgFactory;
     public override bool IsSync => false; 
 
 	public IQ_InStr_OutInt_Fn(
-		IY_InStr_OutInt_AsyncService service,
+		ISvc_InStr_OutInt_AsyncService service,
 		IMsgFactory msgFactory
 	)
 	{
@@ -80,7 +80,7 @@ public class IQ_InStr_OutInt_Fn : BaseFn
 		var serviceArgs = this.Cast<Msg<string>>(this.SafeGet(param, serviceParamName)).GetData();
 		if (string.IsNullOrEmpty(serviceArgs))
 		{
-			throw new OperationCanceledException($"Invalid param provided for service {nameof(IY_InStr_OutInt_AsyncService)}");
+			throw new OperationCanceledException($"Invalid param provided for service {nameof(ISvc_InStr_OutInt_AsyncService)}");
 		}
 
 		// One of the strengths of user-defined fn is the ability to modify the result of a Task before it gets passed to the next Task.

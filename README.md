@@ -58,58 +58,98 @@ This design makes xo-tasktree both expressive and safe, supporting advanced scen
 ## Usage Examples
 
 ### If-Else Branching
+
+```mermaid
+graph LR
+    A[RootIf: ISvc_OutConstBool_SyncService] -->|true| B[Then: ISvc_InStr_OutConstInt_AsyncService]
+    A -->|false| E[Else: ISvc_InStr_AsyncService]
+    B --> C[Then: ISvc_InInt_OutBool_SyncService]
+    E --> F[Match: ISvc_InStr_OutConstStr_AsyncService]
+```
+
 ```csharp
 var mn = _stateManager
-    .RootIf<IY_OutConstBool_SyncService>()
-    .Then<IY_InStr_OutConstInt_AsyncService>(
+    .RootIf<ISvc_OutConstBool_SyncService>()
+    .Then<ISvc_InStr_OutConstInt_AsyncService>(
         configure => configure.MatchArg("<<arg-1>>"),
-        then => then.Then<IY_InInt_OutBool_SyncService>(c => c.RequireResult())
+        then => then.Then<ISvc_InInt_OutBool_SyncService>(c => c.RequireResult())
     )
-    .Else<IY_InStr_AsyncService>(c => c.MatchArg<IY_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg-2>>")));
+    .Else<ISvc_InStr_AsyncService>(c => c.MatchArg<ISvc_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg-2>>")));
 var n = mn.Build();
 var msgs = await n.Resolve(cancellationToken);
 ```
 
 ### Null Check Branch
+
+```mermaid
+graph LR
+    A[IsNotNull: ISvc_OutObj_SyncService] -->|not null| B[Then: ISvc_InObj_OutConstInt_AsyncService]
+    A -->|null| C[Else: ISvc_InStr_AsyncService]
+```
+
 ```csharp
 var mn = _stateManager
-    .IsNotNull<IY_OutObj_SyncService>()
-    .Then<IY_InObj_OutConstInt_AsyncService>(c => c.RequireResult())
-    .Else<IY_InStr_AsyncService>(c => c.AddArg("<<args>>", "args3"));
+    .IsNotNull<ISvc_OutObj_SyncService>()
+    .Then<ISvc_InObj_OutConstInt_AsyncService>(c => c.RequireResult())
+    .Else<ISvc_InStr_AsyncService>(c => c.AddArg("<<args>>", "args3"));
 var n = mn.Build();
 var msgs = await n.Resolve(cancellationToken);
 ```
 
 ### Argument Matching
+
+```mermaid
+graph LR
+    A[Root: ISvc_InBoolStr_OutConstInt_AsyncService] --> B[MatchArg: ISvc_OutConstBool_SyncService]
+    A --> C[MatchArg: ISvc_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService]
+```
+
 ```csharp
 var mn = _stateManager
-    .Root<IY_InBoolStr_OutConstInt_AsyncService>(c =>
-        c.MatchArg<IY_OutConstBool_SyncService>()
-         .MatchArg<IY_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.MatchArg(true))
+    .Root<ISvc_InBoolStr_OutConstInt_AsyncService>(c =>
+        c.MatchArg<ISvc_OutConstBool_SyncService>()
+         .MatchArg<ISvc_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.MatchArg(true))
     );
 var n = mn.Build();
 var msgs = await n.Resolve(cancellationToken);
 ```
 
 ### Key/Hash Branching
+
+```mermaid
+graph LR
+    A[Root: ISvc_OutConstBool_SyncService] --> B[Key: ISvc_InBool_OutConstStr_AsyncService]
+    B --> C[Hash: ISvc_InBoolStr_OutConstInt_AsyncService]
+    B --> D[Hash: ISvc_AsyncService]
+    C --> E[Then: ISvc_InStr_OutConstInt_AsyncService]
+```
+
 ```csharp
 var mn = _stateManager
-    .Root<IY_OutConstBool_SyncService>()
-    .Key<IY_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
-    .Hash<IY_InBoolStr_OutConstInt_AsyncService, IY_AsyncService>(
+    .Root<ISvc_OutConstBool_SyncService>()
+    .Key<ISvc_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
+    .Hash<ISvc_InBoolStr_OutConstInt_AsyncService, ISvc_AsyncService>(
         c => c.MatchArg(true).MatchArg("<<arg>>").Key("<<str>>"),
         c => c.Key("key-a"),
-        then => then.Then<IY_InStr_OutConstInt_AsyncService>(c => c.MatchArg("<<arg>>"))
+        then => then.Then<ISvc_InStr_OutConstInt_AsyncService>(c => c.MatchArg("<<arg>>"))
     );
 var n = mn.Build();
 var msgs = await n.Resolve(cancellationToken);
 ```
 
 ### Path Branching
+
+```mermaid
+graph LR
+    A[Root: ISvc_OutConstBool_SyncService] --> B[Path: ISvc_InBool_OutConstStr_AsyncService]
+    B --> C[Path: ISvc_InStr_OutConstInt_AsyncService]
+    C --> D[Path: ISvc_InInt_OutConstInt_AsyncService]
+```
+
 ```csharp
 var mn = _stateManager
-    .Root<IY_OutConstBool_SyncService>()
-    .Path<IY_InBool_OutConstStr_AsyncService, IY_InStr_OutConstInt_AsyncService, IY_InInt_OutConstInt_AsyncService>(
+    .Root<ISvc_OutConstBool_SyncService>()
+    .Path<ISvc_InBool_OutConstStr_AsyncService, ISvc_InStr_OutConstInt_AsyncService, ISvc_InInt_OutConstInt_AsyncService>(
         c => c.RequireResult(),
         c => c.RequireResult(),
         c => c.RequireResult()

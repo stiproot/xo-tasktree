@@ -3,16 +3,16 @@ namespace Xo.TaskTree.Unit.Tests;
 [ExcludeFromCodeCoverage]
 public class TypeInspectorTests
 {
-	private readonly IY_InStr_OutBool_AsyncService _testService1;
-	private readonly IY_InStr_AsyncService _testService3;
-	private readonly IY_SyncService _syncTestService;
-	private readonly IY_OutConstBool_SyncService _returnsBoolService;
+	private readonly ISvc_InStr_OutBool_AsyncService _testService1;
+	private readonly ISvc_InStr_AsyncService _testService3;
+	private readonly ISvc_SyncService _syncTestService;
+	private readonly ISvc_OutConstBool_SyncService _returnsBoolService;
 
 	public TypeInspectorTests(
-		IY_InStr_OutBool_AsyncService testService1,
-		IY_InStr_AsyncService testService3,
-		IY_SyncService syncTestService,
-		IY_OutConstBool_SyncService returnsBoolService
+		ISvc_InStr_OutBool_AsyncService testService1,
+		ISvc_InStr_AsyncService testService3,
+		ISvc_SyncService syncTestService,
+		ISvc_OutConstBool_SyncService returnsBoolService
 	)
 	{
 		this._testService1 = testService1 ?? throw new System.ArgumentNullException(nameof(testService1));
@@ -25,8 +25,8 @@ public class TypeInspectorTests
 	public void TypeInspector_MethodHasReturnTypeOfTask_ProvidedInterfaceMethodThatReturnsTaskOfBool_ReturnTrue()
 	{
 		// ARRANGE...
-		var type = typeof(IY_InStr_OutBool_AsyncService);
-		var methodName = nameof(IY_InStr_OutBool_AsyncService.GetBoolAsync);
+		var type = typeof(ISvc_InStr_OutBool_AsyncService);
+		var methodName = nameof(ISvc_InStr_OutBool_AsyncService.GetBoolAsync);
 		MethodInfo methodInfo = type.GetMethod(methodName)!;
 
 		// ACT...
@@ -40,8 +40,8 @@ public class TypeInspectorTests
 	public void TypeInspector_MethodHasReturnTypeOfTask_ProvidedInterfaceMethodThatReturnsTask_ReturnTrue()
 	{
 		// ARRANGE...
-		var type = typeof(IY_InStr_AsyncService);
-		var methodName = nameof(IY_InStr_AsyncService.ProcessStrAsync);
+		var type = typeof(ISvc_InStr_AsyncService);
+		var methodName = nameof(ISvc_InStr_AsyncService.ProcessStrAsync);
 		MethodInfo methodInfo = type.GetMethod(methodName)!;
 
 		// ACT...
@@ -85,8 +85,8 @@ public class TypeInspectorTests
 	public void TypeInspector_MethodHasReturnTypeOfTask_ProvidedSyncInterfaceVoidMethod_ReturnFalse()
 	{
 		// ARRANGE...
-		var type = typeof(IY_SyncService);
-		var methodName = nameof(IY_SyncService.Process);
+		var type = typeof(ISvc_SyncService);
+		var methodName = nameof(ISvc_SyncService.Process);
 		MethodInfo methodInfo = type.GetMethod(methodName)!;
 
 		// ACT...
@@ -100,8 +100,8 @@ public class TypeInspectorTests
 	public void TypeInspector_MethodHasReturnTypeOfTask_ProvidedSyncInterfaceMethodThatReturnsBool_ReturnFalse()
 	{
 		// ARRANGE...
-		var type = typeof(IY_OutConstBool_SyncService);
-		var methodName = nameof(IY_OutConstBool_SyncService.GetBool);
+		var type = typeof(ISvc_OutConstBool_SyncService);
+		var methodName = nameof(ISvc_OutConstBool_SyncService.GetBool);
 		MethodInfo methodInfo = type.GetMethod(methodName)!;
 
 		// ACT...
