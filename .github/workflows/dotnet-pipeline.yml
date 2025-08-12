@@ -25,10 +25,10 @@ jobs:
           echo "VERSION=$version" >> $GITHUB_ENV
 
       - name: Build
-        run: dotnet build src/ --configuration Release
+        run: dotnet build --configuration Release
 
       - name: Test
-        run: dotnet test src/ --configuration Release --no-build
+        run: dotnet test --configuration Release --no-build
 
       - name: Pkg
         run: dotnet pack --configuration Release --no-build --no-restore --output nupkg --version-suffix $VERSION ./src/
