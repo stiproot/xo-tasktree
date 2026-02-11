@@ -1,14 +1,15 @@
-
 # Xo.TaskTree .NET Library - Coding Agent Guide
+
+[STATUS:WORK-IN-PROGRESS]
 
 ## Overview
 
 Xo.TaskTree is a .NET 8 library for building composable, type-safe, and testable task workflows using a fluent, functional-style API. It enables advanced branching, argument matching, and workflow orchestration for complex business logic.
 
-
 ## Core Concepts
 
 ### Nodes and Edges
+
 - **Node**: Encapsulates a single function (fn) and its configuration
 - **Edge**: Connects nodes, enabling branching and flow
 - **Workflow**: A connected graph of nodes representing your business logic
@@ -16,27 +17,31 @@ Xo.TaskTree is a .NET 8 library for building composable, type-safe, and testable
 ### 2. Key Interfaces and Components
 
 #### Services and Functions
+
 - **IFn**: Represents a function that can be executed (sync or async)
 - **IFnFactory**: Creates function wrappers from service types and method names
 - **BaseFn**: Base class for creating custom function implementations
 
 #### Messages and Arguments
+
 - **IMsg**: Encapsulates data passed between nodes
 - **IMsgFactory**: Creates typed messages for data flow
 - **IArgs**: Contains arguments/parameters for function execution
 
 #### Node Building
+
 - **INodeBuilder**: Fluent API for constructing individual nodes
 - **INodeBuilderFactory**: Factory for creating node builders
 - **INodeConfiguration**: Configuration for node behavior
 
 #### Workflow Context
+
 - **IWorkflowContext**: Shared state across the entire workflow
 - **IWorkflowContextFactory**: Creates workflow contexts for state management
 
 #### State Management (High-Level API)
-- **IStateManager**: High-level fluent API for building complex workflows with branching logic
 
+- **IStateManager**: High-level fluent API for building complex workflows with branching logic
 
 ## Meta Module & Workflow Building
 
@@ -45,16 +50,18 @@ When you use the fluent API to construct a workflow, you are initially working i
 - **Meta abstractions** (e.g., `IMetaNode`, `IMetaNodeEdge`) capture the structure, configuration, and intent of your workflow as you compose it.
 - This meta-state allows for validation, transformation, and analysis before any actual execution logic is created.
 - When you call `.Build()`, the meta workflow is transformed into a **concrete workflow**:
-    - `IMetaNode` → `INode`
-    - `IMetaNodeEdge` → `INodeEdge`
-    - ...and so on
+  - `IMetaNode` → `INode`
+  - `IMetaNodeEdge` → `INodeEdge`
+  - ...and so on
 
 This separation enables powerful design-time features, such as:
+
 - Static analysis and validation of workflow structure
 - Flexible composition and reuse of workflow fragments
 - Late binding and dependency injection
 
 **Example:**
+
 ```csharp
 // Meta-state (fluent API)
 var meta = _stateManager.RootIf<IMyService>().Then<IOtherService>();
@@ -70,6 +77,7 @@ var node = meta.Build(); // node is an INode, ready for execution
 Branching in Xo.TaskTree is modeled using three core edge types, each representing a different branching structure in your workflow graph:
 
 ### Monarius (Single Edge)
+
 Represents a single outgoing edge from a node (linear or simple flow).
 
 ```csharp
@@ -86,6 +94,7 @@ graph LR
 ---
 
 ### Binarius (Dual Edge)
+
 Represents a binary (two-way) branch, such as if/else or true/false logic.
 
 ```csharp
@@ -104,6 +113,7 @@ graph LR
 ---
 
 ### Multus (Multi Edge)
+
 Represents a node with multiple outgoing edges (e.g., switch/case, hash, or parallel branches).
 
 ```csharp
@@ -123,21 +133,25 @@ graph LR
 ---
 
 These edge types allow you to model any workflow branching scenario, from simple linear flows to complex decision trees and parallel execution paths, all with type safety and composability.
+
 ## Node Controllers
 
 A **node controller** determines whether a branch of the workflow tree is executed, acting as a gatekeeper for conditional logic. The controller type is set in the `NodeConfiguration` during workflow composition. When the workflow is built, the controller becomes a node whose core operation is to validate the output of a node (as `IArgs`) according to the controller type (e.g., `True`, `IsNotNull`, `Equals`).
 
 **How it works:**
+
 - The controller type is configured in the meta-state (via `NodeConfiguration.ControllerType`).
 - On build, a controller node is inserted into the tree.
 - This node evaluates the output of its predecessor and determines which branch (if any) to follow.
 
 **Common controller types:**
+
 - `True`: Proceeds if the condition is true.
 - `IsNotNull`: Proceeds if the value is not null.
 - `Equals`: Proceeds if the value equals a specified value.
 
 **Diagram:**
+
 ```mermaid
 graph TD
     A[Node] -->|output| C{Controller Node}
@@ -149,6 +163,7 @@ graph TD
 This pattern enables expressive, type-safe conditional logic in your workflow graphs, with each controller node encapsulating a specific validation or decision.
 
 ### 1. Service Registration
+
 ```csharp
 // Register TaskTree services
 services.AddTaskTreeServices();
@@ -160,6 +175,7 @@ services.AddScoped<IMyValidationService, MyValidationService>();
 ```
 
 ### 2. Dependency Injection
+
 TaskTree integrates seamlessly with .NET's built-in dependency injection. Inject the required factories and managers:
 
 ```csharp
@@ -189,6 +205,7 @@ public class MyWorkflowService
 ### Low-Level API: Manual Node Construction
 
 #### Basic Sequential Workflow
+
 ```csharp
 // Create individual nodes manually
 var node1 = _nodeBuilderFactory.Create()
@@ -208,6 +225,7 @@ var results = await node2.Resolve(cancellationToken);
 ```
 
 #### Using Generic Type Inference
+
 ```csharp
 var node = _nodeBuilderFactory.Create()
     .Configure(c => c.AddArg<string>("input", "param"))
@@ -216,6 +234,7 @@ var node = _nodeBuilderFactory.Create()
 ```
 
 #### Custom Function Implementation
+
 ```csharp
 // Create custom function using lambda
 var node = _nodeBuilderFactory.Create()
@@ -242,6 +261,7 @@ var asyncNode = _nodeBuilderFactory.Create()
 ### High-Level API: StateManager Fluent Interface
 
 #### Simple Linear Path
+
 ```csharp
 var workflow = _stateManager
     .Root<IDataRetrievalService>()
@@ -255,6 +275,7 @@ var results = await node.Resolve(cancellationToken);
 ```
 
 #### Conditional Branching (If-Then-Else)
+
 ```csharp
 var workflow = _stateManager
     .RootIf<IBooleanDecisionService>()
@@ -269,6 +290,7 @@ var results = await node.Resolve(cancellationToken);
 ```
 
 #### Null Checking
+
 ```csharp
 var workflow = _stateManager
     .IsNotNull<IDataRetrievalService>()
@@ -279,6 +301,7 @@ var node = workflow.Build();
 ```
 
 #### Hash-based Routing
+
 ```csharp
 var workflow = _stateManager
     .Root<IKeyGeneratorService>()
@@ -291,6 +314,7 @@ var workflow = _stateManager
 ```
 
 #### Parallel Branching
+
 ```csharp
 var workflow = _stateManager
     .Root<IInputService>()
@@ -303,6 +327,7 @@ var workflow = _stateManager
 ## Configuration Options
 
 ### Node Configuration
+
 ```csharp
 .Configure(c => c
     .SetId("custom-node-id")
@@ -317,6 +342,7 @@ var workflow = _stateManager
 ```
 
 ### Workflow Context Usage
+
 ```csharp
 var workflowContext = _workflowContextFactory.Create();
 
@@ -354,6 +380,7 @@ var node = _nodeBuilderFactory.Create()
 ## Custom Function Implementation
 
 ### Extending BaseFn
+
 ```csharp
 public class CustomAsyncFunction : BaseFn
 {
@@ -387,28 +414,33 @@ public class CustomAsyncFunction : BaseFn
 ## Best Practices
 
 ### 1. Service Design
+
 - Keep services focused on single responsibilities
 - Make services stateless when possible
 - Use dependency injection for service dependencies
 - Return appropriate data types for workflow chaining
 
 ### 2. Workflow Construction
+
 - Use the high-level StateManager API for complex branching logic
 - Use the low-level NodeBuilder API when you need fine-grained control
 - Prefer `RequireResult()` for simple chaining between services
 - Use workflow context for sharing state across non-adjacent nodes
 
 ### 3. Error Handling
+
 - Always provide exception handlers for nodes
 - Consider implementing retry logic in custom functions
 - Log appropriately for debugging workflow issues
 
 ### 4. Performance
+
 - Be mindful of parallel vs sequential execution
 - Use `IgnorePromisedResults()` when appropriate to avoid unnecessary waiting
 - Consider caching strategies for expensive operations
 
 ### 5. Testing
+
 - Unit test individual services independently
 - Integration test complete workflows
 - Mock services using your preferred mocking framework
@@ -417,6 +449,7 @@ public class CustomAsyncFunction : BaseFn
 ## Common Patterns
 
 ### Data Pipeline
+
 ```csharp
 var pipeline = _stateManager
     .Root<IDataIngestionService>()
@@ -428,6 +461,7 @@ var pipeline = _stateManager
 ```
 
 ### Validation with Fallback
+
 ```csharp
 var workflow = _stateManager
     .Root<IValidationService>()
@@ -437,6 +471,7 @@ var workflow = _stateManager
 ```
 
 ### Multi-Stage Approval
+
 ```csharp
 var approval = _stateManager
     .Root<IInitialReviewService>()

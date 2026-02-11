@@ -1,48 +1,129 @@
 # xo-tasktree
 
 ![Build](https://github.com/stiproot/xo-tasktree/actions/workflows/dotnet-pipeline.yml/badge.svg)
+![NuGet](https://img.shields.io/nuget/v/Xo.TaskTree.svg)
+![Downloads](https://img.shields.io/nuget/dt/Xo.TaskTree.svg)
 ![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
-**xo-tasktree** is a .NET 8 library for building composable, type-safe, and testable task workflows using a fluent, functional-style API. It enables advanced branching, argument matching, and workflow orchestration for complex business logic.
+Build AI-friendly, composable task workflows that generate better code by emphasizing declarative structure over imperative orchestration.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Core Concepts](#core-concepts)
+- [Usage Examples](#usage-examples)
+- [Performance Considerations](#performance-considerations)
+- [Advanced Topics](#advanced-topics)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+**xo-tasktree** is a .NET 8 library for building composable, type-safe, and testable task workflows using a fluent, functional-style API. By modeling workflows as declarative graphs rather than procedural orchestration, xo-tasktree makes it easier for AI coding agents to understand, generate, and modify complex business logic.
+
+The library excels at workflow orchestration, request processing pipelines, and business logic composition. It integrates seamlessly with `Microsoft.Extensions.DependencyInjection` and `Microsoft.Extensions.Logging`, fitting naturally into modern .NET applications.
 
 ---
 
 ## Features
-- Fluent API for workflow and branching logic
-- Type-safe node and edge composition
-- Supports conditional, hash, path, and parallel branching
-- Extensible with custom functions and argument resolvers
-- Integrates with Microsoft.Extensions.DependencyInjection & Logging
+
+- **Fluent API** for workflow and branching logic
+- **Type-safe** node and edge composition
+- **Conditional, hash, path, and parallel branching** support
+- **Extensible** with custom functions and argument resolvers
+- **Integrates** with Microsoft.Extensions.DependencyInjection & Logging
 
 ---
 
 ## Installation
 
-Add the package to your project (when available on NuGet):
+### Prerequisites
+
+- .NET 8.0 SDK or later
+- Basic familiarity with dependency injection patterns
+
+### Install via NuGet
 
 ```sh
 dotnet add package Xo.TaskTree
 ```
 
+Or via Package Manager Console:
+
+```powershell
+Install-Package Xo.TaskTree
+```
+
+### Setup Dependency Injection
+
+Register TaskTree services in your startup/program configuration:
+
+```csharp
+using Xo.TaskTree.DependencyInjection.Extensions;
+
+services.AddTaskTreeServices();
+
+// Register your business services
+services.AddScoped<IDataValidator, DataValidator>();
+services.AddScoped<IDataProcessor, DataProcessor>();
+services.AddScoped<IErrorHandler, ErrorHandler>();
+```
+
 ---
 
-## Meta Module & Workflow Building
+## Quick Start
 
-When you use the fluent API to construct a workflow in xo-tasktree, you are initially working in a **meta-state**. In this phase, your workflow is represented by meta abstractions—such as `IMetaNode`, `IMetaNodeEdge`, and related meta types—rather than concrete runtime objects.
+Here's a simple workflow that validates and processes user input—a common pattern in AI-generated applications:
 
-- **Meta abstractions** (e.g., `IMetaNode`, `IMetaNodeEdge`) capture the structure, configuration, and intent of your workflow as you compose it.
-- This meta-state allows for validation, transformation, and analysis before any actual execution logic is created.
-- When you call `.Build()`, the meta workflow is transformed into a **concrete workflow**:
-    - `IMetaNode` → `INode`
-    - `IMetaNodeEdge` → `INodeEdge`
-    - ...and so on
+```csharp
+public class ValidationWorkflow
+{
+    private readonly IStateManager _stateManager;
 
-This separation enables powerful design-time features, such as:
-- Static analysis and validation of workflow structure
-- Flexible composition and reuse of workflow fragments
-- Late binding and dependency injection
+    public ValidationWorkflow(IStateManager stateManager)
+    {
+        _stateManager = stateManager;
+    }
+
+    public async Task<IReadOnlyList<IMsg>> ValidateAndProcessAsync(CancellationToken ct)
+    {
+        var workflow = _stateManager
+            .Root<IInputValidator>()                      // Validate input
+            .RootIf<IValidationResultChecker>()          // Check if valid
+            .Then<IDataProcessor>(                        // Process if valid
+                c => c.RequireResult()
+            )
+            .Else<IErrorHandler>();                       // Handle errors if invalid
+
+        var node = workflow.Build();
+        return await node.Resolve(ct);
+    }
+}
+```
+
+This creates a graph where data flows through validation, branching to either processing or error handling based on the validation result.
+
+---
+
+## Core Concepts
+
+### Meta-State Workflow Building
+
+When you use the fluent API to construct a workflow in xo-tasktree, you work in a **meta-state**. In this phase, your workflow is represented by meta abstractions (`IMetaNode`, `IMetaNodeEdge`) rather than concrete runtime objects.
+
+- **Meta abstractions** capture the structure, configuration, and intent of your workflow as you compose it
+- This allows for validation, transformation, and analysis before execution logic is created
+- When you call `.Build()`, the meta workflow transforms into a concrete workflow ready for execution
 
 **Example:**
+
 ```csharp
 // Meta-state (fluent API)
 var meta = _stateManager.RootIf<IMyService>().Then<IOtherService>();
@@ -51,144 +132,26 @@ var meta = _stateManager.RootIf<IMyService>().Then<IOtherService>();
 var node = meta.Build(); // node is an INode, ready for execution
 ```
 
-This design makes xo-tasktree both expressive and safe, supporting advanced scenarios in workflow authoring and execution.
+This separation enables static analysis, flexible composition, and late binding with dependency injection.
 
----
+### Branching Edge Types
 
-## Usage Examples
+Branching in xo-tasktree is modeled using three core edge types:
 
-### If-Else Branching
+#### Monarius (Single Edge)
 
-```mermaid
-graph LR
-    A[RootIf: ISvc_OutConstBool_SyncService] -->|true| B[Then: ISvc_InStr_OutConstInt_AsyncService]
-    A -->|false| E[Else: ISvc_InStr_AsyncService]
-    B --> C[Then: ISvc_InInt_OutBool_SyncService]
-    E --> F[Match: ISvc_InStr_OutConstStr_AsyncService]
-```
+Represents a single outgoing edge from a node (linear flow).
 
-```csharp
-var mn = _stateManager
-    .RootIf<ISvc_OutConstBool_SyncService>()
-    .Then<ISvc_InStr_OutConstInt_AsyncService>(
-        configure => configure.MatchArg("<<arg-1>>"),
-        then => then.Then<ISvc_InInt_OutBool_SyncService>(c => c.RequireResult())
-    )
-    .Else<ISvc_InStr_AsyncService>(c => c.MatchArg<ISvc_InStr_OutConstStr_AsyncService>(c => c.MatchArg("<<arg-2>>")));
-var n = mn.Build();
-var msgs = await n.Resolve(cancellationToken);
-```
-
-### Null Check Branch
-
-```mermaid
-graph LR
-    A[IsNotNull: ISvc_OutObj_SyncService] -->|not null| B[Then: ISvc_InObj_OutConstInt_AsyncService]
-    A -->|null| C[Else: ISvc_InStr_AsyncService]
-```
-
-```csharp
-var mn = _stateManager
-    .IsNotNull<ISvc_OutObj_SyncService>()
-    .Then<ISvc_InObj_OutConstInt_AsyncService>(c => c.RequireResult())
-    .Else<ISvc_InStr_AsyncService>(c => c.AddArg("<<args>>", "args3"));
-var n = mn.Build();
-var msgs = await n.Resolve(cancellationToken);
-```
-
-### Argument Matching
-
-```mermaid
-graph LR
-    A[Root: ISvc_InBoolStr_OutConstInt_AsyncService] --> B[MatchArg: ISvc_OutConstBool_SyncService]
-    A --> C[MatchArg: ISvc_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService]
-```
-
-```csharp
-var mn = _stateManager
-    .Root<ISvc_InBoolStr_OutConstInt_AsyncService>(c =>
-        c.MatchArg<ISvc_OutConstBool_SyncService>()
-         .MatchArg<ISvc_InBool_OutConstStrIfFalseElseDynamicStr_AsyncService>(c => c.MatchArg(true))
-    );
-var n = mn.Build();
-var msgs = await n.Resolve(cancellationToken);
-```
-
-### Key/Hash Branching
-
-```mermaid
-graph LR
-    A[Root: ISvc_OutConstBool_SyncService] --> B[Key: ISvc_InBool_OutConstStr_AsyncService]
-    B --> C[Hash: ISvc_InBoolStr_OutConstInt_AsyncService]
-    B --> D[Hash: ISvc_AsyncService]
-    C --> E[Then: ISvc_InStr_OutConstInt_AsyncService]
-```
-
-```csharp
-var mn = _stateManager
-    .Root<ISvc_OutConstBool_SyncService>()
-    .Key<ISvc_InBool_OutConstStr_AsyncService>(c => c.RequireResult())
-    .Hash<ISvc_InBoolStr_OutConstInt_AsyncService, ISvc_AsyncService>(
-        c => c.MatchArg(true).MatchArg("<<arg>>").Key("<<str>>"),
-        c => c.Key("key-a"),
-        then => then.Then<ISvc_InStr_OutConstInt_AsyncService>(c => c.MatchArg("<<arg>>"))
-    );
-var n = mn.Build();
-var msgs = await n.Resolve(cancellationToken);
-```
-
-### Path Branching
-
-```mermaid
-graph LR
-    A[Root: ISvc_OutConstBool_SyncService] --> B[Path: ISvc_InBool_OutConstStr_AsyncService]
-    B --> C[Path: ISvc_InStr_OutConstInt_AsyncService]
-    C --> D[Path: ISvc_InInt_OutConstInt_AsyncService]
-```
-
-```csharp
-var mn = _stateManager
-    .Root<ISvc_OutConstBool_SyncService>()
-    .Path<ISvc_InBool_OutConstStr_AsyncService, ISvc_InStr_OutConstInt_AsyncService, ISvc_InInt_OutConstInt_AsyncService>(
-        c => c.RequireResult(),
-        c => c.RequireResult(),
-        c => c.RequireResult()
-    );
-var n = mn.Build();
-var msgs = await n.Resolve(cancellationToken);
-```
-
-## Laws
-- A Node contains a single fn.
-- Nodes do not directly reference other nodes, nodes reference edges. Edges reference nodes.
-- There should be a single core node type. ie. no different type for a decision making node.
-
-
-## Branching
-Branching in xo-tasktree is modeled using three core edge types, each representing a different branching structure in your workflow graph:
-
-### Monarius (Single Edge)
-Represents a single outgoing edge from a node (linear or simple flow).
-
-**Interface:**
 ```csharp
 public interface IMonariusNodeEdge : INodeEdge {
     INode Edge { get; }
 }
 ```
 
-**Diagram:**
-```mermaid
-graph LR
-    A((Node)) -- Monarius --> B((Node))
-```
+#### Binarius (Dual Edge)
 
----
+Represents a binary branch, such as if/else or true/false logic.
 
-### Binarius (Dual Edge)
-Represents a binary (two-way) branch, such as if/else or true/false logic.
-
-**Interface:**
 ```csharp
 public interface IBinariusNodeEdge : INodeEdge {
     INode? Edge1 { get; }
@@ -196,62 +159,198 @@ public interface IBinariusNodeEdge : INodeEdge {
 }
 ```
 
-**Diagram:**
-```mermaid
-graph LR
-    A((Node)) -- Edge1 --> B((Node))
-    A((Node)) -- Edge2 --> C((Node))
-```
+#### Multus (Multi Edge)
 
----
+Represents multiple outgoing edges (e.g., switch/case, hash, or parallel branches).
 
-### Multus (Multi Edge)
-Represents a node with multiple outgoing edges (e.g., switch/case, hash, or parallel branches).
-
-**Interface:**
 ```csharp
 public interface IMultusNodeEdge : INodeEdge {
     IList<INode> Edges { get; }
 }
 ```
 
-**Diagram:**
+These edge types allow you to model any workflow branching scenario, from simple linear flows to complex decision trees and parallel execution paths.
+
+### Node Controllers
+
+A **node controller** determines whether a branch is executed, acting as a gatekeeper for conditional logic. The controller validates the output of a node and determines which branch to follow.
+
+**Common controller types:**
+
+- `True`: Proceeds if the condition is true
+- `IsNotNull`: Proceeds if the value is not null
+- `Equals`: Proceeds if the value equals a specified value
+
+---
+
+## Usage Examples
+
+### Document Processing Pipeline
+
+Linear workflow for processing documents through multiple stages:
+
+```csharp
+var workflow = _stateManager
+    .Root<IDocumentParser>()
+    .Path<IDataExtractor, ISchemaValidator, IDataRepository>(
+        c => c.RequireResult(),
+        c => c.RequireResult(),
+        c => c.RequireResult()
+    );
+
+var node = workflow.Build();
+var results = await node.Resolve(cancellationToken);
+```
+
 ```mermaid
 graph LR
-    A((Node)) -- Edge1 --> B((Node))
-    A((Node)) -- Edge2 --> C((Node))
-    A((Node)) -- Edge3 --> D((Node))
-    %% ...and so on
+    A[DocumentParser] --> B[DataExtractor]
+    B --> C[SchemaValidator]
+    C --> D[DataRepository]
 ```
 
 ---
 
-These edge types allow you to model any workflow branching scenario, from simple linear flows to complex decision trees and parallel execution paths, all with type safety and composability.
+### Conditional Feature Flag Workflow
 
+Branch execution based on feature flag configuration:
 
-## Node Controllers
+```csharp
+var workflow = _stateManager
+    .IsNotNull<IFeatureConfigLoader>()
+    .Then<INewFeatureProcessor>(c => c.RequireResult())
+    .Else<ILegacyProcessor>();
 
-A **node controller** determines whether a branch of the workflow tree is executed, acting as a gatekeeper for conditional logic. The controller type is set in the `NodeConfiguration` during workflow composition. When the workflow is built, the controller becomes a node whose core operation is to validate the output of a node (as `IArgs`) according to the controller type (e.g., `True`, `IsNotNull`, `Equals`).
-
-**How it works:**
-- The controller type is configured in the meta-state (via `NodeConfiguration.ControllerType`).
-- On build, a controller node is inserted into the tree.
-- This node evaluates the output of its predecessor and determines which branch (if any) to follow.
-
-**Common controller types:**
-- `True`: Proceeds if the condition is true.
-- `IsNotNull`: Proceeds if the value is not null.
-- `Equals`: Proceeds if the value equals a specified value.
-
-
-
-**Diagram:**
-```mermaid
-graph TD
-    A[Node] -->|output| C{Controller Node}
-    C -- true --> B[Then Branch]
-    C -- false --> D[Else Branch]
-    %% Controller Node can represent types like IsNotNull, True, Equals, etc.
+var node = workflow.Build();
+var results = await node.Resolve(cancellationToken);
 ```
 
-This pattern enables expressive, type-safe conditional logic in your workflow graphs, with each controller node encapsulating a specific validation or decision.
+```mermaid
+graph LR
+    A[FeatureConfigLoader] -->|not null| B[NewFeatureProcessor]
+    A -->|null| C[LegacyProcessor]
+```
+
+---
+
+### Multi-Stage Approval Process
+
+Nested conditionals for a multi-level approval chain:
+
+```csharp
+var workflow = _stateManager
+    .Root<IRequestSubmission>()
+    .RootIf<IManagerApprovalCheck>()
+    .Then<IDirectorReview>(
+        c => c.RequireResult(),
+        then => then
+            .RootIf<IDirectorApprovalCheck>()
+            .Then<IFinalApproval>(c => c.RequireResult())
+            .Else<IRejectionHandler>()
+    )
+    .Else<IRejectionHandler>();
+
+var node = workflow.Build();
+var results = await node.Resolve(cancellationToken);
+```
+
+```mermaid
+graph TD
+    A[RequestSubmission] --> B{ManagerApprovalCheck}
+    B -->|approved| C[DirectorReview]
+    B -->|rejected| D[RejectionHandler]
+    C --> E{DirectorApprovalCheck}
+    E -->|approved| F[FinalApproval]
+    E -->|rejected| D
+```
+
+---
+
+### API Request Router
+
+Hash-based routing by API version:
+
+```csharp
+var workflow = _stateManager
+    .Root<IRequestParser>()
+    .Key<IVersionExtractor>(c => c.RequireResult())
+    .Hash<IV1Handler, IV2Handler, IV3Handler>(
+        c => c.Key("v1"),
+        c => c.Key("v2"),
+        c => c.Key("v3")
+    );
+
+var node = workflow.Build();
+var results = await node.Resolve(cancellationToken);
+```
+
+---
+
+### Parallel Data Enrichment
+
+Fetch data from multiple sources concurrently:
+
+```csharp
+var workflow = _stateManager
+    .Root<IUserIdExtractor>()
+    .Branch<IUserProfileService, IUserPreferencesService>(
+        c => c.RequireResult(),
+        c => c.RequireResult()
+    );
+
+var node = workflow.Build();
+var results = await node.Resolve(cancellationToken);
+```
+
+```mermaid
+graph LR
+    A[UserIdExtractor] --> B[UserProfileService]
+    A --> C[UserPreferencesService]
+```
+
+---
+
+## Performance Considerations
+
+### Reflection Usage
+
+**Important:** xo-tasktree uses reflection to dynamically resolve and invoke service methods. While this provides powerful flexibility and enables the fluent API, it has performance implications:
+
+- **Not recommended for hot paths** - Avoid using in tight loops or high-frequency operations
+- **Suitable for orchestration** - Well-suited for workflow orchestration, request processing pipelines, and business logic composition
+- **Consider alternatives for performance-critical code** - For performance-sensitive scenarios, consider hand-coded implementations
+
+### Best Practices
+
+- Build workflows once and reuse them (don't rebuild on every execution)
+- Use workflow context to share state efficiently
+- Profile and benchmark your specific use cases
+- See [benchmarks project](/test/benchmark/Xo.TaskTree.Benchmarks) for performance metrics
+
+---
+
+## Advanced Topics
+
+For detailed documentation on advanced scenarios, see:
+
+- [Low-Level API Guide](./coding-agent-prompt.md) - Manual node construction
+- [Custom Functions](./coding-agent-prompt.md) - Extending BaseFn
+- [Workflow Context](./coding-agent-prompt.md) - Sharing state across nodes
+- [Error Handling](./coding-agent-prompt.md) - Exception handlers and retry logic
+
+---
+
+## Contributing
+
+Contributions are welcome! Please feel free to:
+
+- Report bugs via [GitHub Issues](https://github.com/stiproot/xo-tasktree/issues)
+- Submit pull requests for bug fixes or features
+- Improve documentation
+- Share feedback and suggestions
+
+---
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.

@@ -1,0 +1,5 @@
+node_modules/
+.git/
+bun.lockb
+CLAUDE.md
+.claude/

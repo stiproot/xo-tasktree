@@ -1,0 +1,11 @@
+{
+  "name": "xo-tasktree",
+  "private": true,
+  "scripts": {
+    "lint:md": "markdownlint \"**/*.md\"",
+    "lint:md:fix": "markdownlint \"**/*.md\" --fix"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.47.0"
+  }
+}
